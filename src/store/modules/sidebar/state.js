@@ -38,9 +38,9 @@ export default {
           title: '监考记录'
         },
         {
-          path: '/main/third/third3',
+          path: '/main/third/third_submit',
           icon: 'suncaper-menu-unfold',
-          title: '监考批次'
+          title: '报名提交'
         }
       ]
     }

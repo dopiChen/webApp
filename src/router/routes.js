@@ -43,10 +43,16 @@ const mainPage = [
           import(/* webpackChunkName: "First" */ '../pages/main/routes/third/Third2')
       },
       {
-        path: 'third/third3',
-        name: 'third',
+        path: 'third/third3A',
+        name: 'third3A',
         component: () =>
-          import(/* webpackChunkName: "First" */ '../pages/main/routes/third/Third3')
+          import(/* webpackChunkName: "First" */ '../pages/main/routes/third/Third3A.vue')
+      },
+      {
+        path: 'third/third_submit',
+        name: 'third_submit',
+        component: () =>
+          import(/* webpackChunkName: "First" */ '../pages/main/routes/third/Third_Submit.vue')
       }
     ]
   }

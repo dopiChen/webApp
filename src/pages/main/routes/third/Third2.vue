@@ -28,10 +28,10 @@
                             label="序号"
                             width="100">
                     </el-table-column>
-                    <el-table-column
-                            prop="round"
-                            label="监考批次"
-                            width="400">
+                    <el-table-column label="监考批次">
+                        <template v-slot="scope">
+                            <el-button type="text" @click="handleclick(scope.row)">{{ scope.row.round }}</el-button>
+                        </template>
                     </el-table-column>
                     <el-table-column
                             prop="startdate"
@@ -79,6 +79,7 @@ export default {
       input2: '',
       checked: true,
       teams: [{
+        id: 'A',
         index: '00',
         round: '2023A楼2023监考报名',
         startdate: '2023-9-12-10:30:00',
@@ -86,66 +87,77 @@ export default {
         state: '已确认'
 
       }, {
+        id: 'B',
         index: '01',
-        round: '2023A楼2023监考报名',
+        round: '2023B楼2023监考报名',
         startdate: '2023-9-12-10:30:00',
         overdate: '2023-10-12-10:30:00',
         state: '已确认'
       }, {
+        id: 'C',
         index: '02',
-        round: '2023A楼2023监考报名',
+        round: '2023C楼2023监考报名',
         startdate: '2023-9-12-10:30:00',
         overdate: '2023-10-12-10:30:00',
         state: '已确认'
       }, {
+        id: 'D',
         index: '03',
-        round: '2023A楼2023监考报名',
+        round: '2023D楼2023监考报名',
         startdate: '2023-9-12-10:30:00',
         overdate: '2023-10-12-10:30:00',
         state: '已确认'
       }, {
+        id: 'E',
         index: '04',
-        round: '2023A楼2023监考报名',
+        round: '2023E楼2023监考报名',
         startdate: '2023-9-12-10:30:00',
         overdate: '2023-10-12-10:30:00',
         state: '已确认'
       }, {
+        id: 'A',
         index: '05',
         round: '2023A楼2023监考报名',
         startdate: '2023-9-12-10:30:00',
         overdate: '2023-10-12-10:30:00',
         state: '已确认'
       }, {
+        id: 'A',
         index: '06',
         round: '2023A楼2023监考报名',
         startdate: '2023-9-12-10:30:00',
         overdate: '2023-10-12-10:30:00',
         state: '已确认'
       }, {
+        id: 'A',
         index: '07',
         round: '2023A楼2023监考报名',
         startdate: '2023-9-12-10:30:00',
         overdate: '2023-10-12-10:30:00',
         state: '已确认'
       }, {
+        id: 'A',
         index: '08',
         round: '2023A楼2023监考报名',
         startdate: '2023-9-12-10:30:00',
         overdate: '2023-10-12-10:30:00',
         state: '已确认'
       }, {
+        id: 'A',
         index: '09',
         round: '2023A楼2023监考报名',
         startdate: '2023-9-12-10:30:00',
         overdate: '2023-10-12-10:30:00',
         state: '已确认'
       }, {
+        id: 'A',
         index: '10',
         round: '2023A楼2023监考报名',
         startdate: '2023-9-12-10:30:00',
         overdate: '2023-10-12-10:30:00',
         state: '已确认'
       }, {
+        id: 'A',
         index: '11',
         round: '2023A楼2023监考报名',
         startdate: '2023-9-12-10:30:00',
@@ -155,6 +167,16 @@ export default {
       ],
       expandedTeam: null // 存储当前展开的队伍信息
 
+    }
+  },
+  methods: {
+    handleclick (row) {
+      this.$router.push({
+        name: 'third3A',
+        query: {
+          id: row.id
+        }
+      })
     }
   }
 }
@@ -203,6 +225,7 @@ export default {
     justify-content: space-between;
     align-items: center;
     flex: 0 1 auto; /* 让 selectbody 的高度根据内容自适应 */
+    margin-top: 15px;
 }
 
 .tablebody {
@@ -238,7 +261,8 @@ export default {
     color: #000000e6;
     text-align: right;
     padding: 1rem;
-    margin-top: 1rem;
+    margin-top: 20px;
+    margin-left: 10px;
 }
 
 .body {

@@ -21,8 +21,8 @@
                         stripe
                         style="width: 100%">
                     <el-table-column
-                        type="selection"
-                        width="55">
+                            type="selection"
+                            width="55">
                     </el-table-column>
                     <el-table-column
                             fixed
@@ -30,10 +30,10 @@
                             label="序号"
                             width="100">
                     </el-table-column>
-                    <el-table-column
-                            prop="round"
-                            label="监考批次"
-                            width="300">
+                    <el-table-column label="监考批次">
+                        <template v-slot="scope">
+                            <el-button type="text" @click="handleclick(scope.row)">{{ scope.row.round }}</el-button>
+                        </template>
                     </el-table-column>
                     <el-table-column
                             prop="startdate"
@@ -86,6 +86,7 @@ export default {
       input2: '',
       checked: true,
       teams: [{
+        id: 'A',
         index: '00',
         round: '2023A楼2023监考报名',
         startdate: '2023-9-12-10:30:00',
@@ -94,20 +95,23 @@ export default {
         state: '进行中'
 
       }, {
+        id: 'B',
         index: '01',
-        round: '2023A楼2023监考报名',
+        round: '2023B楼2023监考报名',
         startdate: '2023-9-12-10:30:00',
         overdate: '2023-10-12-10:30:00',
         date: '2023-11-12-10:30:00',
         state: '进行中'
       }, {
+        id: 'C',
         index: '02',
-        round: '2023A楼2023监考报名',
+        round: '2023C楼2023监考报名',
         startdate: '2023-9-12-10:30:00',
         overdate: '2023-10-12-10:30:00',
         date: '2023-11-12-10:30:00',
         state: '进行中'
       }, {
+        id: 'A',
         index: '03',
         round: '2023A楼2023监考报名',
         startdate: '2023-9-12-10:30:00',
@@ -115,6 +119,7 @@ export default {
         date: '2023-11-12-10:30:00',
         state: '进行中'
       }, {
+        id: 'A',
         index: '04',
         round: '2023A楼2023监考报名',
         startdate: '2023-9-12-10:30:00',
@@ -122,6 +127,7 @@ export default {
         date: '2023-11-12-10:30:00',
         state: '进行中'
       }, {
+        id: 'A',
         index: '05',
         round: '2023A楼2023监考报名',
         startdate: '2023-9-12-10:30:00',
@@ -129,6 +135,7 @@ export default {
         date: '2023-11-12-10:30:00',
         state: '进行中'
       }, {
+        id: 'A',
         index: '06',
         round: '2023A楼2023监考报名',
         startdate: '2023-9-12-10:30:00',
@@ -136,6 +143,7 @@ export default {
         date: '2023-11-12-10:30:00',
         state: '进行中'
       }, {
+        id: 'A',
         index: '07',
         round: '2023A楼2023监考报名',
         startdate: '2023-9-12-10:30:00',
@@ -143,6 +151,7 @@ export default {
         date: '2023-11-12-10:30:00',
         state: '进行中'
       }, {
+        id: 'A',
         index: '08',
         round: '2023A楼2023监考报名',
         startdate: '2023-9-12-10:30:00',
@@ -150,6 +159,7 @@ export default {
         date: '2023-11-12-10:30:00',
         state: '进行中'
       }, {
+        id: 'A',
         index: '09',
         round: '2023A楼2023监考报名',
         startdate: '2023-9-12-10:30:00',
@@ -157,6 +167,7 @@ export default {
         date: '2023-11-12-10:30:00',
         state: '进行中'
       }, {
+        id: 'A',
         index: '10',
         round: '2023A楼2023监考报名',
         startdate: '2023-9-12-10:30:00',
@@ -164,6 +175,7 @@ export default {
         date: '2023-11-12-10:30:00',
         state: '进行中'
       }, {
+        id: 'A',
         index: '11',
         round: '2023A楼2023监考报名',
         startdate: '2023-9-12-10:30:00',
@@ -177,13 +189,13 @@ export default {
     }
   },
   methods: {
-    handleRowClick (row) {
-      console.info('111')
-      if (this.expandedTeam === row) {
-        this.expandedTeam = null // 如果点击的是当前展开的队伍，关闭展开
-      } else {
-        this.expandedTeam = row // 否则展开点击的队伍
-      }
+    handleclick (row) {
+      this.$router.push({
+        name: 'third3A',
+        query: {
+          id: row.id
+        }
+      })
     }
   }
 }
@@ -269,9 +281,11 @@ export default {
     padding: 1rem;
     margin-top: 1rem;
 }
-.body{
+
+.body {
     height: 100%;
 }
+
 .demo-input-suffix {
     display: flex;
 }

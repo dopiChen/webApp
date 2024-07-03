@@ -25,10 +25,40 @@ const mainPage = [
           import(/* webpackChunkName: "Second" */ '../pages/main/routes/first/First')
       },
       {
-        path: 'second/second',
+        path: 'second/second1',
         name: 'second',
         component: () =>
           import(/* webpackChunkName: "First" */ '../pages/main/routes/second/Second')
+      },
+      {
+        path: 'second/second2',
+        name: 'second',
+        component: () =>
+            import(/* webpackChunkName: "First" */ '../pages/main/routes/second/Second2')
+      },
+      {
+        path: 'second/second3',
+        name: 'second',
+        component: () =>
+            import(/* webpackChunkName: "First" */ '../pages/main/routes/second/Second3')
+      },
+      {
+        path: 'second/second4',
+        name: 'second',
+        component: () =>
+            import(/* webpackChunkName: "First" */ '../pages/main/routes/second/Second4')
+      },
+      {
+        path: 'second/second5',
+        name: 'second',
+        component: () =>
+            import(/* webpackChunkName: "First" */ '../pages/main/routes/second/Second5')
+      },
+      {
+        path: 'second/second6',
+        name: 'second',
+        component: () =>
+            import(/* webpackChunkName: "First" */ '../pages/main/routes/second/Second6')
       },
       {
         path: 'third/third1',

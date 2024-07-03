@@ -9,9 +9,6 @@ export default {
     },
     3: {
       main: ['third']
-    },
-    4: {
-      main: ['*']
     }
   }
 }

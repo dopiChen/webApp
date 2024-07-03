@@ -8,6 +8,9 @@ export default {
     },
     3: {
       roleName: '在职在岗教职工'
+    },
+    4: {
+      roleName: '研究生招生考务科科长'
     }
   }
 }

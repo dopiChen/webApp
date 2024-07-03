@@ -8,7 +8,7 @@ export default {
       main: ['second']
     },
     3: {
-      main: ['third']
+      main: ['*']
     }
   }
 }

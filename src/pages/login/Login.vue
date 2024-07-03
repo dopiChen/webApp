@@ -15,6 +15,7 @@
                     <input type="text" placeholder="user">
                     <input type="text" placeholder="password">
                     <button class="inupbutton">Sign up</button>
+                    <button>NIHAO</button>
                 </div>
 
             </div>

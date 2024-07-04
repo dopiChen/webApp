@@ -11,7 +11,7 @@ export default {
       data: {
         id: 1,
         name: 'clt',
-        userType: 3
+        userType: 1
       }
     }
     // 提取信息

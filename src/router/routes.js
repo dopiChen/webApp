@@ -19,10 +19,16 @@ const mainPage = [
       import(/* webpackChunkName: "Main" */ '../pages/main/Main'),
     children: [
       {
-        path: 'first',
-        name: 'first',
+        path: 'first/first_approval',
+        name: 'first_approval',
         component: () =>
-          import(/* webpackChunkName: "Second" */ '../pages/main/routes/first/First')
+          import(/* webpackChunkName: "Second" */ '../pages/main/routes/first/First_Approval.vue')
+      },
+      {
+        path: 'first/first_namelist',
+        name: 'first_namelist',
+        component: () =>
+          import(/* webpackChunkName: "Second" */ '../pages/main/routes/first/First_Namelist.vue')
       },
       {
         path: 'second/second1',

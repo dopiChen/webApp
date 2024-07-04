@@ -3,25 +3,14 @@ export default {
     1: {
       main: [
         {
-          groupTitle: '分组1'
+          path: '/main/first/first_approval',
+          icon: 'suncaper-menu-unfold',
+          title: '报名审批'
         },
         {
-          path: '/main/first',
+          path: '/main/first/first_namelist',
           icon: 'suncaper-menu-unfold',
-          title: '一级菜单1'
-        },
-        {
-          path: '/main/second',
-          icon: 'suncaper-menu-unfold',
-          title: '一级菜单2',
-          group: 'second',
-          children: [
-            {
-              path: '/main/second/second',
-              icon: 'suncaper-menu-unfold',
-              title: '二级菜单'
-            }
-          ]
+          title: '监考名单'
         }
       ]
     },

@@ -66,6 +66,7 @@
             </div>
             <div class="block">
                 <el-pagination
+                        background
                         small
                         layout="prev, pager, next"
                         :total="total"

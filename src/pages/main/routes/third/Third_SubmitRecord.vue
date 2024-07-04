@@ -12,20 +12,59 @@
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
             <div class="info">
-                <h2>{{ user.name }}</h2>
-                <p>{{ user.role }}</p>
+                <h2 style="font-size: 40px">{{ user.name }}</h2>
+                <p style="font-size: 20px;margin-top: 10px">{{ user.role }}</p>
             </div>
+            <el-descriptions class="table" :column="1" :size="medium" border style="width: 1000px;height: 500px">
+                <el-descriptions-item>
+                    <template slot="label">
+                        <i class="el-icon-user"></i>
+                        用户名
+                    </template>
+                    kooriookami
+                </el-descriptions-item>
+                <el-descriptions-item>
+                    <template slot="label">
+                        <i class="el-icon-mobile-phone"></i>
+                        手机号
+                    </template>
+                    18100000000
+                </el-descriptions-item>
+                <el-descriptions-item>
+                    <template slot="label">
+                        <i class="el-icon-location-outline"></i>
+                        居住地
+                    </template>
+                    苏州市
+                </el-descriptions-item>
+                <el-descriptions-item>
+                    <template slot="label">
+                        <i class="el-icon-tickets"></i>
+                        备注
+                    </template>
+                    <el-tag size="small">学校</el-tag>
+                </el-descriptions-item>
+                <el-descriptions-item>
+                    <template slot="label">
+                        <i class="el-icon-office-building"></i>
+                        联系地址
+                    </template>
+                    江苏省苏州市吴中区吴中大道 1188 号
+                </el-descriptions-item>
+            </el-descriptions>
         </div>
+        <hr>
+        <h2>我的申请记录</h2>
         <div class="applications">
             <el-table :data="applications" stripe class="centered-table">
-                <el-table-column prop="id" label="申请编号" width="180"></el-table-column>
-                <el-table-column prop="title" label="申请标题" width="300"></el-table-column>
-                <el-table-column prop="status" label="状态" width="180">
+                <el-table-column prop="id" label="申请编号" width="280"></el-table-column>
+                <el-table-column prop="title" label="申请标题" width="400"></el-table-column>
+                <el-table-column prop="status" label="状态" width="280">
                     <template v-slot="scope">
                         <el-tag :type="getTagType(scope.row.status)">{{ scope.row.status }}</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column prop="createdAt" label="提交时间" width="180"></el-table-column>
+                <el-table-column prop="createdAt" label="提交时间" width="400"></el-table-column>
             </el-table>
         </div>
     </div>
@@ -36,10 +75,11 @@ export default {
   name: 'UserProfile',
   data () {
     return {
+      // 介入数据库
       user: {
         avatar: 'https://via.placeholder.com/150',
         name: '张三',
-        role: '学生'
+        role: '在职在岗教师'
       },
       applications: [
         {id: 'A001', title: '监考报名 - 2023A楼', status: '审核中', createdAt: '2023-07-01'},
@@ -84,6 +124,7 @@ export default {
 <style scoped>
 .mainbody {
     width: 80%;
+    height: 100%;
     margin: 40px auto;
     padding: 20px;
     background-color: #fff;
@@ -98,7 +139,12 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 40px;
+    margin-top: 40px;
+}
+
+.table {
+    margin-top: 100px;
+    font-size: 24px;
 }
 
 .avatar-uploader {
@@ -143,12 +189,14 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 200px;
+    margin-bottom: 100px;
+
 }
 
 .centered-table {
     width: 80%;
-    font-size: 16px;
+    font-size: 20px;
+    margin-left: 200px;
 }
 
 .el-table th, .el-table td {

@@ -3,7 +3,7 @@
         <span class="title">监考管理</span>
         <div class="top">
             <div class="top1">
-                        <el-button type="primary" icon="el-icon-search">快速找人</el-button>
+                        <el-button type="primary" icon="el-icon-search"  style="background-color:dodgerblue;">快速找人</el-button>
                         <el-button type="primary" plain class="shu" @click="dialogVisible = true">创建批次</el-button>
                 <el-dialog
                         title="创造监考报名批次"
@@ -16,7 +16,7 @@
                                 <el-input placeholder="请输入批次名称" v-model="ruleForm.name"></el-input>
                             </el-form-item>
                             <el-form-item label="关联年份" prop="region">
-                                <el-select v-model="ruleForm.region" placeholder="请选择关联年份">
+                                <el-select v-model="ruleForm.region" placeholder="请选择关联年份" style="width:526px">
                                     <el-option label="2022"></el-option>
                                     <el-option label="2023"></el-option>
                                     <el-option label="2024"></el-option>
@@ -54,8 +54,21 @@
                                     </el-upload>
                                 </el-form-item>
                             </el-form-item>
+                            <el-form-item label="考场名称" prop="kcmc">
+                                <el-input placeholder="请输入考场名称" v-model="ruleForm.name"></el-input>
+                            </el-form-item>
+                            <el-form-item label="校区" prop="xq">
+                                <el-input placeholder="请输入校区" v-model="ruleForm.name"></el-input>
+                            </el-form-item>
+                            <el-form-item label="校内地址" prop="xndz">
+                                <el-input placeholder="请输入校内地址" v-model="ruleForm.name"></el-input>
+                            </el-form-item>
+                            <el-form-item label="监考时间" prop="jksj">
+                                <el-input placeholder="监考时间" v-model="ruleForm.name"></el-input>
+                            </el-form-item>
                         </el-form>
                     </div>
+                    <hr>
                     <span slot="footer" class="dialog-footer">
                          <div class="horizontal-line"></div>
                          <el-button type="primary" @click="submitForm('ruleForm')" style="background-color:dodgerblue;">提交</el-button>
@@ -68,7 +81,7 @@
                                 v-model="input"
                                 class="shuru">
                         </el-input>
-                        <el-button type="primary" class="shu2">查询</el-button>
+                        <el-button type="primary" class="shu2"  style="background-color:dodgerblue;">查询</el-button>
                         <el-button type="primary" plain class="shu1">重置</el-button>
                         <div class="table-container"><el-table
                                 ref="multipleTable"

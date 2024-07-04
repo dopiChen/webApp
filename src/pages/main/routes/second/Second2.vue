@@ -6,58 +6,59 @@
                         <el-button type="primary" icon="el-icon-search">快速找人</el-button>
                         <el-button type="primary" plain class="shu" @click="dialogVisible = true">创建批次</el-button>
                 <el-dialog
-                        title="提示"
+                        title="创造监考报名批次"
                         :visible.sync="dialogVisible"
-                        width="30%"
+                        width="40%"
                         :before-close="handleClose">
                     <div>
-                        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-                            <el-form-item label="活动名称" prop="name">
-                                <el-input v-model="ruleForm.name"></el-input>
+                        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="150px"  label-position="left" class="demo-ruleForm" >
+                            <el-form-item label="批次名称" prop="name">
+                                <el-input placeholder="请输入批次名称" v-model="ruleForm.name"></el-input>
                             </el-form-item>
-                            <el-form-item label="活动区域" prop="region">
-                                <el-select v-model="ruleForm.region" placeholder="请选择活动区域">
-                                    <el-option label="区域一" value="shanghai"></el-option>
-                                    <el-option label="区域二" value="beijing"></el-option>
+                            <el-form-item label="关联年份" prop="region">
+                                <el-select v-model="ruleForm.region" placeholder="请选择关联年份">
+                                    <el-option label="2022"></el-option>
+                                    <el-option label="2023"></el-option>
+                                    <el-option label="2024"></el-option>
+                                    <el-option label="2025"></el-option>
                                 </el-select>
                             </el-form-item>
-                            <el-form-item label="活动时间" required>
-                                <el-col :span="11">
+                            <el-form-item label="批次开始时间" required>
                                     <el-form-item prop="date1">
-                                        <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.date1" style="width: 100%;"></el-date-picker>
+                                        <el-input v-model="ruleForm.name" placeholder="请输入批次开始时间"></el-input>
                                     </el-form-item>
-                                </el-col>
-                                <el-col class="line" :span="2">-</el-col>
-                                <el-col :span="11">
-                                    <el-form-item prop="date2">
-                                        <el-time-picker placeholder="选择时间" v-model="ruleForm.date2" style="width: 100%;"></el-time-picker>
-                                    </el-form-item>
-                                </el-col>
                             </el-form-item>
-                            <el-form-item label="即时配送" prop="delivery">
-                                <el-switch v-model="ruleForm.delivery"></el-switch>
+                            <el-form-item label="批次结束时间" required>
+                                <el-form-item prop="date2">
+                                    <el-input v-model="ruleForm.name" placeholder="请输入批次结束时间"></el-input>
+                                </el-form-item>
                             </el-form-item>
-                            <el-form-item label="活动性质" prop="type">
-                                <el-checkbox-group v-model="ruleForm.type">
-                                    <el-checkbox label="美食/餐厅线上活动" name="type"></el-checkbox>
-                                    <el-checkbox label="地推活动" name="type"></el-checkbox>
-                                    <el-checkbox label="线下主题活动" name="type"></el-checkbox>
-                                    <el-checkbox label="单纯品牌曝光" name="type"></el-checkbox>
-                                </el-checkbox-group>
-                            </el-form-item>
-                            <el-form-item label="特殊资源" prop="resource">
-                                <el-radio-group v-model="ruleForm.resource">
-                                    <el-radio label="线上品牌商赞助"></el-radio>
-                                    <el-radio label="线下场地免费"></el-radio>
-                                </el-radio-group>
-                            </el-form-item>
-                            <el-form-item label="活动形式" prop="desc">
-                                <el-input type="textarea" v-model="ruleForm.desc"></el-input>
+                                <el-form-item label="监考说明">
+                                   <el-input
+                                    type="textarea"
+                                    placeholder="请输入监考说明"
+                                    v-model="textarea"
+                                    maxlength="200"
+                                    show-word-limit>
+                                   </el-input>
+                                </el-form-item>
+                            <el-form-item label="上传附件">
+                                <el-form-item>
+                                    <el-upload
+                                        class="upload-demo"
+                                        action="https://jsonplaceholder.typicode.com/posts/"
+                                        :on-preview="handlePreview"
+                                        :on-remove="handleRemove">
+                                        <el-button size="small" type="primary" class="scwj" plain icon="el-icon-upload2">上传文件</el-button>
+                                        <div class="wjxianzhi" style="margin-top: 40px">限制上传文件10个以下，单个大小不超过100M；</div>
+                                    </el-upload>
+                                </el-form-item>
                             </el-form-item>
                         </el-form>
                     </div>
                     <span slot="footer" class="dialog-footer">
-                         <el-button type="primary" @click="submitForm('ruleForm')" >提交</el-button>
+                         <div class="horizontal-line"></div>
+                         <el-button type="primary" @click="submitForm('ruleForm')" style="background-color:dodgerblue;">提交</el-button>
                          <el-button @click="dialogVisible = false">取消</el-button>
                     </span>
                 </el-dialog>
@@ -561,6 +562,12 @@ export default {
     },
     resetForm (formName) {
       this.$refs[formName].resetFields()
+    },
+    handleRemove (file, fileList) {
+      console.log(file, fileList)
+    },
+    handlePreview (file) {
+      console.log(file)
     }
   }
 }
@@ -641,5 +648,23 @@ export default {
 }
 .el-icon-arrow-down {
     font-size: 15px;
+}
+.scwj{
+    background-color: #FFFFFF;
+    position: absolute;
+    left:0px;
+}
+.wjxianzhi{
+    width: 261px;
+    height: 20px;
+    font-weight: 400;
+    font-size: 12px;
+    color: #00000066;
+    line-height: 20px;
+}
+.dialog-footer {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
 }
 </style>

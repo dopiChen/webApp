@@ -10,7 +10,7 @@ const loginPage = [
 const mainPage = [
   {
     path: '/',
-    redirect: '/login'
+    redirect: '/main'
   },
   {
     path: '/main',

@@ -4,7 +4,7 @@
         <hr>
         <div class="main_body">
             <div class="selectbody">
-                <el-button type="primary">+ 监考报名</el-button>
+                <el-button type="primary" @click="gosubmit">+ 监考报名</el-button>
                 <div class="demo-input-suffix">
                     <el-input
                             placeholder="输入监考名称关键词"
@@ -17,9 +17,12 @@
             </div>
             <div class="tablebody">
                 <el-table
-                        :data="teams"
+                        :data="currentTableData"
                         stripe
-                        style="width: 100%">
+                        style="width: 100%"
+                        @selection-change="handleSelelctionChange"
+                        :height="tableHeight"
+                        class="table">
                     <el-table-column
                             type="selection"
                             width="55">
@@ -30,37 +33,37 @@
                             label="序号"
                             width="100">
                     </el-table-column>
-                    <el-table-column label="监考批次">
-                        <template v-slot="scope">
-                            <el-button type="text" @click="handleclick(scope.row)">{{ scope.row.round }}</el-button>
-                        </template>
+                    <el-table-column
+                            prop="round"
+                            label="监考批次"
+                            width="300">
                     </el-table-column>
                     <el-table-column
                             prop="startdate"
                             label="报名开始时间"
-                            width="300">
+                            width="400">
                     </el-table-column>
                     <el-table-column
                             prop="overdate"
                             label="报名结束时间"
-                            width="300">
+                            width="400">
                     </el-table-column>
                     <el-table-column
                             prop="date"
                             label="创建时间"
-                            width="300">
+                            width="400">
                     </el-table-column>
                     <el-table-column
                             prop="state"
                             label="批次状态"
-                            width="200">
+                            width="400">
                     </el-table-column>
                     <el-table-column
                             fixed="right"
                             label="操作"
-                            width="150">
+                            width="200">
                         <template v-slot="scope">
-                            <el-button type="text" size="small">查看报名</el-button>
+                            <el-button type="text" size="small" @click="handleclick(scope.row)">查看报名</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -69,7 +72,10 @@
                 <el-pagination
                         small
                         layout="prev, pager, next"
-                        :total="50">
+                        :total="total"
+                        :page-size="pageSize"
+                        @current-change="handleCurrentChange"
+                >
                 </el-pagination>
             </div>
         </div>
@@ -77,6 +83,8 @@
 </template>
 
 <script>
+import {Message} from 'element-ui'
+
 export default {
   name: 'third',
   data () {
@@ -182,10 +190,96 @@ export default {
         overdate: '2023-10-12-10:30:00',
         date: '2023-11-12-10:30:00',
         state: '进行中'
+      }, {
+        id: 'A',
+        index: '12',
+        round: '2023A楼2023监考报名',
+        startdate: '2023-9-12-10:30:00',
+        overdate: '2023-10-12-10:30:00',
+        date: '2023-11-12-10:30:00',
+        state: '进行中'
+      }, {
+        id: 'A',
+        index: '13',
+        round: '2023A楼2023监考报名',
+        startdate: '2023-9-12-10:30:00',
+        overdate: '2023-10-12-10:30:00',
+        date: '2023-11-12-10:30:00',
+        state: '进行中'
+      }, {
+        id: 'A',
+        index: '14',
+        round: '2023A楼2023监考报名',
+        startdate: '2023-9-12-10:30:00',
+        overdate: '2023-10-12-10:30:00',
+        date: '2023-11-12-10:30:00',
+        state: '进行中'
+      }, {
+        id: 'E',
+        index: '15',
+        round: '2023E楼2023监考报名',
+        startdate: '2023-9-12-10:30:00',
+        overdate: '2023-10-12-10:30:00',
+        date: '2023-11-12-10:30:00',
+        state: '进行中'
+      }, {
+        id: 'C',
+        index: '16',
+        round: '2023C楼2023监考报名',
+        startdate: '2023-9-12-10:30:00',
+        overdate: '2023-10-12-10:30:00',
+        date: '2023-11-12-10:30:00',
+        state: '进行中'
+      }, {
+        id: 'D',
+        index: '17',
+        round: '2023D楼2023监考报名',
+        startdate: '2023-9-12-10:30:00',
+        overdate: '2023-10-12-10:30:00',
+        date: '2023-11-12-10:30:00',
+        state: '进行中'
+      }, {
+        id: 'D',
+        index: '17',
+        round: '2023D楼2023监考报名',
+        startdate: '2023-9-12-10:30:00',
+        overdate: '2023-10-12-10:30:00',
+        date: '2023-11-12-10:30:00',
+        state: '进行中'
+      }, {
+        id: 'D',
+        index: '17',
+        round: '2023D楼2023监考报名',
+        startdate: '2023-9-12-10:30:00',
+        overdate: '2023-10-12-10:30:00',
+        date: '2023-11-12-10:30:00',
+        state: '进行中'
+      }, {
+        id: 'D',
+        index: '17',
+        round: '2023D楼2023监考报名',
+        startdate: '2023-9-12-10:30:00',
+        overdate: '2023-10-12-10:30:00',
+        date: '2023-11-12-10:30:00',
+        state: '进行中'
       }
       ],
-      expandedTeam: null // 存储当前展开的队伍信息
+      selectedIds: [],
+      currentPage: 1, // 当前页码
+      pageSize: 15, // 每页显示行数
+      tableHeight: 0
 
+    }
+  },
+  // 计算换页显示
+  computed: {
+    total () {
+      return this.teams.length
+    },
+    currentTableData () {
+      const start = (this.currentPage - 1) * this.pageSize
+      const end = start + this.pageSize
+      return this.teams.slice(start, end)
     }
   },
   methods: {
@@ -196,8 +290,40 @@ export default {
           id: row.id
         }
       })
+    },
+    handleSelelctionChange (val) {
+      this.selectedIds = val.map(item => item.id)
+    },
+    gosubmit () {
+      if (this.selectedIds.length === 0) {
+        Message({
+          message: '尚未选择批次',
+          type: 'warning'
+        })
+        return
+      }
+      // 路由跳转
+      this.$router.push({name: 'third_submit', query: {ids: this.selectedIds.join(',')}})
+    },
+    handleCurrentChange (page) {
+      this.currentPage = page
+    },
+    updateTableHeight () {
+      this.$nextTick(() => {
+        const tableBody = this.$refs.tableBody
+        const height = tableBody.clientHeight * 0.9
+        this.tableHeight = height
+      })
     }
+  },
+  mounted () {
+    this.updateTableHeight()
+    window.addEventListener('resize', this.updateTableHeight)
+  },
+  beforeDestroy () {
+    window.removeEventListener('resize', this.updateTableHeight)
   }
+
 }
 </script>
 
@@ -246,6 +372,10 @@ export default {
     flex: 0 1 auto; /* 让 selectbody 的高度根据内容自适应 */
 }
 
+.table {
+    margin-top: 20px;
+}
+
 .tablebody {
     padding: 1rem;
     margin-top: 1rem;
@@ -253,12 +383,20 @@ export default {
     background-color: white;
     flex: 1 1 auto; /* 让 tablebody 占据剩余的所有空间 */
     overflow: auto; /* 当内容超出时，允许滚动 */
+    display: flex;
+    flex-direction: column;
 }
 
 .block {
     padding: 1rem;
     width: 95%;
     background-color: white;
+    margin-bottom: 100px;
+}
+
+.table.el-table__body {
+    font-size: 16px;
+
 }
 
 .main_body {

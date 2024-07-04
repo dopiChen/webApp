@@ -93,10 +93,6 @@
                         <span class="tag1">|</span>
                         <span class="subtitle1">历史记录</span><br>
                     </div>
-                    <el-button-group class="sortbtn">
-                        <el-button type="primary" icon="el-icon-arrow-left">正序</el-button>
-                        <el-button type="primary">倒序<i class="el-icon-arrow-right el-icon--right"></i></el-button>
-                    </el-button-group>
                 </div>
                 <div class="indexbody">
                     <div style="height: 1000px;">
@@ -183,12 +179,14 @@
             </div>
         </div>
         <div class="footer">
-            <el-button type="primary" class="submitbtn">提交报名</el-button>
+            <el-button type="primary" class="submitbtn" @click="handlesubmit">提交报名</el-button>
         </div>
     </div>
 </template>
 
 <script>
+import {Message} from 'element-ui'
+
 export default {
   name: 'Third4',
   data () {
@@ -206,7 +204,7 @@ export default {
         dialogImageUrl: '',
         dialogVisible: false
       },
-      activeStep: 2, // 当前活跃的步骤，可以根据需要动态设置
+      activeStep: 1, // 当前活跃的步骤，可以根据需要动态设置
       // 教师信息
       teacher_data1: {
         name: '张三',
@@ -245,8 +243,32 @@ export default {
     }
   },
   methods: {
-    onSubmit () {
-      console.log('submit!')
+    handlesubmit () {
+      // 如果所有必填字段都填写，则继续提交表单
+      if (!this.form.id || !this.form.qualification || !this.form.tel || !this.form.spare_tel || !this.form.date || !this.form.sex || !this.form.campus || !this.form.promise) {
+        Message({
+          message: '信息未完整无法提交！',
+          type: 'warning'
+        })
+      } else {
+        this.$confirm('确认信息无误提交报名！', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '提交成功!'
+          }
+            // 在这里处理信息提交后的处理逻辑
+          )
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消报名'
+          })
+        })
+      }
     },
     handleRemove (file, fileList) {
       console.log(file, fileList)
@@ -271,8 +293,12 @@ export default {
       } else {
         return '待审批'
       }
+    },
+    returnclick () {
+      this.$router.push({
+        path: '/main/third/third1'
+      })
     }
-
   }
 }
 </script>

@@ -38,10 +38,11 @@ export default {
           title: '监考记录'
         },
         {
-          path: '/main/third/third_submit',
+          path: '/main/third/third_submitrecord',
           icon: 'suncaper-menu-unfold',
-          title: '报名提交'
+          title: '监考记录'
         }
+
       ]
     },
     2: {

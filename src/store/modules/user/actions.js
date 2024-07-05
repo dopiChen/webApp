@@ -21,5 +21,10 @@ export default {
       commit(types.SET_USER_TYPE, res.data.userType)
     }
     return res
+  },
+  // 获取用户类型
+  async getUserType ({ dispatch }) {
+    const res = await dispatch('fetchUserInfo')
+    return res.data.userType
   }
 }

@@ -40,5 +40,14 @@ export default {
   components: {
     'suncaper-layout': Layout
   }
+  // beforeRouteEnter(to, from, next) {
+  //   switch (this.userType) {
+  //     case 1:
+  //       next({
+  //         name:
+  //       })
+  //       break;
+  //   }
+  // }
 }
 </script>

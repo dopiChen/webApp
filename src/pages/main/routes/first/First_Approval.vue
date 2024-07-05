@@ -45,7 +45,7 @@
                                         <el-form-item label="选择方式">
                                             <el-radio-group v-model="form.way">
                                                 <el-radio label="自走流程"></el-radio>
-                                                <el-radio label="帮组报名"></el-radio>
+                                                <el-radio label="帮助报名"></el-radio>
                                             </el-radio-group>
                                         </el-form-item>
                                         <el-form-item label="查询">
@@ -717,6 +717,14 @@ export default {
       const index = this.rejectdata.indexOf(row)
       if (index > -1) {
         this.rejectdata.splice(index, 1)
+      }
+    },
+    oncomfirm () {
+      if (this.form.way === '帮助报名') {
+        // 如果需要携带参数可以在这里携带
+        this.$router.push({ path: '/main1/first/first_enroll' })
+      } else {
+        // 向老师端发送邀请短信
       }
     }
   }

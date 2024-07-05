@@ -1,3 +1,4 @@
+
 <template>
     <div class="center">
         <h1>Sign in/ Sign up</h1>
@@ -17,7 +18,6 @@
                     <button class="inupbutton">Sign up</button>
                     <button>NIHAO</button>
                 </div>
-
             </div>
             <div :class="overlaytitle">
                 <div class="overlaytitle-Signin" v-if="disfiex == 0">
@@ -34,11 +34,10 @@
                 </div>
             </div>
         </div>
-
     </div>
 </template>
-
 <script>
+import { mapActions, mapState } from 'vuex'
 export default {
   data () {
     return {
@@ -47,30 +46,33 @@ export default {
       disfiex: 0
     }
   },
+  // 对角色类型进行判断后跳转至各自首页
+  computed: {
+    ...mapState('user', {
+      userType: state => state.type // 确保引用正确
+    })
+  },
   methods: {
-    Signin2 () {
-      this.overlaylong = 'overlaylongleft'
-      this.overlaytitle = 'overlaytitleright'
+    ...mapActions('user', ['fetchUserInfo']),
+    // 其余登录注册按钮在此书写
+    async Signin1 () {
       setTimeout(() => {
-        this.disfiex = 1
+        this.disfiex = 0
       }, 200)
-    },
-    Signup2 () {
-      this.overlaylong = 'overlaylongright'
-      this.overlaytitle = 'overlaytitleleft'
 
-      setTimeout(() => {
-        this.disfiex = 0
-      }, 200)
-      this.$router.push('/main')
+      await this.fetchUserInfo()
+      this.redirectBasedOnUserType()
     },
-    Signin1 () {
-      this.overlaylong = 'overlaylongleft'
-      this.overlaytitle = 'overlaytitleright'
-      setTimeout(() => {
-        this.disfiex = 0
-      }, 200)
-      this.$router.push('/main')
+    redirectBasedOnUserType () {
+      if (this.userType === 1 || this.userType === 4 || this.userType === 5) {
+        this.$router.push('/main1/first/first_approval')
+      } else if (this.userType === 2) {
+        this.$router.push('/main2/second/second1')
+      } else if (this.userType === 3) {
+        this.$router.push('/main3/third/third1')
+      } else {
+        this.$router.push('/main')
+      }
     }
   }
 }

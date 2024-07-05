@@ -78,7 +78,7 @@
                     <el-table-column
                         prop="jksj"
                         label="监考时间"
-                        show-overflow-tooltip>
+                        width="150">
                     </el-table-column>
                 </el-table>
                     <div class="pagination-container">

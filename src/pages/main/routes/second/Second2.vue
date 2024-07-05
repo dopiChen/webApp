@@ -16,7 +16,7 @@
                                 <el-input placeholder="请输入批次名称" v-model="ruleForm.name"></el-input>
                             </el-form-item>
                             <el-form-item label="关联年份" prop="region">
-                                <el-select v-model="ruleForm.region" placeholder="请选择关联年份" style="width:526px">
+                                <el-select v-model="ruleForm.year" placeholder="请选择关联年份" style="width:526px" required>
                                     <el-option label="2022"></el-option>
                                     <el-option label="2023"></el-option>
                                     <el-option label="2024"></el-option>
@@ -25,19 +25,19 @@
                             </el-form-item>
                             <el-form-item label="批次开始时间" required>
                                     <el-form-item prop="date1">
-                                        <el-input v-model="ruleForm.name" placeholder="请输入批次开始时间"></el-input>
+                                        <el-input v-model="ruleForm.bmkssj" placeholder="请输入批次开始时间"></el-input>
                                     </el-form-item>
                             </el-form-item>
                             <el-form-item label="批次结束时间" required>
                                 <el-form-item prop="date2">
-                                    <el-input v-model="ruleForm.name" placeholder="请输入批次结束时间"></el-input>
+                                    <el-input v-model="ruleForm.bmjssj" placeholder="请输入批次结束时间"></el-input>
                                 </el-form-item>
                             </el-form-item>
                                 <el-form-item label="监考说明">
                                    <el-input
                                     type="textarea"
                                     placeholder="请输入监考说明"
-                                    v-model="textarea"
+                                    v-model="jksm"
                                     maxlength="200"
                                     show-word-limit>
                                    </el-input>
@@ -55,16 +55,16 @@
                                 </el-form-item>
                             </el-form-item>
                             <el-form-item label="考场名称" prop="kcmc">
-                                <el-input placeholder="请输入考场名称" v-model="ruleForm.name"></el-input>
+                                <el-input placeholder="请输入考场名称" v-model="ruleForm.kcmc"></el-input>
                             </el-form-item>
                             <el-form-item label="校区" prop="xq">
-                                <el-input placeholder="请输入校区" v-model="ruleForm.name"></el-input>
+                                <el-input placeholder="请输入校区" v-model="ruleForm.xq"></el-input>
                             </el-form-item>
                             <el-form-item label="校内地址" prop="xndz">
-                                <el-input placeholder="请输入校内地址" v-model="ruleForm.name"></el-input>
+                                <el-input placeholder="请输入校内地址" v-model="ruleForm.xndz"></el-input>
                             </el-form-item>
                             <el-form-item label="监考时间" prop="jksj">
-                                <el-input placeholder="监考时间" v-model="ruleForm.name"></el-input>
+                                <el-input placeholder="监考时间" v-model="ruleForm.jksj"></el-input>
                             </el-form-item>
                         </el-form>
                     </div>
@@ -175,36 +175,29 @@ export default {
       dialogVisible: false,
       ruleForm: {
         name: '',
+        year: '',
         region: '',
-        date1: '',
-        date2: '',
+        bmkssj: '',
+        bmjssj: '',
         delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        jksm: '',
+        kcmc: '',
+        xq: '',
+        xndz: '',
+        jksj: ''
       },
       rules: {
         name: [
-          { required: true, message: '请输入活动名称', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { required: true, message: '请输入批次名称', trigger: 'blur' }
         ],
-        region: [
-          { required: true, message: '请选择活动区域', trigger: 'change' }
+        year: [
+          { required: true, message: '请选择关联年份', trigger: 'change' }
         ],
-        date1: [
-          { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
+        bmkssj: [
+          { required: true, message: '请选择批次开始时间', trigger: 'change' }
         ],
-        date2: [
-          { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
-        ],
-        type: [
-          { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
-        ],
-        resource: [
-          { required: true, message: '请选择活动资源', trigger: 'change' }
-        ],
-        desc: [
-          { required: true, message: '请填写活动形式', trigger: 'blur' }
+        bmjssj: [
+          { required: true, message: '请选择批次结束时间', trigger: 'change' }
         ]
       },
       tableData: [
@@ -564,12 +557,11 @@ export default {
         .catch(_ => {})
     },
     submitForm (formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-          alert('submit!')
-        } else {
-          console.log('error submit!!')
-          return false
+          this.tableData.push({ ...this.ruleForm })
+          this.dialogVisible = false
+          this.$refs.ruleForm.resetFields()
         }
       })
     },

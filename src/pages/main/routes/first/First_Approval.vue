@@ -109,7 +109,7 @@
                                 </el-table-column>
                                 <el-table-column
                                         label="上传材料">
-                                    <el-button type="text">预览</el-button>
+                                    <el-button type="text" @click="dialogFormVisible=true">预览</el-button>
                                 </el-table-column>
                                 <el-table-column label="操作">
                                     <!-- 传递 row 参数 -->
@@ -169,6 +169,13 @@
                                         <el-button @click="isApprovalDialogVisible = false" style="font-size: 16px;">取消</el-button>
                                     </el-form-item>
                                 </el-form>
+                            </el-dialog>
+                            <el-dialog :visible.sync="dialogFormVisible">
+                                <div style="width: 630px;height: 829px">
+                                    <div class="utopbar">
+                                        <span class="utitle">武汉理工大学研究生招生考试监考人员报名表</span>
+                                    </div>
+                                </div>
                             </el-dialog>
                         </div>
                     </el-tab-pane>
@@ -351,6 +358,8 @@ export default {
       activeName: 'second',
       currentPage: 1,
       pageSize: 15,
+      dialogTableVisible: false,
+      dialogFormVisible: false,
       options: [{
         value: '选项1',
         label: '批次1'
@@ -796,5 +805,21 @@ export default {
 .xuanze {
     position: absolute;
     right: 420px;
+}
+.utopbar{
+    text-align: center;
+    position: absolute;
+    top:36px;
+    left: 16px;
+    right: 16px;
+    height: 56px;
+    background: #F2F2F2;
+    border: 1px solid #ABABAB;
+}
+.utitle{
+    font-weight: 500;
+    font-size: 24px;
+    color: #000000e6;
+    line-height: 24px;
 }
 </style>

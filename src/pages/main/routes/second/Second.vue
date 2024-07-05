@@ -26,7 +26,7 @@
                             ref="multipleTable"
                             :data="paginatedData"
                             tooltip-effect="dark"
-                            style="width: 100%"
+                            style="width: 100%;height: 100%"
                             @selection-change="handleSelectionChange">
                             <el-table-column
                                 type="selection"

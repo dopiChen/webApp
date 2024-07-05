@@ -77,13 +77,12 @@ export default {
   }
 }
 </script>
-
 <style scoped>
 .center {
-    width: 1920px;
-    height: 1080px;
+    width: 100vw;
+    height: 100vh;
     background-image: url('https://gd-hbimg.huaban.com/9165dc3c0f8279ae5402d1f47212847bff68b49f3cb547-QEli8R');
-    background-size: 100% 100%;
+    background-size: cover;
     background-repeat: no-repeat;
     display: flex;
     align-items: center;

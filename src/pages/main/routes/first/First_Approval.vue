@@ -21,10 +21,10 @@
                                     placeholder="请输入报名人姓名/工号查询"
                                     v-model="input"
                                     class="shuru"
-                                    style="font-size: 25px">
+                                    style="font-size: 18px">
                             </el-input>
-                            <el-button type="primary" class="shu2" style="font-size: 22px">查询</el-button>
-                            <el-button type="primary" plain class="shu1" style="font-size: 22px">重置</el-button>
+                            <el-button type="primary" class="shu2" style="font-size: 20px;margin-left: 5px" @click="searchData1">查询</el-button>
+                            <el-button type="primary" plain class="shu1" style="font-size: 20px" @click="resetData1">重置</el-button>
                             <el-dialog :visible.sync="isApprovalDialogVisible2" title="邀约" width="800px" height="1000px" center style="font-weight: bolder">
                                 <hr />
                                 <div class="info">
@@ -192,13 +192,13 @@
                                 </el-option>
                             </el-select>
                             <el-input
-                                    placeholder="请输入报名人姓名/工号查询"
-                                    v-model="input"
-                                    class="shuru"
-                                    style="font-size: 25px">
+                                placeholder="请输入报名人姓名/工号查询"
+                                v-model="input"
+                                class="shuru"
+                                style="font-size: 18px">
                             </el-input>
-                            <el-button type="primary" class="shu2" style="font-size: 22px">查询</el-button>
-                            <el-button type="primary" plain class="shu1" style="font-size: 22px">重置</el-button>
+                            <el-button type="primary" class="shu2" style="font-size: 20px;margin-left: 5px" @click="searchData2">查询</el-button>
+                            <el-button type="primary" plain class="shu1" style="font-size: 20px" @click="resetData2">重置</el-button>
                         </div>
                         <div class="table-container">
                             <el-table
@@ -275,13 +275,13 @@
                                 </el-option>
                             </el-select>
                             <el-input
-                                    placeholder="请输入报名人姓名/工号查询"
-                                    v-model="input"
-                                    class="shuru"
-                                    style="font-size: 25px">
+                                placeholder="请输入报名人姓名/工号查询"
+                                v-model="input"
+                                class="shuru"
+                                style="font-size: 18px">
                             </el-input>
-                            <el-button type="primary" class="shu2" style="font-size: 22px">查询</el-button>
-                            <el-button type="primary" plain class="shu1" style="font-size: 22px">重置</el-button>
+                            <el-button type="primary" class="shu2" style="font-size: 20px;margin-left: 5px" @click="searchData3">查询</el-button>
+                            <el-button type="primary" plain class="shu1" style="font-size: 20px" @click="resetData3">重置</el-button>
                         </div>
                         <div class="table-container">
                             <el-table
@@ -385,44 +385,74 @@ export default {
         yxjkxq: '南湖校区'
       },
       {
-        name: '王家栋',
+        name: '赖家栋',
         num: '34099001',
         jkpc: '2023年A楼2023监考报名',
         yxjkxq: '南湖校区'
       },
       {
-        name: '王家栋',
-        num: '34099001',
+        name: '薛志恒',
+        num: '34099002',
         jkpc: '2023年A楼2023监考报名',
         yxjkxq: '南湖校区'
       },
       {
-        name: '王家栋',
-        num: '34099001',
+        name: '好家栋',
+        num: '34099003',
         jkpc: '2023年A楼2023监考报名',
         yxjkxq: '南湖校区'
       },
       {
-        name: '王家栋',
-        num: '34099001',
+        name: '浩家栋',
+        num: '34099004',
         jkpc: '2023年A楼2023监考报名',
         yxjkxq: '南湖校区'
       },
       {
-        name: '王家栋',
-        num: '34099001',
+        name: '去家栋',
+        num: '34099005',
         jkpc: '2023年A楼2023监考报名',
         yxjkxq: '南湖校区'
       },
       {
-        name: '王家栋',
-        num: '34099001',
+        name: '擦家栋',
+        num: '34099006',
         jkpc: '2023年A楼2023监考报名',
         yxjkxq: '服从调剂'
       },
       {
-        name: '王家栋',
-        num: '34099001',
+        name: '哲家栋',
+        num: '34099006',
+        jkpc: '2023年A楼2023监考报名',
+        yxjkxq: '余家头校区'
+      },
+      {
+        name: '刘家栋',
+        num: '34099007',
+        jkpc: '2023年A楼2023监考报名',
+        yxjkxq: '余家头校区'
+      },
+      {
+        name: '六家栋',
+        num: '34099008',
+        jkpc: '2023年A楼2023监考报名',
+        yxjkxq: '余家头校区'
+      },
+      {
+        name: '陈家栋',
+        num: '34099009',
+        jkpc: '2023年A楼2023监考报名',
+        yxjkxq: '余家头校区'
+      },
+      {
+        name: '李家栋',
+        num: '34099010',
+        jkpc: '2023年A楼2023监考报名',
+        yxjkxq: '余家头校区'
+      },
+      {
+        name: '王家',
+        num: '34099011',
         jkpc: '2023年A楼2023监考报名',
         yxjkxq: '余家头校区'
       },
@@ -431,120 +461,6 @@ export default {
         num: '34099001',
         jkpc: '2023年A楼2023监考报名',
         yxjkxq: '余家头校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '南湖校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '南湖校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '南湖校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '南湖校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '南湖校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '服从调剂'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '南湖校区'
       },
       {
         name: '王家栋',
@@ -620,6 +536,54 @@ export default {
       },
       {
         name: '王家栋',
+        num: '34099002',
+        jkpc: '2023年A楼2023监考报名',
+        yxjkxq: '余家头校区'
+      },
+      {
+        name: '王家栋',
+        num: '34099002',
+        jkpc: '2023年A楼2023监考报名',
+        yxjkxq: '南湖校区'
+      },
+      {
+        name: '王家栋',
+        num: '34099002',
+        jkpc: '2023年A楼2023监考报名',
+        yxjkxq: '南湖校区'
+      },
+      {
+        name: '王家栋',
+        num: '34099002',
+        jkpc: '2023年A楼2023监考报名',
+        yxjkxq: '南湖校区'
+      },
+      {
+        name: '王家栋',
+        num: '34099001',
+        jkpc: '2023年A楼2023监考报名',
+        yxjkxq: '南湖校区'
+      },
+      {
+        name: '王家栋',
+        num: '34099001',
+        jkpc: '2023年A楼2023监考报名',
+        yxjkxq: '南湖校区'
+      },
+      {
+        name: '王家栋',
+        num: '34099001',
+        jkpc: '2023年A楼2023监考报名',
+        yxjkxq: '南湖校区'
+      },
+      {
+        name: '王家栋',
+        num: '34099001',
+        jkpc: '2023年A楼2023监考报名',
+        yxjkxq: '服从调剂'
+      },
+      {
+        name: '王家栋',
         num: '34099001',
         jkpc: '2023年A楼2023监考报名',
         yxjkxq: '余家头校区'
@@ -627,6 +591,42 @@ export default {
       {
         name: '王家栋',
         num: '34099001',
+        jkpc: '2023年A楼2023监考报名',
+        yxjkxq: '余家头校区'
+      },
+      {
+        name: '王家栋',
+        num: '34099001',
+        jkpc: '2023年A楼2023监考报名',
+        yxjkxq: '余家头校区'
+      },
+      {
+        name: '王家栋',
+        num: '34099001',
+        jkpc: '2023年A楼2023监考报名',
+        yxjkxq: '余家头校区'
+      },
+      {
+        name: '王家栋',
+        num: '34099001',
+        jkpc: '2023年A楼2023监考报名',
+        yxjkxq: '余家头校区'
+      },
+      {
+        name: '王家栋',
+        num: '34099001',
+        jkpc: '2023年A楼2023监考报名',
+        yxjkxq: '余家头校区'
+      },
+      {
+        name: '王家栋',
+        num: '34099001',
+        jkpc: '2023年A楼2023监考报名',
+        yxjkxq: '余家头校区'
+      },
+      {
+        name: '王家栋',
+        num: '44099001',
         jkpc: '2023年A楼2023监考报名',
         yxjkxq: '余家头校区'
       }],
@@ -645,7 +645,10 @@ export default {
         way: '',
         input: ''
       },
-      currentRow: null
+      currentRow: null,
+      fliterData1: [],
+      fliterData2: [],
+      fliterData3: []
     }
   },
   computed: {
@@ -653,18 +656,23 @@ export default {
     paginatedData1 () {
       const start = (this.currentPage - 1) * this.pageSize
       const end = this.currentPage * this.pageSize
-      return this.WaiteData.slice(start, end)
+      return this.fliterData1.slice(start, end)
     },
     paginatedData2 () {
       const start = (this.currentPage - 1) * this.pageSize
       const end = this.currentPage * this.pageSize
-      return this.acceptData.slice(start, end)
+      return this.fliterData2.slice(start, end)
     },
     paginatedData3 () {
       const start = (this.currentPage - 1) * this.pageSize
       const end = this.currentPage * this.pageSize
-      return this.rejectdata.slice(start, end)
+      return this.fliterData3.slice(start, end)
     }
+  },
+  mounted () {
+    this.fliterData1 = this.WaiteData
+    this.fliterData2 = this.acceptData
+    this.fliterData3 = this.rejectdata
   },
   methods: {
     handleClick (tab, event) {
@@ -726,6 +734,43 @@ export default {
       } else {
         // 向老师端发送邀请短信
       }
+    },
+    // 搜索函数
+    searchData1 () {
+      const searchQuery = this.input.toLowerCase()
+      console.info(searchQuery)
+      this.fliterData1 = this.WaiteData.filter(item => {
+        return item.name.toLowerCase().includes(searchQuery) ||
+                  item.num.includes(searchQuery)
+      })
+    },
+    resetData1 () {
+      this.input = ''
+      this.fliterData1 = this.WaiteData
+    },
+    searchData2 () {
+      const searchQuery = this.input.toLowerCase()
+      console.info(searchQuery)
+      this.fliterData2 = this.acceptData.filter(item => {
+        return item.name.toLowerCase().includes(searchQuery) ||
+                  item.num.includes(searchQuery)
+      })
+    },
+    resetData2 () {
+      this.input = ''
+      this.fliterData2 = this.acceptData
+    },
+    searchData3 () {
+      const searchQuery = this.input.toLowerCase()
+      console.info(searchQuery)
+      this.fliterData3 = this.rejectdata.filter(item => {
+        return item.name.toLowerCase().includes(searchQuery) ||
+                  item.num.includes(searchQuery)
+      })
+    },
+    resetData3 () {
+      this.input = ''
+      this.fliterData3 = this.rejectdata
     }
   }
 }

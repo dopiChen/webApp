@@ -11,10 +11,10 @@
                     <el-input
                             placeholder="输入老师工号"
                             prefix-icon="el-icon-search"
-                            v-model="input2">
+                            v-model="input">
                     </el-input>
-                    <el-button type="primary" style="margin-left: 10px">搜索</el-button>
-                    <el-button type="info">重置</el-button>
+                    <el-button type="primary" style="margin-left: 10px" @click="searchData1">搜索</el-button>
+                    <el-button type="info" @click="resetData1">重置</el-button>
                 </div>
             </div>
             <div class="tablebody">
@@ -105,6 +105,20 @@
                     </el-form-item>
                 </el-form>
             </el-dialog>
+            <!-- 预览对话框 -->
+            <el-dialog title="导出数据预览" :visible.sync="isExportDialogVisible" width="50%">
+                <el-table :data="selectedData" style="width: 100%;">
+                    <el-table-column prop="index" label="序号" width="100"></el-table-column>
+                    <el-table-column prop="name" label="姓名" width="150"></el-table-column>
+                    <el-table-column prop="sex" label="性别" width="100"></el-table-column>
+                    <el-table-column prop="workid" label="工号" width="200"></el-table-column>
+                    <!-- 添加其他你需要预览的列 -->
+                </el-table>
+                <span slot="footer" class="dialog-footer">
+        <el-button @click="isExportDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="confirmExportExcel">确认导出</el-button>
+      </span>
+            </el-dialog>
             <div class="block">
                 <el-pagination
                         background
@@ -121,13 +135,13 @@
 </template>
 
 <script>
+import * as XLSX from 'xlsx'
 export default {
   name: 'third',
   data () {
     return {
       welcome: '欢迎第三用户！',
-      input1: '',
-      input2: '',
+      input: '',
       checked: true,
       teams: [{
         index: '00',
@@ -274,7 +288,13 @@ export default {
       removeForm: {
         name: '',
         workid: ''
-      }
+      },
+      // 导出数据
+      isExportDialogVisible: false,
+      selectedData: [],
+      // 搜索数据
+      // 过滤数据
+      fliterData1: []
 
     }
   },
@@ -286,13 +306,15 @@ export default {
     currentTableData () {
       const start = (this.currentPage - 1) * this.pageSize
       const end = start + this.pageSize
-      return this.teams.slice(start, end)
+      return this.fliterData1.slice(start, end)
     }
   },
   methods: {
     // 调整页面 引用时不用改动
     handleSelelctionChange (val) {
       this.selectedIds = val.map(item => item.id)
+      // 处理表格选择变化
+      this.selectedData = val
     },
     handleCurrentChange (page) {
       this.currentPage = page
@@ -317,10 +339,40 @@ export default {
         this.teams.splice(index, 1)
       }
       this.isRemoveDialogVisible = false
+    },
+    // 导出数据的方法
+    outdata () {
+      if (this.selectedData.length > 0) {
+        this.isExportDialogVisible = true
+      } else {
+        this.$message.warning('请选择要导出的数据')
+      }
+    },
+    // 确认导出的方法
+    confirmExportExcel () {
+      const ws = XLSX.utils.json_to_sheet(this.selectedData)
+      const wb = XLSX.utils.book_new()
+      XLSX.utils.book_append_sheet(wb, ws, 'Sheet1')
+      XLSX.writeFile(wb, 'export.xlsx')
+      this.isExportDialogVisible = false
+    },
+    // 搜索函数
+    searchData1 () {
+      const searchQuery = this.input.toLowerCase()
+      console.info(searchQuery)
+      this.fliterData1 = this.teams.filter(item => {
+        return item.name.toLowerCase().includes(searchQuery) ||
+                  item.workid.includes(searchQuery)
+      })
+    },
+    resetData1 () {
+      this.input = ''
+      this.fliterData1 = this.teams
     }
   },
   mounted () {
     this.updateTableHeight()
+    this.fliterData1 = this.teams
     window.addEventListener('resize', this.updateTableHeight)
   },
   beforeDestroy () {

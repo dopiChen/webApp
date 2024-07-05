@@ -12,8 +12,8 @@
                     <span class="subtitle1">武汉理工大学研究生招生考试监考人员报名表</span><br>
                 </div>
                 <div class="table">
-                    <el-form ref="form" :model="form" label-width="80px" label-position="left" class="custom-form">
-                        <el-form-item label="姓名" :style="{ paddingLeft: '10px' }" required>
+                    <el-form ref="form" :model="form" label-width="80px" label-position="left" class="custom-form" font-size="30px">
+                        <el-form-item label="姓名" :style="{ paddingLeft: '10px' }"  required>
                             <el-input v-model="form.name" style="width: 400px; margin-left: 100px;"></el-input>
                             <span v-if="!form.name" class="required-star">*</span>
                         </el-form-item>
@@ -178,8 +178,28 @@
 
             </div>
         </div>
-        <div class="footer">
+<!--        // 正在提交报名-->
+        <div class="footer" v-if="issubmitVisible">
             <el-button type="primary" class="submitbtn" @click="handlesubmit">提交报名</el-button>
+        </div>
+<!--        // 提交成功-->
+        <div class="footer" v-if="issuccessVisible">
+            <el-alert
+                title="报名成功！"
+                type="success"
+                description="请关注审批进度！"
+                show-icon
+            style="height: 80%;font-size: larger">
+            </el-alert>
+        </div>
+<!--        //报名失败-->
+        <div class="footer" v-if="isunsuccessVisible">
+            <el-alert
+                title="报名失败！"
+                type="error"
+                show-icon
+                style="height:300px;font-size: 20px;">
+            </el-alert>
         </div>
     </div>
 </template>
@@ -204,6 +224,9 @@ export default {
         dialogImageUrl: '',
         dialogVisible: false
       },
+      issubmitVisible: true,
+      issuccessVisible: false,
+      isunsuccessVisible: false,
       activeStep: 1, // 当前活跃的步骤，可以根据需要动态设置
       // 教师信息
       teacher_data1: {
@@ -256,12 +279,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '提交成功!'
-          }
-            // 在这里处理信息提交后的处理逻辑
-          )
+          this.handlefinalsubmit()
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -269,6 +287,15 @@ export default {
           })
         })
       }
+    },
+    handlefinalsubmit () {
+      this.$message({
+        type: 'success',
+        message: '提交成功!'
+      })
+      this.issubmitVisible = false
+      this.issuccessVisible = true
+      // 报名失败在这里添加逻辑让其显示报名失败
     },
     handleRemove (file, fileList) {
       console.log(file, fileList)

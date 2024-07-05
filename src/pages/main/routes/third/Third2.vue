@@ -7,10 +7,10 @@
                     <el-input
                             placeholder="输入监考名称关键词"
                             prefix-icon="el-icon-search"
-                            v-model="input2">
+                            v-model="input">
                     </el-input>
-                    <el-button type="primary">搜索</el-button>
-                    <el-button type="info">重置</el-button>
+                    <el-button type="primary" @click="searchData1">搜索</el-button>
+                    <el-button type="info" @click="resetData1">重置</el-button>
                 </div>
             </div>
             <div class="tablebody">
@@ -85,8 +85,7 @@ export default {
   data () {
     return {
       welcome: '欢迎第三用户！',
-      input1: '',
-      input2: '',
+      input: '',
       checked: true,
       teams: [{
         id: 'A',
@@ -233,7 +232,9 @@ export default {
       ],
       expandedTeam: null, // 存储当前展开的队伍信息
       pageSize: 15, // 每页显示行数
-      currentPage: 1 // 当前页码
+      currentPage: 1, // 当前页码
+      // 搜索函数
+      fliterData1: []
     }
   },
   // 计算换页显示
@@ -244,7 +245,7 @@ export default {
     currentTableData () {
       const start = (this.currentPage - 1) * this.pageSize
       const end = start + this.pageSize
-      return this.teams.slice(start, end)
+      return this.fliterData1.slice(start, end)
     }
   },
   methods: {
@@ -272,10 +273,23 @@ export default {
       } else {
         row.state = '已确认'
       }
+    },
+    // 搜索函数
+    searchData1 () {
+      const searchQuery = this.input.toLowerCase()
+      console.info(searchQuery)
+      this.fliterData1 = this.teams.filter(item => {
+        return item.round.toLowerCase().includes(searchQuery)
+      })
+    },
+    resetData1 () {
+      this.input = ''
+      this.fliterData1 = this.teams
     }
   },
   mounted () {
     this.updateTableHeight()
+    this.fliterData1 = this.teams
     window.addEventListener('resize', this.updateTableHeight)
   },
   beforeDestroy () {

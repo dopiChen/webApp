@@ -7,7 +7,7 @@
                     <el-tab-pane label="待我审批" name="first" style="font-size: 25px">
                         <div class="select">
                             <el-button type="primary" icon="el-icon-user-solid" style="font-size: 22px" @click="openApprovalDialog2">邀约</el-button>
-                            <el-button type="primary" plain class="shu" style="font-size: 22px">数据导出</el-button>
+                            <el-button type="primary" plain class="shu" style="font-size: 22px" @click="outdata">数据导出</el-button>
                             <el-select v-model="value" placeholder="请选择监考批次" class="xuanze"
                                        style="font-size: 25px">
                                 <el-option
@@ -76,7 +76,7 @@
                                     :data="paginatedData1"
                                     tooltip-effect="dark"
                                     style="width: 100%;overflow: auto; flex: 0 1 auto;font-size: 24px;margin-top: 10px"
-                                    @selection-change="handleSelectionChange">
+                                    @selection-change="handleSelelctionChange">
                                 <el-table-column
                                         type="selection"
                                         width="25px"
@@ -181,7 +181,7 @@
                     </el-tab-pane>
                     <el-tab-pane label="同意报名" name="second">
                         <div class="select">
-                            <el-button type="primary" plain class="shu" style="font-size: 22px">数据导出</el-button>
+                            <el-button type="primary" plain class="shu" style="font-size: 22px" @click="outdata">数据导出</el-button>
                             <el-select v-model="value" placeholder="请选择监考批次" class="xuanze"
                                        style="font-size: 25px">
                                 <el-option
@@ -206,7 +206,7 @@
                                     :data="paginatedData2"
                                     tooltip-effect="dark"
                                     style="width: 100%;overflow: auto; flex: 0 1 auto;font-size: 24px;margin-top: 10px"
-                                    @selection-change="handleSelectionChange">
+                                    @selection-change="handleSelelctionChange">
                                 <el-table-column
                                         type="selection"
                                         width="25px"
@@ -264,7 +264,7 @@
                     </el-tab-pane>
                     <el-tab-pane label="不同意报名" name="third">
                         <div class="select">
-                            <el-button type="primary" plain class="shu" style="font-size: 22px">数据导出</el-button>
+                            <el-button type="primary" plain class="shu" style="font-size: 22px" @click="outdata">数据导出</el-button>
                             <el-select v-model="value" placeholder="请选择监考批次" class="xuanze"
                                        style="font-size: 25px">
                                 <el-option
@@ -289,7 +289,7 @@
                                     :data="paginatedData3"
                                     tooltip-effect="dark"
                                     style="width: 100%;overflow: auto; flex: 0 1 auto;font-size: 24px;margin-top: 10px"
-                                    @selection-change="handleSelectionChange">
+                                    @selection-change="handleSelelctionChange">
                                 <el-table-column
                                         type="selection"
                                         width="25px"
@@ -346,12 +346,26 @@
                         </div>
                     </el-tab-pane>
                 </el-tabs>
+                <!-- 预览对话框 -->
+                <el-dialog title="导出数据预览" :visible.sync="isExportDialogVisible" width="50%">
+                    <el-table :data="selectedData" style="width: 100%;">
+                        <el-table-column prop="name" label="姓名" width="200"></el-table-column>
+                        <el-table-column prop="num" label="姓名" width="200"></el-table-column>
+                        <el-table-column prop="yxjkxq" label="意向校区" width="200"></el-table-column>
+                        <!-- 添加其他你需要预览的列 -->
+                    </el-table>
+                    <span slot="footer" class="dialog-footer">
+        <el-button @click="isExportDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="confirmExportExcel">确认导出</el-button>
+      </span>
+                </el-dialog>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import * as XLSX from 'xlsx'
 export default {
   data () {
     return {
@@ -646,9 +660,13 @@ export default {
         input: ''
       },
       currentRow: null,
+      // 过滤数据
       fliterData1: [],
       fliterData2: [],
-      fliterData3: []
+      fliterData3: [],
+      // 导出数据
+      selectedData: [],
+      isExportDialogVisible: false
     }
   },
   computed: {
@@ -675,6 +693,12 @@ export default {
     this.fliterData3 = this.rejectdata
   },
   methods: {
+    // 调整页面 引用时不用改动
+    handleSelelctionChange (val) {
+      this.selectedIds = val.map(item => item.id)
+      // 处理表格选择变化
+      this.selectedData = val
+    },
     handleClick (tab, event) {
       console.log(tab, event)
     },
@@ -771,6 +795,22 @@ export default {
     resetData3 () {
       this.input = ''
       this.fliterData3 = this.rejectdata
+    },
+    // 导出数据的方法
+    outdata () {
+      if (this.selectedData.length > 0) {
+        this.isExportDialogVisible = true
+      } else {
+        this.$message.warning('请选择要导出的数据')
+      }
+    },
+    // 确认导出的方法
+    confirmExportExcel () {
+      const ws = XLSX.utils.json_to_sheet(this.selectedData)
+      const wb = XLSX.utils.book_new()
+      XLSX.utils.book_append_sheet(wb, ws, 'Sheet1')
+      XLSX.writeFile(wb, 'export.xlsx')
+      this.isExportDialogVisible = false
     }
   }
 }

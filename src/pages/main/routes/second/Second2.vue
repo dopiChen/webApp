@@ -17,10 +17,10 @@
                             </el-form-item>
                             <el-form-item label="关联年份" prop="region">
                                 <el-select v-model="ruleForm.year" placeholder="请选择关联年份" style="width:526px" required>
-                                    <el-option label="2022"></el-option>
-                                    <el-option label="2023"></el-option>
-                                    <el-option label="2024"></el-option>
-                                    <el-option label="2025"></el-option>
+                                    <el-option label="2022" value="2022"></el-option>
+                                    <el-option label="2023" value="2023"></el-option>
+                                    <el-option label="2024" value="2024"></el-option>
+                                    <el-option label="2025" value="2025"></el-option>
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="批次开始时间" required>

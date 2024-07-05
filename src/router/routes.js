@@ -96,6 +96,12 @@ const Secondpage = [
         name: 'second',
         component: () =>
           import(/* webpackChunkName: "First" */ '../pages/main/routes/second/Second6')
+      },
+      {
+        path: 'second/second_MemberList',
+        name: 'second',
+        component: () =>
+            import(/* webpackChunkName: "First" */ '../pages/main/routes/second/Second_MemberList.vue')
       }
     ]
   }

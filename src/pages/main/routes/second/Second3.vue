@@ -8,12 +8,12 @@
                 <el-button type="primary" icon="el-icon-document"  style="background-color:dodgerblue;">导入监考信息</el-button>
                 <el-button type="primary" plain class="shu" @click="dialogVisible = true">数据导出</el-button>
                 <el-input
-                        placeholder="请输入监考名称关键词查询"
+                        placeholder="请输入姓名/工号查询"
                         v-model="input"
                         class="shuru">
                 </el-input>
-                <el-button type="primary" class="shu2"  style="background-color:dodgerblue;">查询</el-button>
-                <el-button type="primary" plain class="shu1">重置</el-button>
+                <el-button type="primary" class="shu2"  style="background-color:dodgerblue;"  @click="searchData1">查询</el-button>
+                <el-button type="primary" plain class="shu1" @click="resetData1">重置</el-button>
                 <div class="table-container"><el-table
                         ref="multipleTable"
                         :data="paginatedData"
@@ -120,9 +120,10 @@ export default {
         resource: '',
         desc: ''
       },
+      fliterData1: [],
       tableData: [
         {
-          name: '王家栋',
+          name: '林家栋',
           xb: '男',
           gh: '34099001',
           szdw: '计算机智能学院',
@@ -134,7 +135,7 @@ export default {
           jksj: '12月25日全天-12月26日全天'
         },
         {
-          name: '王家栋',
+          name: '薛家栋',
           xb: '男',
           gh: '34099001',
           szdw: '艺术学院',
@@ -146,7 +147,7 @@ export default {
           jksj: '12月25日全天-12月26日全天'
         },
         {
-          name: '王家栋',
+          name: '张家栋',
           xb: '男',
           gh: '34099001',
           szdw: '人工智能学院',
@@ -284,8 +285,11 @@ export default {
     paginatedData () {
       const start = (this.currentPage - 1) * this.pageSize
       const end = this.currentPage * this.pageSize
-      return this.tableData.slice(start, end)
+      return this.fliterData1.slice(start, end)
     }
+  },
+  mounted () {
+    this.fliterData1 = this.tableData
   },
   methods: {
     handleClick (tab, event) {
@@ -333,6 +337,18 @@ export default {
       this.$router.push({
         path: '/main/second/second3'
       })
+    },
+    // 搜索函数
+    searchData1 () {
+      const searchQuery = this.input.toLowerCase()
+      console.info(searchQuery)
+      this.fliterData1 = this.tableData.filter(item => {
+        return item.name.toLowerCase().includes(searchQuery) || item.gh.toLowerCase().includes(searchQuery)
+      })
+    },
+    resetData1 () {
+      this.input = ''
+      this.fliterData1 = this.tableData
     }
   }
 }

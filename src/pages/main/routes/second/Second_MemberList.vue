@@ -57,8 +57,8 @@
                     v-model="input"
                     class="shuru">
                 </el-input>
-                <el-button type="primary" class="shu2"  style="background-color:dodgerblue;">查询</el-button>
-                <el-button type="primary" plain class="shu1">重置</el-button>
+                <el-button type="primary" class="shu2"  style="background-color:dodgerblue;" @click="searchData1">查询</el-button>
+                <el-button type="primary" plain class="shu1" @click="resetData1">重置</el-button>
                 <div class="table-container"><el-table
                     ref="multipleTable"
                     :data="paginatedData"
@@ -254,16 +254,17 @@ export default {
           { required: true, message: '请选择人员状态', trigger: 'change' }
         ]
       },
+      fliterData1: [],
       tableData: [
         {
-          name: '王家栋',
+          name: '张家栋',
           gh: '340990011',
           xtjs: '教职工',
           jsdm: 'role5',
           ryzt: '激活'
         },
         {
-          name: '王家栋',
+          name: '陈家栋',
           gh: '340990012',
           xtjs: '教职工',
           jsdm: 'role5',
@@ -311,8 +312,11 @@ export default {
     paginatedData () {
       const start = (this.currentPage - 1) * this.pageSize
       const end = this.currentPage * this.pageSize
-      return this.tableData.slice(start, end)
+      return this.fliterData1.slice(start, end)
     }
+  },
+  mounted () {
+    this.fliterData1 = this.tableData
   },
   methods: {
     handleClick (tab, event) {
@@ -425,6 +429,18 @@ export default {
         this.tableData[index].ryzt = this.newStatus
       }
       this.changeStatusDialogVisible = false
+    },
+    // 搜索函数
+    searchData1 () {
+      const searchQuery = this.input.toLowerCase()
+      console.info(searchQuery)
+      this.fliterData1 = this.tableData.filter(item => {
+        return item.name.toLowerCase().includes(searchQuery) || item.gh.toLowerCase().includes(searchQuery)
+      })
+    },
+    resetData1 () {
+      this.input = ''
+      this.fliterData1 = this.tableData
     }
   }
 }

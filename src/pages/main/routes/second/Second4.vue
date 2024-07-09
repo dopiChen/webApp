@@ -81,8 +81,8 @@
                         v-model="input"
                         class="shuru">
                 </el-input>
-                <el-button type="primary" class="shu2" style="background-color:dodgerblue;">查询</el-button>
-                <el-button type="primary" plain class="shu1">重置</el-button>
+                <el-button type="primary" class="shu2" style="background-color:dodgerblue;" @click="searchData1">查询</el-button>
+                <el-button type="primary" plain class="shu1" @click="resetData1">重置</el-button>
                 <div class="table-container"><el-table
                         ref="multipleTable"
                         :data="paginatedData"
@@ -204,16 +204,17 @@ export default {
           { required: true, message: '请填写活动形式', trigger: 'blur' }
         ]
       },
+      fliterData1: [],
       tableData: [
         {
-          name: '2023年A楼2023监考报名',
+          name: '2022年A楼2023监考报名',
           bmqk: '2/20',
           bmkssj: '2023-09-12-10:30:00',
           bmjssj: '2023-09-12-10:30:00',
           cjsj: '2023-09-12-10:30:00'
         },
         {
-          name: '2023年A楼2023监考报名',
+          name: '2022年A楼2023监考报名',
           bmqk: '2/20',
           bmkssj: '2023-09-12-10:30:00',
           bmjssj: '2023-09-12-10:30:00',
@@ -534,8 +535,11 @@ export default {
     paginatedData () {
       const start = (this.currentPage - 1) * this.pageSize
       const end = this.currentPage * this.pageSize
-      return this.tableData.slice(start, end)
+      return this.fliterData1.slice(start, end)
     }
+  },
+  mounted () {
+    this.fliterData1 = this.tableData
   },
   methods: {
     handleClick (tab, event) {
@@ -578,6 +582,18 @@ export default {
     },
     handlePreview (file) {
       console.log(file)
+    },
+    // 搜索函数
+    searchData1 () {
+      const searchQuery = this.input.toLowerCase()
+      console.info(searchQuery)
+      this.fliterData1 = this.tableData.filter(item => {
+        return item.name.toLowerCase().includes(searchQuery)
+      })
+    },
+    resetData1 () {
+      this.input = ''
+      this.fliterData1 = this.tableData
     }
   }
 }

@@ -32,12 +32,12 @@
                 </el-dialog>
                 <el-button type="primary" plain class="shu4">数据导出</el-button>
                 <el-input
-                    placeholder="请输入部门名称关键词查询"
+                    placeholder="请输入部门名称/代码查询"
                     v-model="input"
                     class="shuru">
                 </el-input>
-                <el-button type="primary" class="shu2" style="background-color:dodgerblue;">查询</el-button>
-                <el-button type="primary" plain class="shu1">重置</el-button>
+                <el-button type="primary" class="shu2" style="background-color:dodgerblue;" @click="searchData1">查询</el-button>
+                <el-button type="primary" plain class="shu1" @click="resetData1">重置</el-button>
                 <div class="table-container"><el-table
                     ref="multipleTable"
                     :data="paginatedData"
@@ -137,6 +137,7 @@ export default {
           { required: true, message: '请输入部门类型', trigger: 'change' }
         ]
       },
+      fliterData1: [],
       tableData: [
         {
           name: 'A部门',
@@ -175,8 +176,11 @@ export default {
     paginatedData () {
       const start = (this.currentPage - 1) * this.pageSize
       const end = this.currentPage * this.pageSize
-      return this.tableData.slice(start, end)
+      return this.fliterData1.slice(start, end)
     }
+  },
+  mounted () {
+    this.fliterData1 = this.tableData
   },
   methods: {
     handleClick (tab, event) {
@@ -223,6 +227,18 @@ export default {
       this.$router.push({
         path: '/main2/second/second_MemberList'
       })
+    },
+    // 搜索函数
+    searchData1 () {
+      const searchQuery = this.input.toLowerCase()
+      console.info(searchQuery)
+      this.fliterData1 = this.tableData.filter(item => {
+        return item.name.toLowerCase().includes(searchQuery) || item.bmdm.toLowerCase().includes(searchQuery)
+      })
+    },
+    resetData1 () {
+      this.input = ''
+      this.fliterData1 = this.tableData
     }
   }
 }

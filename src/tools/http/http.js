@@ -6,6 +6,10 @@ import NProgress from 'nprogress'
 axios.defaults.baseURL = process.env.BASE_URL
 axios.interceptors.request.use(config => {
   NProgress.start()
+  config.headers = {
+    'Authorization': 'Basic MTAwMDE6MTIzNDU=',
+    'Content-Type': 'application/json'
+  }
   return config
 }, error => {
   return Promise.reject(error)

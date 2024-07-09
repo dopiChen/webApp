@@ -1,4 +1,3 @@
-
 <template>
     <div class="center">
         <h1>Sign in/ Sign up</h1>
@@ -37,13 +36,14 @@
     </div>
 </template>
 <script>
-import { mapActions, mapState } from 'vuex'
+import {mapActions, mapState} from 'vuex'
 export default {
   data () {
     return {
       overlaylong: 'overlaylong',
       overlaytitle: 'overlaytitle',
-      disfiex: 0
+      disfiex: 0,
+      data: null
     }
   },
   // 对角色类型进行判断后跳转至各自首页

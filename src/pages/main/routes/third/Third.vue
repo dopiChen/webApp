@@ -29,34 +29,34 @@
                     </el-table-column>
                     <el-table-column
                             fixed
-                            prop="index"
+                            prop="batchId"
                             label="序号"
                             width="100">
                     </el-table-column>
                     <el-table-column
-                            prop="round"
+                            prop="batchName"
                             label="监考批次"
                             width="300">
                     </el-table-column>
                     <el-table-column
-                            prop="startdate"
+                            prop="startDate"
                             label="报名开始时间"
                             width="400">
                     </el-table-column>
                     <el-table-column
-                            prop="overdate"
+                            prop="endDate"
                             label="报名结束时间"
                             width="400">
                     </el-table-column>
                     <el-table-column
-                            prop="date"
+                            prop="year"
                             label="创建时间"
                             width="400">
                     </el-table-column>
                     <el-table-column
-                            prop="state"
                             label="批次状态"
                             width="400">
+                        <div>已结束</div>
                     </el-table-column>
                     <el-table-column
                             fixed="right"
@@ -85,6 +85,7 @@
 
 <script>
 import {Message} from 'element-ui'
+import {_getAllBatches} from '@/api/api'
 
 export default {
   name: 'third',
@@ -93,177 +94,7 @@ export default {
       welcome: '欢迎第三用户！',
       input: '',
       checked: true,
-      teams: [{
-        id: 'A',
-        index: '00',
-        round: '2023A楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        date: '2023-11-12-10:30:00',
-        state: '进行中'
-
-      }, {
-        id: 'B',
-        index: '01',
-        round: '2023B楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        date: '2023-11-12-10:30:00',
-        state: '进行中'
-      }, {
-        id: 'C',
-        index: '02',
-        round: '2023C楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        date: '2023-11-12-10:30:00',
-        state: '进行中'
-      }, {
-        id: 'A',
-        index: '03',
-        round: '2023A楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        date: '2023-11-12-10:30:00',
-        state: '进行中'
-      }, {
-        id: 'A',
-        index: '04',
-        round: '2023A楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        date: '2023-11-12-10:30:00',
-        state: '进行中'
-      }, {
-        id: 'A',
-        index: '05',
-        round: '2023A楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        date: '2023-11-12-10:30:00',
-        state: '进行中'
-      }, {
-        id: 'A',
-        index: '06',
-        round: '2023A楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        date: '2023-11-12-10:30:00',
-        state: '进行中'
-      }, {
-        id: 'A',
-        index: '07',
-        round: '2023A楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        date: '2023-11-12-10:30:00',
-        state: '进行中'
-      }, {
-        id: 'A',
-        index: '08',
-        round: '2023A楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        date: '2023-11-12-10:30:00',
-        state: '进行中'
-      }, {
-        id: 'A',
-        index: '09',
-        round: '2023A楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        date: '2023-11-12-10:30:00',
-        state: '进行中'
-      }, {
-        id: 'A',
-        index: '10',
-        round: '2023A楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        date: '2023-11-12-10:30:00',
-        state: '进行中'
-      }, {
-        id: 'A',
-        index: '11',
-        round: '2023A楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        date: '2023-11-12-10:30:00',
-        state: '进行中'
-      }, {
-        id: 'A',
-        index: '12',
-        round: '2023A楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        date: '2023-11-12-10:30:00',
-        state: '进行中'
-      }, {
-        id: 'A',
-        index: '13',
-        round: '2023A楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        date: '2023-11-12-10:30:00',
-        state: '进行中'
-      }, {
-        id: 'A',
-        index: '14',
-        round: '2023A楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        date: '2023-11-12-10:30:00',
-        state: '进行中'
-      }, {
-        id: 'E',
-        index: '15',
-        round: '2023E楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        date: '2023-11-12-10:30:00',
-        state: '进行中'
-      }, {
-        id: 'C',
-        index: '16',
-        round: '2023C楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        date: '2023-11-12-10:30:00',
-        state: '进行中'
-      }, {
-        id: 'D',
-        index: '17',
-        round: '2023D楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        date: '2023-11-12-10:30:00',
-        state: '进行中'
-      }, {
-        id: 'D',
-        index: '17',
-        round: '2023D楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        date: '2023-11-12-10:30:00',
-        state: '进行中'
-      }, {
-        id: 'D',
-        index: '17',
-        round: '2023D楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        date: '2023-11-12-10:30:00',
-        state: '进行中'
-      }, {
-        id: 'D',
-        index: '17',
-        round: '2023D楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        date: '2023-11-12-10:30:00',
-        state: '进行中'
-      }
-      ],
+      teams: [],
       selectedIds: [],
       currentPage: 1, // 当前页码
       pageSize: 15, // 每页显示行数
@@ -271,6 +102,11 @@ export default {
       // 搜索数据
       fliterData1: []
     }
+  },
+  // 生成页面时从后端获取数据
+  created () {
+    this.fetchData()
+    console.info(this.teams)
   },
   // 计算换页显示
   computed: {
@@ -282,6 +118,13 @@ export default {
       const end = start + this.pageSize
       return this.fliterData1.slice(start, end)
     }
+  },
+  mounted () {
+    this.updateTableHeight()
+    window.addEventListener('resize', this.updateTableHeight)
+  },
+  beforeDestroy () {
+    window.removeEventListener('resize', this.updateTableHeight)
   },
   methods: {
     handleclick (row) {
@@ -327,15 +170,15 @@ export default {
     resetData1 () {
       this.input = ''
       this.fliterData1 = this.teams
+    },
+    // 异步函数
+    async fetchData () {
+      _getAllBatches().then(res => {
+        console.info(res)
+        this.teams = res.data
+        this.fliterData1 = this.teams
+      })
     }
-  },
-  mounted () {
-    this.updateTableHeight()
-    this.fliterData1 = this.teams
-    window.addEventListener('resize', this.updateTableHeight)
-  },
-  beforeDestroy () {
-    window.removeEventListener('resize', this.updateTableHeight)
   }
 
 }

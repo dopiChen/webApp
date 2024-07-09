@@ -46,6 +46,12 @@ const Thirdpage = [
         name: 'third_submitrecord',
         component: () =>
           import(/* webpackChunkName: "First" */ '../pages/main/routes/third/Third_SubmitRecord.vue')
+      },
+      {
+        path: 'third/third_test',
+        name: 'third_test',
+        component: () =>
+          import(/* webpackChunkName: "First" */ '../pages/main/routes/third/test.vue')
       }
     ]
   }

@@ -58,6 +58,11 @@ export default {
           path: '/main3/third/third_submitrecord',
           icon: 'suncaper-menu-unfold',
           title: '提交记录'
+        },
+        {
+          path: '/main3/third/third_test',
+          icon: 'suncaper-menu-unfold',
+          title: '测试页面'
         }
 
       ]

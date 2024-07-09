@@ -131,12 +131,12 @@ export default {
       this.$router.push({
         name: 'third3A',
         query: {
-          id: row.id
+          id: row.batchId
         }
       })
     },
     handleSelelctionChange (val) {
-      this.selectedIds = val.map(item => item.id)
+      this.selectedIds = val.map(item => item.batchId)
     },
     gosubmit () {
       if (this.selectedIds.length === 0) {

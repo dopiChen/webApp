@@ -30,23 +30,17 @@
                             width="55">
                     </el-table-column>
                     <el-table-column
-                            fixed
-                            prop="index"
-                            label="序号"
-                            width="100">
-                    </el-table-column>
-                    <el-table-column
                             prop="name"
                             label="姓名"
                             width="200">
                     </el-table-column>
                     <el-table-column
-                            prop="sex"
+                            prop="gender"
                             label="性别"
                             width="250">
                     </el-table-column>
                     <el-table-column
-                            prop="workid"
+                            prop="personnelId"
                             label="工号"
                             width="300">
                     </el-table-column>
@@ -56,17 +50,12 @@
                             width="300">
                     </el-table-column>
                     <el-table-column
-                            prop="ID"
-                            label="身份证号"
-                            width="300">
-                    </el-table-column>
-                    <el-table-column
-                            prop="tel"
+                            prop="phone"
                             label="移动电话"
                             width="300">
                     </el-table-column>
                     <el-table-column
-                            prop="source"
+                            prop="examRoom"
                             label="来源"
                             width="300">
                     </el-table-column>
@@ -85,12 +74,12 @@
                     <el-table :data="[removeForm]" stripe style="width: 100%; margin-bottom: 20px;">
                         <el-table-column prop="num" label="工号" width="180">
                             <template v-slot="scope">
-                                <span style="font-size: 16px; padding: 10px;">{{ scope.row.name }}</span>
+                                <span style="font-size: 16px; padding: 10px;">{{ scope.row.workid }}</span>
                             </template>
                         </el-table-column>
                         <el-table-column prop="name" label="姓名" width="180">
                             <template v-slot="scope">
-                                <span style="font-size: 16px; padding: 10px;">{{ scope.row.workid }}</span>
+                                <span style="font-size: 16px; padding: 10px;">{{ scope.row.name }}</span>
                             </template>
                         </el-table-column>
                         <el-table-column  width="180" label="操作">
@@ -108,10 +97,9 @@
             <!-- 预览对话框 -->
             <el-dialog title="导出数据预览" :visible.sync="isExportDialogVisible" width="50%">
                 <el-table :data="selectedData" style="width: 100%;">
-                    <el-table-column prop="index" label="序号" width="100"></el-table-column>
                     <el-table-column prop="name" label="姓名" width="150"></el-table-column>
-                    <el-table-column prop="sex" label="性别" width="100"></el-table-column>
-                    <el-table-column prop="workid" label="工号" width="200"></el-table-column>
+                    <el-table-column prop="gender" label="性别" width="100"></el-table-column>
+                    <el-table-column prop="personnelId" label="工号" width="200"></el-table-column>
                     <!-- 添加其他你需要预览的列 -->
                 </el-table>
                 <span slot="footer" class="dialog-footer">
@@ -136,6 +124,7 @@
 
 <script>
 import * as XLSX from 'xlsx'
+import {_getNamelist} from '@/api/api'
 export default {
   name: 'third',
   data () {
@@ -143,143 +132,7 @@ export default {
       welcome: '欢迎第三用户！',
       input: '',
       checked: true,
-      teams: [{
-        index: '00',
-        name: '王强',
-        sex: '男',
-        workid: '100002',
-        unit: '电信学院',
-        ID: '350681200406153225',
-        tel: '18659339648',
-        source: '自主报名'
-      }, {
-        index: '01',
-        name: '王强',
-        sex: '男',
-        workid: '100002',
-        unit: '电信学院',
-        ID: '350681200406153225',
-        tel: '18659339648',
-        source: '自主报名'
-      }, {
-        index: '02',
-        name: '王强',
-        sex: '男',
-        workid: '100003',
-        unit: '电信学院',
-        ID: '350681200406153225',
-        tel: '18659339648',
-        source: '自主报名'
-      }, {
-        index: '03',
-        name: '王强',
-        sex: '男',
-        workid: '100004',
-        unit: '电信学院',
-        ID: '350681200406153225',
-        tel: '18659339648',
-        source: '自主报名'
-      }, {
-        index: '04',
-        name: '王强',
-        sex: '男',
-        workid: '100005',
-        unit: '电信学院',
-        ID: '350681200406153225',
-        tel: '18659339648',
-        source: '自主报名'
-      }, {
-        index: '05',
-        name: '王强',
-        sex: '男',
-        workid: '100006',
-        unit: '电信学院',
-        ID: '350681200406153225',
-        tel: '18659339648',
-        source: '自主报名'
-      }, {
-        index: '06',
-        name: '王强',
-        sex: '男',
-        workid: '100007',
-        unit: '电信学院',
-        ID: '350681200406153225',
-        tel: '18659339648',
-        source: '自主报名'
-      }, {
-        index: '00',
-        name: '王强',
-        sex: '男',
-        workid: '100008',
-        unit: '电信学院',
-        ID: '350681200406153225',
-        tel: '18659339648',
-        source: '自主报名'
-      }, {
-        index: '00',
-        name: '王强',
-        sex: '男',
-        workid: '100009',
-        unit: '电信学院',
-        ID: '350681200406153225',
-        tel: '18659339648',
-        source: '自主报名'
-      }, {
-        index: '00',
-        name: '王强',
-        sex: '男',
-        workid: '100010',
-        unit: '电信学院',
-        ID: '350681200406153225',
-        tel: '18659339648',
-        source: '自主报名'
-      }, {
-        index: '00',
-        name: '王强',
-        sex: '男',
-        workid: '100011',
-        unit: '电信学院',
-        ID: '350681200406153225',
-        tel: '18659339648',
-        source: '自主报名'
-      }, {
-        index: '00',
-        name: '王强',
-        sex: '男',
-        workid: '100012',
-        unit: '电信学院',
-        ID: '350681200406153225',
-        tel: '18659339648',
-        source: '自主报名'
-      }, {
-        index: '00',
-        name: '王强',
-        sex: '男',
-        workid: '100013',
-        unit: '电信学院',
-        ID: '350681200406153225',
-        tel: '18659339648',
-        source: '自主报名'
-      }, {
-        index: '00',
-        name: '王强',
-        sex: '男',
-        workid: '100014',
-        unit: '电信学院',
-        ID: '350681200406153225',
-        tel: '18659339648',
-        source: '自主报名'
-      }, {
-        index: '00',
-        name: '王强',
-        sex: '男',
-        workid: '100015',
-        unit: '电信学院',
-        ID: '350681200406153225',
-        tel: '18659339648',
-        source: '自主报名'
-      }
-      ],
+      teams: [],
       selectedIds: [],
       currentPage: 1, // 当前页码
       pageSize: 15, // 每页显示行数
@@ -297,6 +150,9 @@ export default {
       fliterData1: []
 
     }
+  },
+  created () {
+    this.fetchData()
   },
   // 计算换页显示
   computed: {
@@ -329,7 +185,7 @@ export default {
     removeclick (row) {
       this.currentRow = row
       this.removeForm.name = row.name
-      this.removeForm.workid = row.workid
+      this.removeForm.workid = row.personnelId
       this.isRemoveDialogVisible = true
     },
     // 直接一步否决删除不会再回到待审批
@@ -362,18 +218,19 @@ export default {
       console.info(searchQuery)
       this.fliterData1 = this.teams.filter(item => {
         return item.name.toLowerCase().includes(searchQuery) ||
-                  item.workid.includes(searchQuery)
+                  item.personnelId.includes(searchQuery)
       })
     },
     resetData1 () {
       this.input = ''
       this.fliterData1 = this.teams
+    },
+    async fetchData () {
+      _getNamelist().then(res => {
+        this.teams = res.data
+        this.fliterData1 = this.teams
+      })
     }
-  },
-  mounted () {
-    this.updateTableHeight()
-    this.fliterData1 = this.teams
-    window.addEventListener('resize', this.updateTableHeight)
   },
   beforeDestroy () {
     window.removeEventListener('resize', this.updateTableHeight)

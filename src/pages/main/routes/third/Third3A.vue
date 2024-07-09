@@ -9,40 +9,83 @@
             <span class="tag1">|</span>
             <span class="subtitle1">监考批次情况</span><br>
             <el-descriptions :column="1" class="custom1">
-                <el-descriptions-item label="批次名称"> 2023年A楼2023监考报名</el-descriptions-item>
-                <el-descriptions-item label="关联年份"> 2023年</el-descriptions-item>
-                <el-descriptions-item label="批次开始时间">2023/09/30 00:00:00</el-descriptions-item>
-                <el-descriptions-item label="批次结束时间">2023/09/30 00:00:00</el-descriptions-item>
+                <el-descriptions-item label="批次名称">{{ batchName }}</el-descriptions-item>
+                <el-descriptions-item label="关联年份">{{ year }}</el-descriptions-item>
+                <el-descriptions-item label="批次开始时间">{{ batchStartTime }}</el-descriptions-item>
+                <el-descriptions-item label="批次结束时间">{{ batchEndTime }}</el-descriptions-item>
                 <el-descriptions-item label="批次时长">两天</el-descriptions-item>
-                <el-descriptions-item label="监考说明">监考人员需要分别站在教室前后，在不影响考生情况下，适当走动。
+                <el-descriptions-item label="监考说明">
+                    监考人员需要分别站在教室前后，在不影响考生情况下，适当走动。
                 </el-descriptions-item>
                 <el-descriptions-item label="附件">
-                    <img src="../../../../../src/assets/images/email.jpg" alt="附件图片"
-                         style="width: 16px; height: 16px;">
+                    <img src="../../../../../src/assets/images/email.jpg" alt="附件图片" style="width: 16px; height: 16px;">
                     <router-link to="/path/to/your/route">
                         <el-link type="primary" class="tail">附件.docx</el-link>
                     </router-link>
                 </el-descriptions-item>
             </el-descriptions>
+
             <span class="tag2">|</span>
             <span class="subtitle1">考场安排</span><br>
-            <el-descriptions :column="1" class="custom2">
-                <el-descriptions-item label="考场名称"> 3楼第一考场</el-descriptions-item>
-                <el-descriptions-item label="校区"> 南湖校区</el-descriptions-item>
-                <el-descriptions-item label="校内地址">南湖4-111</el-descriptions-item>
-                <el-descriptions-item label="监考时间">2023/09/30 00:08:00</el-descriptions-item>
-                <el-descriptions-item label="批次时长">两天</el-descriptions-item>
-            </el-descriptions>
+
+            <div v-for="exam in exams" :key="exam.examId">
+                <el-descriptions :column="1" class="custom2">
+                    <el-descriptions-item label="考场名称">{{ exam.examRoom }}</el-descriptions-item>
+                    <el-descriptions-item label="校区">{{ exam.campus }}</el-descriptions-item>
+                    <el-descriptions-item label="校内地址">{{ exam.address ? exam.address : '暂无地址' }}</el-descriptions-item>
+                    <el-descriptions-item label="监考时间">{{ exam.fromTime }} 至 {{ exam.endTime }}</el-descriptions-item>
+                </el-descriptions>
         </div>
+    </div>
     </div>
 </template>
 
 <script>
+import {_getBatch} from '@/api/api'
+
 export default {
   name: 'Third3.vue',
+
+  data () {
+    return {
+      batchId: this.$route.query.id,
+      exams: [],
+      batchName: '',
+      batchStartTime: '',
+      batchEndTime: '',
+      year: ''
+    }
+  },
+  created () {
+    this.fetchData()
+  },
   methods: {
     returnclick () {
-      this.$router.push('/main/third/third1')
+      this.$router.push('/main3/third/third1')
+    },
+    async fetchData () {
+      _getBatch(this.batchId).then(res => {
+        console.info(res)
+        this.exams = res.data
+        if (this.exams.length > 0) {
+          const firstExam = this.exams[0]
+          console.info(firstExam)
+          this.batchName = `2023年${firstExam.examRoom.split('-')[0]}监考报名`
+          this.batchStartTime = firstExam.fromTime
+          this.batchEndTime = firstExam.endTime
+          this.year = new Date(firstExam.fromTime).getFullYear()
+        }
+      })
+    },
+    initializeBatchInfo () {
+      if (this.exams.length > 0) {
+        const firstExam = this.exams[0]
+        console.info(firstExam)
+        this.batchName = `2023年${firstExam.examRoom.split('-')[0]}监考报名`
+        this.batchStartTime = firstExam.fromTime
+        this.batchEndTime = firstExam.endTime
+        this.year = new Date(firstExam.fromTime).getFullYear()
+      }
     }
   }
 }

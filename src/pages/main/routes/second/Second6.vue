@@ -225,7 +225,7 @@ export default {
     },
     openMemberlist () {
       this.$router.push({
-        path: '/main2/second/second_MemberList'
+        path: '/main/second_MemberList'
       })
     },
     // 搜索函数

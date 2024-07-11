@@ -323,7 +323,7 @@ export default {
     },
     returnclick () {
       this.$router.push({
-        path: '/main/third/third1'
+        path: '/main/third1'
       })
     }
   }

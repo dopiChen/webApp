@@ -362,11 +362,6 @@ export default {
         return '待审批'
       }
     },
-    returnclick () {
-      this.$router.push({
-        path: '/main/third/third1'
-      })
-    },
     ...mapActions('user', ['getUserType']),
     async fetchUserType () {
       try {

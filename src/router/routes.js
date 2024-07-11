@@ -6,141 +6,113 @@ const loginPage = [
       import(/* webpackChunkName: "Login" */ '../pages/login/Login')
   }
 ]
-const Thirdpage = [
+
+const mainPage = [
   {
     path: '/',
     redirect: '/login'
   },
   {
-    path: '/main3',
-    name: 'main3',
+    path: '/main',
+    name: 'main',
     component: () =>
       import(/* webpackChunkName: "Main" */ '../pages/main/Main'),
     children: [
       {
-        path: 'third/third1',
-        name: 'third',
+        path: 'first_approval',
+        name: 'first',
         component: () =>
-          import(/* webpackChunkName: "First" */ '../pages/main/routes/third/Third')
+          import(/* webpackChunkName: "Second" */ '../pages/main/routes/first/First_Approval.vue')
       },
       {
-        path: 'third/third2',
-        name: 'third',
+        path: 'first_namelist',
+        name: 'first',
         component: () =>
-          import(/* webpackChunkName: "First" */ '../pages/main/routes/third/Third2')
+          import(/* webpackChunkName: "Second" */ '../pages/main/routes/first/First_Namelist.vue')
       },
       {
-        path: 'third/third3A',
-        name: 'third3A',
+        path: 'first_enroll',
+        name: 'first',
         component: () =>
-          import(/* webpackChunkName: "First" */ '../pages/main/routes/third/Third3A.vue')
+          import('../pages/main/routes/first/First_Enroll.vue')
       },
       {
-        path: 'third/third_submit',
-        name: 'third_submit',
-        component: () =>
-          import(/* webpackChunkName: "First" */ '../pages/main/routes/third/Third_Submit.vue')
-      },
-      {
-        path: 'third/third_submitrecord',
-        name: 'third_submitrecord',
-        component: () =>
-          import(/* webpackChunkName: "First" */ '../pages/main/routes/third/Third_SubmitRecord.vue')
-      },
-      {
-        path: 'third/third_test',
-        name: 'third_test',
-        component: () =>
-          import(/* webpackChunkName: "First" */ '../pages/main/routes/third/test.vue')
-      }
-    ]
-  }
-]
-const Secondpage = [
-  {
-    path: '/',
-    redirect: '/login'
-  },
-  {
-    path: '/main2',
-    name: 'main2',
-    component: () =>
-      import(/* webpackChunkName: "Main" */ '../pages/main/Main'),
-    children: [
-      {
-        path: 'second/second1',
+        path: 'second1',
         name: 'second',
         component: () =>
           import(/* webpackChunkName: "First" */ '../pages/main/routes/second/Second')
       },
       {
-        path: 'second/second2',
+        path: 'second2',
         name: 'second',
         component: () =>
           import(/* webpackChunkName: "First" */ '../pages/main/routes/second/Second2')
       },
       {
-        path: 'second/second3',
+        path: 'second3',
         name: 'second',
         component: () =>
           import(/* webpackChunkName: "First" */ '../pages/main/routes/second/Second3')
       },
       {
-        path: 'second/second4',
+        path: 'second4',
         name: 'second',
         component: () =>
           import(/* webpackChunkName: "First" */ '../pages/main/routes/second/Second4')
       },
       {
-        path: 'second/second5',
+        path: 'second5',
         name: 'second',
         component: () =>
           import(/* webpackChunkName: "First" */ '../pages/main/routes/second/Second5')
       },
       {
-        path: 'second/second6',
+        path: 'second6',
         name: 'second',
         component: () =>
           import(/* webpackChunkName: "First" */ '../pages/main/routes/second/Second6')
       },
       {
-        path: 'second/second_MemberList',
+        path: 'second_MemberList',
         name: 'second',
         component: () =>
-            import(/* webpackChunkName: "First" */ '../pages/main/routes/second/Second_MemberList.vue')
-      }
-    ]
-  }
-]
-
-const FirstPage = [
-  {
-    path: '/',
-    redirect: '/login'
-  },
-  {
-    path: '/main1',
-    name: 'main1',
-    component: () =>
-      import(/* webpackChunkName: "Main" */ '../pages/main/Main'),
-    children: [
-      {
-        path: 'first/first_approval',
-        name: 'first_approval',
-        component: () =>
-          import(/* webpackChunkName: "Second" */ '../pages/main/routes/first/First_Approval.vue')
+          import(/* webpackChunkName: "First" */ '../pages/main/routes/second/Second_MemberList.vue')
       },
       {
-        path: 'first/first_namelist',
-        name: 'first_namelist',
+        path: 'third1',
+        name: 'third',
         component: () =>
-          import(/* webpackChunkName: "Second" */ '../pages/main/routes/first/First_Namelist.vue')
+          import(/* webpackChunkName: "First" */ '../pages/main/routes/third/Third')
       },
       {
-        path: 'first/first_enroll',
-        name: 'first_enroll',
+        path: 'third2',
+        name: 'third',
         component: () =>
-          import(/* webpackChunkName: "Second" */ '../pages/main/routes/first/First_Enroll.vue')
+          import(/* webpackChunkName: "First" */ '../pages/main/routes/third/Third2')
+      },
+      {
+        path: 'third3A',
+        name: 'third3A',
+        component: () =>
+          import(/* webpackChunkName: "First" */ '../pages/main/routes/third/Third3A.vue')
+      },
+      {
+        path: 'third_submit',
+        name: 'third_submit',
+        component: () =>
+          import(/* webpackChunkName: "First" */ '../pages/main/routes/third/Third_Submit.vue')
+      },
+      {
+        path: 'third_submitrecord',
+        name: 'third_submitrecord',
+        component: () =>
+          import(/* webpackChunkName: "First" */ '../pages/main/routes/third/Third_SubmitRecord.vue')
+      },
+      {
+        path: 'third_test',
+        name: 'third_test',
+        component: () =>
+          import(/* webpackChunkName: "First" */ '../pages/main/routes/third/test.vue')
       }
     ]
   }
@@ -170,4 +142,4 @@ const errorPage = [
     redirect: '/notFound'
   }
 ]
-export default [...loginPage, ...FirstPage, ...errorPage, ...Thirdpage, ...Secondpage]
+export default [...loginPage, ...mainPage, ...errorPage]

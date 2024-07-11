@@ -3,12 +3,12 @@ export default {
     1: {
       main: [
         {
-          path: '/main1/first/first_approval',
+          path: '/main/first_approval',
           icon: 'suncaper-menu-unfold',
           title: '报名审批'
         },
         {
-          path: '/main1/first/first_namelist',
+          path: '/main/first_namelist',
           icon: 'suncaper-menu-unfold',
           title: '监考名单'
         }
@@ -17,12 +17,12 @@ export default {
     4: {
       main: [
         {
-          path: '/main1/first/first_approval',
+          path: '/main/first_approval',
           icon: 'suncaper-menu-unfold',
           title: '报名审批'
         },
         {
-          path: '/main1/first/first_namelist',
+          path: '/main/first_namelist',
           icon: 'suncaper-menu-unfold',
           title: '监考名单'
         }
@@ -31,12 +31,12 @@ export default {
     5: {
       main: [
         {
-          path: '/main1/first/first_approval',
+          path: '/main/first_approval',
           icon: 'suncaper-menu-unfold',
           title: '报名审批'
         },
         {
-          path: '/main1/first/first_namelist',
+          path: '/main/first_namelist',
           icon: 'suncaper-menu-unfold',
           title: '监考名单'
         }
@@ -45,17 +45,17 @@ export default {
     3: {
       main: [
         {
-          path: '/main3/third/third1',
+          path: '/main/third1',
           icon: 'suncaper-menu-unfold',
           title: '监考报名'
         },
         {
-          path: '/main3/third/third2',
+          path: '/main/third2',
           icon: 'suncaper-menu-unfold',
           title: '监考记录'
         },
         {
-          path: '/main3/third/third_submitrecord',
+          path: '/main/third_submitrecord',
           icon: 'suncaper-menu-unfold',
           title: '提交记录'
         }
@@ -65,32 +65,32 @@ export default {
     2: {
       main: [
         {
-          path: '/main2/second/second1',
+          path: '/main/second1',
           icon: 'suncaper-menu-unfold',
           title: '报名审批'
         },
         {
-          path: '/main2/second/second2',
+          path: '/main/second2',
           icon: 'suncaper-menu-unfold',
           title: '监考管理'
         },
         {
-          path: '/main2/second/second3',
+          path: '/main/second3',
           icon: 'suncaper-menu-unfold',
           title: '监考安排表'
         },
         {
-          path: '/main2/second/second4',
+          path: '/main/second4',
           icon: 'suncaper-menu-unfold',
           title: '监考通知确认情况'
         },
         {
-          path: '/main2/second/second5',
+          path: '/main/second5',
           icon: 'suncaper-menu-unfold',
           title: '监考费放明细'
         },
         {
-          path: '/main2/second/second6',
+          path: '/main/second6',
           icon: 'suncaper-menu-unfold',
           title: '部门与角色管理'
         }

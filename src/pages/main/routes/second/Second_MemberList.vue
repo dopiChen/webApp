@@ -361,7 +361,7 @@ export default {
     },
     returnclick () {
       this.$router.push({
-        path: '/main2/second/second6'
+        path: '/main/second6'
       })
     },
     remove (row) {

@@ -61,7 +61,7 @@ export default {
   },
   methods: {
     returnclick () {
-      this.$router.push('/main3/third/third1')
+      this.$router.push('/main/third1')
     },
     async fetchData () {
       _getBatch(this.batchId).then(res => {

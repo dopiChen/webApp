@@ -754,7 +754,7 @@ export default {
     oncomfirm () {
       if (this.form.way === '帮助报名') {
         // 如果需要携带参数可以在这里携带
-        this.$router.push({ path: '/main1/first/first_enroll' })
+        this.$router.push({ path: '/main/first_enroll' })
       } else {
         // 向老师端发送邀请短信
       }

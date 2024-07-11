@@ -1,10 +1,10 @@
 <template>
-  <suncaper-layout
-    theme="dark"
-    :logo="logo"
-    :sidebar-list="sidebarList"
-    :logout="logout"
-  />
+    <suncaper-layout
+            theme="dark"
+            :logo="logo"
+            :sidebar-list="sidebarList"
+            :logout="logout"
+    />
 </template>
 
 <script>
@@ -40,14 +40,5 @@ export default {
   components: {
     'suncaper-layout': Layout
   }
-  // beforeRouteEnter(to, from, next) {
-  //   switch (this.userType) {
-  //     case 1:
-  //       next({
-  //         name:
-  //       })
-  //       break;
-  //   }
-  // }
 }
 </script>

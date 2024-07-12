@@ -12,18 +12,18 @@
                 class="login-from"
             >
                 <el-form-item label="用户名" prop="username">
-                    <el-input v-model="ruleForm.sn"></el-input>
+                    <el-input v-model="form.username"></el-input>
                 </el-form-item>
                 <el-form-item label="密码" prop="password">
                     <el-input
                         type="password"
-                        v-model="ruleForm.password"
+                        v-model="form.password"
                         autocomplete="off"
                     ></el-input>
                 </el-form-item>
             </el-form>
             <div class="btnGroup">
-                <el-button type="primary" @click="submitForm('ruleForm')"
+                <el-button type="primary" @click="submitForm"
                 >登录</el-button
                 >
                 <el-button @click="resetForm('ruleForm')">重置密码</el-button>
@@ -39,7 +39,7 @@
 // eslint-disable-next-line no-unused-vars
 import axios from 'axios'
 // eslint-disable-next-line no-unused-vars
-import {userLogin} from '../../api/user'
+import {_login} from '../../api/user'
 
 export default {
   data () {
@@ -48,22 +48,26 @@ export default {
         sn: '',
         password: ''
       },
-      rules: {
-        uname: [
-          { required: true, message: '用户名不能为空！', trigger: 'blur' }
-        ],
-        password: [
-          { required: true, message: '密码不能为空！', trigger: 'blur' }
-        ]
+      // rules: {
+      //   uname: [
+      //     { required: true, message: '用户名不能为空！', trigger: 'blur' }
+      //   ],
+      //   password: [
+      //     { required: true, message: '密码不能为空！', trigger: 'blur' }
+      //   ]
+      // },
+      form: {
+        username: '',
+        password: ''
       }
     }
   },
   methods: {
-    submitForm (formName) {
-      let obj = {
-        sn: this.ruleForm.sn,
-        password: this.ruleForm.password
-      }
+    submitForm () {
+      // let obj = {
+      //   sn: this.ruleForm.sn,
+      //   password: this.ruleForm.password
+      // }
       // userLogin(obj).then(res => {
       //   // 这里是没有axios封装的res
       //   // res.data就是后端返回的数据，要与下面用axios的区分开
@@ -81,11 +85,13 @@ export default {
       //   }
       //   console.info(res)
       // })
-      axios.get('/api/whitelistSetting/login', {params: obj}).then(res => {
+      console.log(this.form.username)
+      console.log(this.form.password)
+      _login(this.form).then(res => {
         // 这里的返回值res是axios封装后的
         // res.data就是后端返回的json数据
         // res.data.data才是后端真正返回的数据
-        if (res.data.data !== null) {
+        if (res.data !== null) {
           this.$router.push({path: '/main'})
           this.$message({
             message: '登陆成功',
@@ -97,7 +103,7 @@ export default {
             type: 'warning'
           })
         }
-        console.info(res.data.data)
+        console.info(res.data)
       })
     },
     resetForm (formName) {

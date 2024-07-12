@@ -15,7 +15,7 @@ module.exports = {
         target: 'http://localhost:8080',
         changeOrigin: true,
         pathRewrite: {
-          "^/api": "/api"
+          "^/api": ""
         }
       }
     },
@@ -59,13 +59,13 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    // assetsPublicPath: '/',
+   // assetsPublicPath: '/',
     assetsPublicPath: './', // 生产环境打包后静态文件路径修改为相对路径
     /**
      * Source Maps
      */
 
-    // productionSourceMap: true,
+   // productionSourceMap: true,
     productionSourceMap: process.env.env_config !== 'prod', // 生产环境不需要sourceMap，测试阶段可为true
     // https://webpack.js.org/configuration/devtool/#production
     devtool: '#source-map',

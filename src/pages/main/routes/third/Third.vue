@@ -17,7 +17,7 @@
             </div>
             <div class="tablebody">
                 <el-table
-                        :data="currentTableData"
+                        :data="teams"
                         stripe
                         style="width: 100%"
                         @selection-change="handleSelelctionChange"
@@ -79,6 +79,30 @@
                 >
                 </el-pagination>
             </div>
+            <!--            <el-dialog-->
+            <!--                :visible.sync="dialogVisible"-->
+            <!--                width="50%"-->
+            <!--                :before-close="handleClose"-->
+            <!--                custom-class="custom-dialog">-->
+            <!--                <div class="dialog-content">-->
+            <!--                    <div class="dialog-header">-->
+            <!--                        <img src="../../../../assets/images/bg/bg.jpg" alt="背景图片" class="dialog-background">-->
+            <!--                        <h3 class="dialog-title">未确认申请提醒</h3>-->
+            <!--                    </div>-->
+            <!--                    <div class="dialog-body">-->
+            <!--                        <div v-for="(item, index) in notComfirmlist" :key="index" class="record-item">-->
+            <!--                            <p><strong>申请人:</strong> {{ item.name }}</p>-->
+            <!--                            <p><strong>申请时间:</strong> {{ item.time }}</p>-->
+            <!--                            <p><strong>申请内容:</strong> {{ item.content }}</p>-->
+            <!--                            <el-divider></el-divider>-->
+            <!--                        </div>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--                <span slot="footer" class="dialog-footer">-->
+            <!--        <el-button @click="dialogVisible = false">取消</el-button>-->
+            <!--        <el-button type="primary" @click="handleConfirm">前往确认</el-button>-->
+            <!--      </span>-->
+            <!--            </el-dialog>-->
         </div>
     </div>
 </template>
@@ -86,6 +110,7 @@
 <script>
 import {Message} from 'element-ui'
 import {_getAllBatches} from '@/api/api'
+import {_searchBatches} from '../../../../api/api'
 
 export default {
   name: 'third',
@@ -100,7 +125,8 @@ export default {
       pageSize: 15, // 每页显示行数
       tableHeight: 0,
       // 搜索数据
-      fliterData1: []
+      fliterData1: [],
+      notComfirmlist: []
     }
   },
   // 生成页面时从后端获取数据
@@ -118,10 +144,6 @@ export default {
       const end = start + this.pageSize
       return this.fliterData1.slice(start, end)
     }
-  },
-  mounted () {
-    this.updateTableHeight()
-    window.addEventListener('resize', this.updateTableHeight)
   },
   beforeDestroy () {
     window.removeEventListener('resize', this.updateTableHeight)
@@ -149,22 +171,9 @@ export default {
       // 路由跳转
       this.$router.push({name: 'third_submit', query: {ids: this.selectedIds.join(',')}})
     },
-    handleCurrentChange (page) {
-      this.currentPage = page
-    },
-    updateTableHeight () {
-      this.$nextTick(() => {
-        const tableBody = this.$refs.tableBody
-        const height = tableBody.clientHeight * 0.9
-        this.tableHeight = height
-      })
-    },
-    // 搜索函数
     searchData1 () {
-      const searchQuery = this.input.toLowerCase()
-      console.info(searchQuery)
-      this.fliterData1 = this.teams.filter(item => {
-        return item.round.toLowerCase().includes(searchQuery)
+      _searchBatches(this.input).then(res => {
+        this.teams = res.data
       })
     },
     resetData1 () {
@@ -176,9 +185,12 @@ export default {
       _getAllBatches().then(res => {
         console.info(res)
         this.teams = res.data
-        this.fliterData1 = this.teams
       })
     }
+    // 提醒通过审核但未确认的申请
+    // async fetchData2 () {
+    //
+    // }
   }
 
 }

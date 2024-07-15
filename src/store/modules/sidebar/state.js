@@ -59,7 +59,6 @@ export default {
           icon: 'suncaper-menu-unfold',
           title: '提交记录'
         }
-
       ]
     },
     5: {

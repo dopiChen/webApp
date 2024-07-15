@@ -11,46 +11,61 @@
                     <span class="tag1">|</span>
                     <span class="subtitle1">武汉理工大学研究生招生考试监考人员报名表</span><br>
                 </div>
+                <div class="subtitle1">
+                    <span class="tag1">|</span>
+                    <span class="subtitle1">报名监考批次：{{ this.batch.batchName }}</span><br>
+                </div>
                 <div class="table">
-                    <el-form ref="form" :model="form" label-width="80px" label-position="left" class="custom-form" font-size="30px">
-                        <el-form-item label="姓名" :style="{ paddingLeft: '10px' }"  required>
-                            <el-input v-model="form.name" style="width: 400px; margin-left: 100px;"></el-input>
-                            <span v-if="!form.name" class="required-star">*</span>
+                    <el-form ref="form" :model="personnelData" label-width="80px" label-position="left" class="custom-form"
+                             font-size="30px">
+                        <el-form-item label="考试编号" :style="{ paddingLeft: '10px' }" required>
+                            <el-select v-model="value" placeholder="请选择" @change="handleChange">
+                                <el-option
+                                        v-for="item in options"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="姓名" :style="{ paddingLeft: '10px' }" required>
+                            <el-input v-model="personnelData.name" style="width: 400px; margin-left: 100px;"></el-input>
+                            <span v-if="!personnelData.name" class="required-star">*</span>
                         </el-form-item>
                         <el-form-item label="所在单位" required>
-                            <el-input v-model="form.region" style="width: 400px; margin-left: 100px;"></el-input>
-                            <span v-if="!form.region" class="required-star">*</span>
+                            <el-input v-model="personnelData.unit" style="width: 400px; margin-left: 100px;"></el-input>
+                            <span v-if="!personnelData.unit" class="required-star">*</span>
                         </el-form-item>
                         <el-form-item label="性别" required>
-                            <el-radio-group v-model="form.sex" style="margin-left: 100px;">
+                            <el-radio-group v-model="personnelData.gender" style="margin-left: 100px;">
                                 <el-radio label="男"></el-radio>
                                 <el-radio label="女"></el-radio>
                             </el-radio-group>
-                            <span v-if="!form.sex" class="required-star">*</span>
+                            <span v-if="!personnelData.gender" class="required-star">*</span>
                         </el-form-item>
                         <el-form-item label="工号" required>
-                            <el-input v-model="form.id" style="width: 400px; margin-left: 100px;"></el-input>
-                            <span v-if="!form.id" class="required-star">*</span>
+                            <el-input v-model="personnelData.username" style="width: 400px; margin-left: 100px;"></el-input>
+                            <span v-if="!personnelData.username" class="required-star">*</span>
                         </el-form-item>
                         <el-form-item label="学历" required>
-                            <el-input v-model="form.qualification" style="width: 400px; margin-left: 100px;"></el-input>
-                            <span v-if="!form.qualification" class="required-star">*</span>
+                            <el-input v-model="personnelData.eduBackground" style="width: 400px; margin-left: 100px;"></el-input>
+                            <span v-if="!personnelData.eduBackground" class="required-star">*</span>
                         </el-form-item>
                         <el-form-item label="联系电话" required>
-                            <el-input v-model="form.tel" style="width: 400px; margin-left: 100px;"></el-input>
-                            <span v-if="!form.tel" class="required-star">*</span>
+                            <el-input v-model="personnelData.phone" style="width: 400px; margin-left: 100px;"></el-input>
+                            <span v-if="!personnelData.phone" class="required-star">*</span>
                         </el-form-item>
                         <el-form-item label="备用电话" required>
-                            <el-input v-model="form.spare_tel" style="width: 400px; margin-left: 100px;"></el-input>
-                            <span v-if="!form.spare_tel" class="required-star">*</span>
+                            <el-input v-model="personnelData.backupPhone" style="width: 400px; margin-left: 100px;"></el-input>
+                            <span v-if="!personnelData.backupPhone" class="required-star">*</span>
                         </el-form-item>
-                        <el-form-item label="出生年月" required>
-                            <el-col :span="11" style="margin-left: 100px;">
-                                <el-date-picker type="date" placeholder="选择日期" v-model="form.date"
-                                                style="width: 100%;"></el-date-picker>
-                            </el-col>
-                            <span v-if="!form.date" class="required-star">*</span>
-                        </el-form-item>
+<!--                        <el-form-item label="出生年月" required>-->
+<!--                            <el-col :span="11" style="margin-left: 100px;">-->
+<!--                                <el-date-picker type="date" placeholder="选择日期" v-model="form.date"-->
+<!--                                                style="width: 100%;"></el-date-picker>-->
+<!--                            </el-col>-->
+<!--                            <span v-if="!form.date" class="required-star">*</span>-->
+<!--                        </el-form-item>-->
                         <el-form-item label="上传电子照片" required>
                             <el-upload
                                     action="https://jsonplaceholder.typicode.com/posts/"
@@ -68,15 +83,15 @@
                             </el-dialog>
                         </el-form-item>
                         <el-form-item label="校区" required>
-                            <el-checkbox-group v-model="form.campus" style="margin-left: 100px;width: 400px;">
-                                <el-checkbox label="清水河校区" name="type"></el-checkbox>
-                                <el-checkbox label="长菱校区" name="type"></el-checkbox>
-                                <el-checkbox label="服从调剂" name="type"></el-checkbox>
-                            </el-checkbox-group>
+                            <el-radio-group v-model="this.examdetail.campus" style="margin-left: 100px;">
+                                <el-radio label="兴庆校区" v-if="this.examdetail.campus==='兴庆校区'"></el-radio>
+                                <el-radio label="雁塔校区" v-if="this.examdetail.campus==='雁塔校区'"></el-radio>
+                                <el-radio label="曲江校区" v-if="this.examdetail.campus==='曲江校区'"></el-radio>
+                            </el-radio-group>
                         </el-form-item>
                         <el-form-item label="申请人承诺" required>
                             <el-col :span="11" style="margin-left: 100px;">
-                                <el-checkbox-group v-model="form.promise">
+                                <el-checkbox-group v-model="this.promise">
                                     <el-checkbox label="本人自愿参加" name="type"></el-checkbox>
                                 </el-checkbox-group>
                                 <el-col :span="24" style="margin-top: 0; padding-top: 5px;">
@@ -87,118 +102,28 @@
                     </el-form>
                 </div>
             </div>
-            <div class="recordbody">
-                <div class="title2">
-                    <div class="subtitle1">
-                        <span class="tag1">|</span>
-                        <span class="subtitle1">历史记录</span><br>
-                    </div>
-                </div>
-                <div class="indexbody">
-                    <div style="height: 1000px;">
-                        <el-steps direction="vertical" :active=activeStep>
-                            <el-step title="步骤 1">
-                                <template #description>
-                                    <div class="info-box">
-                                        <img src="../../../../../src/assets/images/teacher1.jpg" class="avatar"
-                                             alt="Avatar" style="width: 40px;height: 40px;">
-                                        <div class="info">
-                                            <p>发起人(在职在岗教职工)</p>
-                                            <p>{{ teacher_data1.name }}&nbsp;&nbsp;&nbsp;&nbsp;{{ teacher_data1.id }}&nbsp;&nbsp;&nbsp;&nbsp;{{
-                                                teacher_data1.date
-                                                }}&nbsp;&nbsp;&nbsp;&nbsp;{{ teacher_data1.time }}</p>
-                                            <p>状态: {{ getStatus(1) }}</p>
-                                        </div>
-                                    </div>
-                                </template>
-                            </el-step>
-                            <el-step title="步骤 2">
-                                <template #description>
-                                    <div class="info-box">
-                                        <img src="../../../../../src/assets/images/teacher2.jpg" class="avatar"
-                                             alt="Avatar" style="width: 40px;height: 40px;">
-                                        <div class="info">
-                                            <p>审批人(学院研工办主任)</p>
-                                            <p>{{ teacher_data2.name }}&nbsp;&nbsp;&nbsp;&nbsp;{{ teacher_data2.id }}&nbsp;&nbsp;&nbsp;&nbsp;{{
-                                                teacher_data2.date
-                                                }}&nbsp;&nbsp;&nbsp;&nbsp;{{ teacher_data2.time }}</p>
-                                            <p>状态: {{ getStatus(2) }}</p>
-                                        </div>
-                                    </div>
-                                </template>
-                            </el-step>
-                            <el-step title="步骤 3">
-                                <template #description>
-                                    <div class="info-box">
-                                        <img src="../../../../../src/assets/images/teacher3.jpg" class="avatar"
-                                             alt="Avatar" style="width: 40px;height: 40px;">
-                                        <div class="info">
-                                            <p>审批人(职能部门综合办主任)</p>
-                                            <p>{{ teacher_data3.name }}&nbsp;&nbsp;&nbsp;&nbsp;{{ teacher_data3.id }}&nbsp;&nbsp;&nbsp;&nbsp;{{
-                                                teacher_data3.date
-                                                }}&nbsp;&nbsp;&nbsp;&nbsp;{{ teacher_data3.time }}</p>
-                                            <p>状态: {{ getStatus(3) }}</p>
-                                        </div>
-                                    </div>
-                                </template>
-                            </el-step>
-                            <el-step title="步骤 4">
-                                <template #description>
-                                    <div class="info-box">
-                                        <img src="../../../../../src/assets/images/teacher4.jpg" class="avatar"
-                                             alt="Avatar" style="width: 40px;height: 40px;">
-                                        <div class="info">
-                                            <p>审批人(学院分管研究生工作副院长)</p>
-                                            <p>{{ teacher_data4.name }}&nbsp;&nbsp;&nbsp;&nbsp;{{ teacher_data4.id }}&nbsp;&nbsp;&nbsp;&nbsp;{{
-                                                teacher_data4.date
-                                                }}&nbsp;&nbsp;&nbsp;&nbsp;{{ teacher_data4.time }}</p>
-                                            <p>状态: {{ getStatus(4) }}</p>
-                                        </div>
-                                    </div>
-                                </template>
-                            </el-step>
-                            <el-step title="步骤 5">
-                                <template #description>
-                                    <div class="info-box">
-                                        <img src="../../../../../src/assets/images/teacher5.jpg" class="avatar"
-                                             alt="Avatar" style="width: 40px;height: 40px;">
-                                        <div class="info">
-                                            <p>审批人(研究生招生考务科科长)</p>
-                                            <p>{{ teacher_data5.name }}&nbsp;&nbsp;&nbsp;&nbsp;{{ teacher_data5.id }}&nbsp;&nbsp;&nbsp;&nbsp;{{
-                                                teacher_data5.date
-                                                }}&nbsp;&nbsp;&nbsp;&nbsp;{{ teacher_data5.time }}</p>
-                                            <p>状态: {{ getStatus(5) }}</p>
-                                        </div>
-                                    </div>
-                                </template>
-                            </el-step>
-                        </el-steps>
-                    </div>
-                </div>
-
-            </div>
         </div>
-<!--        // 正在提交报名-->
+        <!--        // 正在提交报名-->
         <div class="footer" v-if="issubmitVisible">
             <el-button type="primary" class="submitbtn" @click="handlesubmit">提交报名</el-button>
         </div>
-<!--        // 提交成功-->
+        <!--        // 提交成功-->
         <div class="footer" v-if="issuccessVisible">
             <el-alert
-                title="报名成功！"
-                type="success"
-                description="请关注审批进度！"
-                show-icon
-            style="height: 80%;font-size: larger">
+                    title="报名成功！"
+                    type="success"
+                    description="请关注审批进度！"
+                    show-icon
+                    style="height: 80%;font-size: larger">
             </el-alert>
         </div>
-<!--        //报名失败-->
+        <!--        //报名失败-->
         <div class="footer" v-if="isunsuccessVisible">
             <el-alert
-                title="报名失败！"
-                type="error"
-                show-icon
-                style="height:300px;font-size: 20px;">
+                    title="报名失败！"
+                    type="error"
+                    show-icon
+                    style="height:300px;font-size: 20px;">
             </el-alert>
         </div>
     </div>
@@ -206,69 +131,40 @@
 
 <script>
 import {Message} from 'element-ui'
+import {mapState} from 'vuex'
+import {_commitSignup, _getBatch, _getBatchDetail, _getExamDetail, _getUserData} from '../../../../api/api'
 
 export default {
   name: 'Third4',
   data () {
     return {
-      form: {
-        name: '',
-        region: '',
-        date: '',
-        sex: '',
-        tel: '',
-        spare_tel: '',
-        qualification: '',
-        campus: [],
-        promise: [],
-        dialogImageUrl: '',
-        dialogVisible: false
-      },
+      batchid: this.$route.query.ids,
       issubmitVisible: true,
       issuccessVisible: false,
       isunsuccessVisible: false,
+      batch: [], // 该批次
+      exams: [], // 该批次所有考试
+      options: [], // 考试选择框
+      value: '', // 选择框的值
+      examdetail: [], // 选定考试的信息
       activeStep: 1, // 当前活跃的步骤，可以根据需要动态设置
-      // 教师信息
-      teacher_data1: {
-        name: '张三',
-        id: '100900',
-        date: '2023-09-12',
-        time: '12:09:23'
-      },
-      // 学院研工办主任
-      teacher_data2: {
-        name: '刘洋',
-        id: '100901',
-        date: '2023-09-13',
-        time: '11:09:23'
-      },
-      // 职能部门综合办主任
-      teacher_data3: {
-        name: '张莉莎',
-        id: '100902',
-        date: '2023-09-15',
-        time: '12:09:23'
-      },
-      // 学院分管研究生工作副院长
-      teacher_data4: {
-        name: '林朝阳',
-        id: '100903',
-        date: '2023-11-16',
-        time: '12:09:23'
-      },
-      // 研究生招生考务科科长
-      teacher_data5: {
-        name: '陈晨',
-        id: '100904',
-        date: '2023-10-19',
-        time: '12:09:23'
-      }
+      personnelData: [], // 当前用户个人信息
+      promise: ''
     }
+  },
+  created () {
+    this.fetchData2()
+    this.fetchData1()
+    this.fetchData3()
+  },
+  computed: {
+    ...mapState({
+      username: state => state.user.id // 映射 userId
+    })
   },
   methods: {
     handlesubmit () {
-      // 如果所有必填字段都填写，则继续提交表单
-      if (!this.form.id || !this.form.qualification || !this.form.tel || !this.form.spare_tel || !this.form.date || !this.form.sex || !this.form.campus || !this.form.promise) {
+      if (!this.personnelData.name || !this.personnelData.username) {
         Message({
           message: '信息未完整无法提交！',
           type: 'warning'
@@ -289,12 +185,23 @@ export default {
       }
     },
     handlefinalsubmit () {
-      this.$message({
-        type: 'success',
-        message: '提交成功!'
+      const submit = {
+        approvalStatus: 1,
+        examId: this.value,
+        intendedCampus: this.examdetail.campus,
+        isComfirm: 0,
+        isOut: 0,
+        name: this.personnelData.name,
+        reson: '无',
+        username: this.personnelData.username,
+        way: '自主报名'
+      }
+      _commitSignup(submit).then(res => {
+        this.$message({
+          type: 'success',
+          message: '提交成功!请前往个人主页查看'
+        })
       })
-      this.issubmitVisible = false
-      this.issuccessVisible = true
       // 报名失败在这里添加逻辑让其显示报名失败
     },
     handleRemove (file, fileList) {
@@ -324,6 +231,34 @@ export default {
     returnclick () {
       this.$router.push({
         path: '/main/third1'
+      })
+    },
+    async fetchData2 () {
+      _getBatchDetail(this.batchid).then(res => {
+        this.batch = res.data
+      })
+    },
+    async fetchData1 () {
+      _getBatch(this.batchid).then(res => {
+        this.exams = res.data
+        this.processData()
+        console.info(this.exams)
+      })
+    },
+    async fetchData3 () {
+      _getUserData(this.username).then(res => {
+        this.personnelData = res.data
+      })
+    },
+    processData () {
+      this.options = this.exams.map(item => ({
+        value: item.examId,
+        label: item.examId + '.' + item.examRoom
+      }))
+    },
+    handleChange () {
+      _getExamDetail(this.value).then(res => {
+        this.examdetail = res.data
       })
     }
   }

@@ -14,7 +14,7 @@ export default {
       main: ['second']
     },
     1: {
-      main: ['third', 'third3A', 'third_submitrecord', 'third_submit', 'third_test']
+      main: ['third', 'third3A', 'third_submitrecord', 'third_submit', 'third_test', 'third_signUpGoOn']
     }
   }
 }

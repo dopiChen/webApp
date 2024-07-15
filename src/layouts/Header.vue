@@ -29,7 +29,7 @@
       <a
         href="javascript:;"
         class="header-logout"
-        @click="logout"
+        @click="exit"
         role="button"
       >
         <s-tooltip effect="dark" content="退出" placement="bottom">
@@ -45,6 +45,8 @@
 <script>
 import Icon from '@/components/Icon'
 import {Tooltip} from 'element-ui'
+import {userLogout} from '../api/user'
+import store from '../store'
 
 export default {
   name: 's-header',
@@ -58,6 +60,17 @@ export default {
   components: {
     's-icon': Icon,
     's-tooltip': Tooltip
+  },
+  methods: {
+    exit () {
+      // 清楚session 的登录用户，在后端controller里面
+      userLogout().then(res => {
+        // 清除前端的的用户
+        store.dispatch('user/clearUserInfo')
+        // 跳转登录
+        this.$router.push({path: '/login'})
+      })
+    }
   }
 }
 </script>

@@ -22,6 +22,12 @@ export default {
     }
     return res
   },
+  async clearUserInfo ({commit}) {
+    // 清楚前端用户信息
+    commit(types.SET_USER_ID, null)
+    commit(types.SET_USER_NAME, null)
+    commit(types.SET_USER_TYPE, null)
+  },
   // 获取用户类型
   async getUserType ({ dispatch }) {
     const res = await dispatch('fetchUserInfo')

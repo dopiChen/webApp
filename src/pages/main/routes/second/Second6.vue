@@ -4,33 +4,33 @@
         <div class="top">
             <div class="top1">
                 <el-button type="primary" icon="el-icon-search" style="background-color:dodgerblue;">快速找人</el-button>
-                <el-button type="primary" plain class="shu" @click="dialogVisible = true">添加部门</el-button>
-                <el-dialog
-                    title="添加部门"
-                    :visible.sync="dialogVisible"
-                    width="40%"
-                    :before-close="handleClose">
-                    <div>
-                        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="150px"  label-position="left" class="demo-ruleForm" >
-                            <el-form-item label="部门名称" prop="name" required>
-                                <el-input placeholder="请输入部门名称" v-model="ruleForm.name"></el-input>
-                            </el-form-item>
-                            <el-form-item label="部门代码" prop="bmdm" required>
-                                <el-input placeholder="请输入部门代码" v-model="ruleForm.bmdm"></el-input>
-                            </el-form-item>
-                            <el-form-item label="部门类型" prop="bmlx" required>
-                                <el-input placeholder="请输入部门类型" v-model="ruleForm.bmlx"></el-input>
-                            </el-form-item>
-                        </el-form>
-                    </div>
-                    <hr>
-                    <span slot="footer" class="dialog-footer">
-                         <div class="horizontal-line"></div>
-                         <el-button type="primary" @click="submitForm('ruleForm')" style="background-color:dodgerblue;">提交</el-button>
-                         <el-button @click="dialogVisible = false">取消</el-button>
-                    </span>
-                </el-dialog>
-                <el-button type="primary" plain class="shu4">数据导出</el-button>
+<!--                <el-button type="primary" plain class="shu" @click="dialogVisible = true">添加部门</el-button>-->
+<!--                <el-dialog-->
+<!--                    title="添加部门"-->
+<!--                    :visible.sync="dialogVisible"-->
+<!--                    width="40%"-->
+<!--                    :before-close="handleClose">-->
+<!--                    <div>-->
+<!--                        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="150px"  label-position="left" class="demo-ruleForm" >-->
+<!--                            <el-form-item label="部门名称" prop="name" required>-->
+<!--                                <el-input placeholder="请输入部门名称" v-model="ruleForm.name"></el-input>-->
+<!--                            </el-form-item>-->
+<!--                            <el-form-item label="部门代码" prop="bmdm" required>-->
+<!--                                <el-input placeholder="请输入部门代码" v-model="ruleForm.bmdm"></el-input>-->
+<!--                            </el-form-item>-->
+<!--                            <el-form-item label="部门类型" prop="bmlx" required>-->
+<!--                                <el-input placeholder="请输入部门类型" v-model="ruleForm.bmlx"></el-input>-->
+<!--                            </el-form-item>-->
+<!--                        </el-form>-->
+<!--                    </div>-->
+<!--                    <hr>-->
+<!--                    <span slot="footer" class="dialog-footer">-->
+<!--                         <div class="horizontal-line"></div>-->
+<!--                         <el-button type="primary" @click="submitForm('ruleForm')" style="background-color:dodgerblue;">提交</el-button>-->
+<!--                         <el-button @click="dialogVisible = false">取消</el-button>-->
+<!--                    </span>-->
+<!--                </el-dialog>-->
+                <el-button type="primary" plain class="shu">数据导出</el-button>
                 <el-input
                     placeholder="请输入部门名称/代码查询"
                     v-model="input"

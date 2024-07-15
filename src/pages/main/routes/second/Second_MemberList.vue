@@ -109,14 +109,14 @@
                                 变更<i class="el-icon-arrow-down el-icon--right"></i>
                                 </span>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-button type="text" @click="showChangeStatusDialog1(scope.row)">修改姓名</el-button>
-                                    <br>
-                                    <el-button type="text" @click="showChangeStatusDialog2(scope.row)">修改工号</el-button>
-                                    <br>
+<!--                                    <el-button type="text" @click="showChangeStatusDialog1(scope.row)">修改姓名</el-button>-->
+<!--                                    <br>-->
+<!--                                    <el-button type="text" @click="showChangeStatusDialog2(scope.row)">修改工号</el-button>-->
+<!--                                    <br>-->
                                     <el-button type="text" @click="showChangeStatusDialog3(scope.row)">变更系统角色</el-button>
                                     <br>
-                                    <el-button type="text" @click="showChangeStatusDialog4(scope.row)">变更角色代码</el-button>
-                                    <br>
+<!--                                    <el-button type="text" @click="showChangeStatusDialog4(scope.row)">变更角色代码</el-button>-->
+<!--                                    <br>-->
                                     <el-button type="text" @click="showChangeStatusDialog5(scope.row)">变更人员状态</el-button>
                                     <br>
                                 </el-dropdown-menu>

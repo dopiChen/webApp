@@ -5,7 +5,6 @@
             <el-form
                 :model="ruleForm"
                 status-icon
-                :rules="rules"
                 ref="ruleForm"
                 label-position="left"
                 label-width="70px"
@@ -48,14 +47,6 @@ export default {
         sn: '',
         password: ''
       },
-      // rules: {
-      //   uname: [
-      //     { required: true, message: '用户名不能为空！', trigger: 'blur' }
-      //   ],
-      //   password: [
-      //     { required: true, message: '密码不能为空！', trigger: 'blur' }
-      //   ]
-      // },
       form: {
         username: '',
         password: ''

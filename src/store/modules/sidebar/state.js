@@ -1,6 +1,6 @@
 export default {
   sidebarMap: {
-    1: {
+    2: {
       main: [
         {
           path: '/main/first_approval',
@@ -28,7 +28,7 @@ export default {
         }
       ]
     },
-    5: {
+    3: {
       main: [
         {
           path: '/main/first_approval',
@@ -42,7 +42,7 @@ export default {
         }
       ]
     },
-    3: {
+    1: {
       main: [
         {
           path: '/main/third1',
@@ -62,7 +62,7 @@ export default {
 
       ]
     },
-    2: {
+    5: {
       main: [
         {
           path: '/main/second1',

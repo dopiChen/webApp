@@ -18,9 +18,8 @@ export default {
     return {
       logo: {
         src: logo,
-        alt: '上程数据',
-        firstDes: '上程数据',
-        secondDes: '广泛UE模板'
+        alt: '监考报名',
+        firstDes: '监考报名'
       }
     }
   },

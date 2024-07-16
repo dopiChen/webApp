@@ -61,12 +61,6 @@ const mainPage = [
           import(/* webpackChunkName: "First" */ '../pages/main/routes/second/Second4')
       },
       {
-        path: 'second5',
-        name: 'second',
-        component: () =>
-          import(/* webpackChunkName: "First" */ '../pages/main/routes/second/Second5')
-      },
-      {
         path: 'second6',
         name: 'second',
         component: () =>

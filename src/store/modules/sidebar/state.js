@@ -84,11 +84,6 @@ export default {
           title: '监考通知确认情况'
         },
         {
-          path: '/main/second5',
-          icon: 'suncaper-menu-unfold',
-          title: '监考费放明细'
-        },
-        {
           path: '/main/second6',
           icon: 'suncaper-menu-unfold',
           title: '部门与角色管理'

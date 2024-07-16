@@ -8,3 +8,4 @@ export const batchList = (obj) => http.GET('/api/batch/pageList', obj)
 
 export const _login = (account) => http.POST('/api/user/login', account)
 export const getFinalList = () => http.GET('/api/finalNameList')
+export const _getAllBatches = () => http.GET('/api/batch/AllBatches')

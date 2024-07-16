@@ -191,6 +191,7 @@ export default {
     },
     handleSizeChange (val) {
       this.pageSize = val
+      this.currentPage = 1
     },
     handleCurrentChange (val) {
       this.currentPage = val

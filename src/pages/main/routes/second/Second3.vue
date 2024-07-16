@@ -82,7 +82,7 @@
                             :page-sizes="[10]"
                             :page-size="pageSize"
                             layout="prev, pager, next"
-                            :total="total"
+                            :total="users.length"
                             class="ye">
                         </el-pagination>
                     </div>
@@ -98,7 +98,6 @@ import { getFinalList } from '../../../../api/user'
 export default {
   data () {
     return {
-      total: 0,
       currentPage: 1,
       pageSize: 10,
       dialogVisible: false,
@@ -120,7 +119,6 @@ export default {
     getList () {
       getFinalList().then(res => {
         this.users = res.data
-        this.total = res.data.length
       })
     },
     handleSizeChange (val) {

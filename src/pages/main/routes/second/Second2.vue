@@ -3,15 +3,15 @@
         <span class="title">监考管理</span>
         <div class="top">
             <div class="top1">
-                        <el-button type="primary" icon="el-icon-search"  style="background-color:dodgerblue;">快速找人</el-button>
-                        <el-button type="primary" plain class="shu" @click="dialogVisible = true">创建批次</el-button>
+                <el-button type="primary" icon="el-icon-search" style="background-color:dodgerblue;">快速找人</el-button>
+                <el-button type="primary" plain class="shu" @click="dialogVisible = true">创建批次</el-button>
                 <el-dialog
-                        title="创造监考报名批次"
-                        :visible.sync="dialogVisible"
-                        width="40%"
-                        :before-close="handleClose">
+                    title="创造监考报名批次"
+                    :visible.sync="dialogVisible"
+                    width="40%"
+                    :before-close="handleClose">
                     <div>
-                        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="150px"  label-position="left" class="demo-ruleForm" >
+                        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="150px" label-position="left" class="demo-ruleForm">
                             <el-form-item label="批次名称" prop="name">
                                 <el-input placeholder="请输入批次名称" v-model="ruleForm.name"></el-input>
                             </el-form-item>
@@ -24,167 +24,104 @@
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="批次开始时间" required>
-                                    <el-form-item prop="date1">
-                                        <el-input v-model="ruleForm.bmkssj" placeholder="请输入批次开始时间"></el-input>
-                                    </el-form-item>
+                                <el-input v-model="ruleForm.bmkssj" placeholder="请输入批次开始时间"></el-input>
                             </el-form-item>
                             <el-form-item label="批次结束时间" required>
-                                <el-form-item prop="date2">
-                                    <el-input v-model="ruleForm.bmjssj" placeholder="请输入批次结束时间"></el-input>
-                                </el-form-item>
+                                <el-input v-model="ruleForm.bmjssj" placeholder="请输入批次结束时间"></el-input>
                             </el-form-item>
-                                <el-form-item label="监考说明">
-                                   <el-input
-                                    type="textarea"
-                                    placeholder="请输入监考说明"
-                                    v-model="jksm"
-                                    maxlength="200"
-                                    show-word-limit>
-                                   </el-input>
-                                </el-form-item>
+                            <el-form-item label="监考说明">
+                                <el-input type="textarea" placeholder="请输入监考说明" v-model="ruleForm.jksm" maxlength="200" show-word-limit></el-input>
+                            </el-form-item>
                             <el-form-item label="上传附件">
-                                <el-form-item>
-                                    <el-upload
-                                        class="upload-demo"
-                                        action="https://jsonplaceholder.typicode.com/posts/"
-                                        :on-preview="handlePreview"
-                                        :on-remove="handleRemove">
-                                        <el-button size="small" type="primary" class="scwj" plain icon="el-icon-upload2">上传文件</el-button>
-                                        <div class="wjxianzhi" style="margin-top: 40px">限制上传文件10个以下，单个大小不超过100M；</div>
-                                    </el-upload>
-                                </el-form-item>
-                            </el-form-item>
-                            <el-form-item label="考场名称" prop="kcmc">
-                                <el-input placeholder="请输入考场名称" v-model="ruleForm.kcmc"></el-input>
-                            </el-form-item>
-                            <el-form-item label="校区" prop="xq">
-                                <el-input placeholder="请输入校区" v-model="ruleForm.xq"></el-input>
-                            </el-form-item>
-                            <el-form-item label="校内地址" prop="xndz">
-                                <el-input placeholder="请输入校内地址" v-model="ruleForm.xndz"></el-input>
-                            </el-form-item>
-                            <el-form-item label="监考时间" prop="jksj">
-                                <el-input placeholder="监考时间" v-model="ruleForm.jksj"></el-input>
+                                <el-upload class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/" :on-preview="handlePreview" :on-remove="handleRemove">
+                                    <el-button size="small" type="primary" class="scwj" plain icon="el-icon-upload2">上传文件</el-button>
+                                    <div class="wjxianzhi" style="margin-top: 40px">限制上传文件10个以下，单个大小不超过100M；</div>
+                                </el-upload>
                             </el-form-item>
                         </el-form>
                     </div>
-                    <hr>
                     <span slot="footer" class="dialog-footer">
-                         <div class="horizontal-line"></div>
-                         <el-button type="primary" @click="submitForm('ruleForm')" style="background-color:dodgerblue;">提交</el-button>
-                         <el-button @click="dialogVisible = false">取消</el-button>
+                        <el-button type="primary" @click="submitForm('ruleForm')" style="background-color:dodgerblue;">提交</el-button>
+                        <el-button @click="dialogVisible = false">取消</el-button>
                     </span>
                 </el-dialog>
-                        <el-button type="primary" plain class="shu4">数据导出</el-button>
-                        <el-input
-                                placeholder="请输入监考名称关键词查询"
-                                v-model="input"
-                                class="shuru">
-                        </el-input>
-                        <el-button type="primary" class="shu2"  style="background-color:dodgerblue;" @click="searchData1">查询</el-button>
-                        <el-button type="primary" plain class="shu1" @click="resetData1">重置</el-button>
-                        <div class="table-container"><el-table
-                                ref="multipleTable"
-                                :data="paginatedData"
-                                tooltip-effect="dark"
-                                style="width: 100%"
-                                @selection-change="handleSelectionChange">
-                            <el-table-column
-                                    type="selection"
-                                    width="25px"
-                                    show-overflow-tooltip>
-                            </el-table-column>
-                            <el-table-column
-                                label="序号">
-                                <template slot-scope="scope">
-                                    {{scope.$index+1}}
-                                </template>
-                            </el-table-column>
-                            <el-table-column
-                                    prop="name"
-                                    label="监考名称"
-                                    show-overflow-tooltip>
-                            </el-table-column>
-                            <el-table-column
-                                    prop="bmqk"
-                                    label="报名情况">
-                            </el-table-column>
-                            <el-table-column
-                                    prop="startDate"
-                                    label="报名开始时间"
-                                    show-overflow-tooltip>
-                            </el-table-column>
-                            <el-table-column
-                                    prop="endDate"
-                                    label="报名结束时间"
-                                    show-overflow-tooltip>
-                            </el-table-column>
-                            <el-table-column
-                                    prop="year"
-                                    label="创建时间"
-                                    show-overflow-tooltip>
-                            </el-table-column>
-                            <el-table-column
-                                    label="批次状态">
-                            </el-table-column>
-                            <el-table-column
-                                    label="操作">
-                                <el-button type="text">查看名单</el-button>
-                                <el-dropdown>
-                                    <span class="el-dropdown-link">
-                                     更多<i class="el-icon-arrow-down el-icon--right"></i>
-                                    </span>
-                                    <el-dropdown-menu slot="dropdown">
-                                        <el-dropdown-item>黄金糕</el-dropdown-item>
-                                        <el-dropdown-item>狮子头</el-dropdown-item>
-                                        <el-dropdown-item>螺蛳粉</el-dropdown-item>
-                                        <el-dropdown-item disabled>双皮奶</el-dropdown-item>
-                                        <el-dropdown-item divided>蚵仔煎</el-dropdown-item>
-                                    </el-dropdown-menu>
-                                </el-dropdown>
-                            </el-table-column>
-                        </el-table>
-                            <div class="pagination-container">
-                                <el-pagination
-                                        background
-                                        @size-change="handleSizeChange"
-                                        @current-change="handleCurrentChange"
-                                        :current-page="currentPage"
-                                        :page-sizes="[10]"
-                                        :page-size="pageSize"
-                                        layout="prev, pager, next"
-                                        :total="tableData.length"
-                                        class="ye">
-                                </el-pagination>
-                            </div>
-                        </div>
+                <el-button type="primary" plain class="shu4">数据导出</el-button>
+                <el-input placeholder="请输入监考名称关键词查询" v-model="input" class="shuru" @input="debouncedSearch"></el-input>
+                <el-button type="primary" class="shu2" style="background-color:dodgerblue;" @click="searchData">查询</el-button>
+                <el-button type="primary" plain class="shu1" @click="resetData">重置</el-button>
+                <div class="table-container">
+                    <el-table ref="multipleTable" :data="paginatedData" tooltip-effect="dark" style="width: 100%">
+                        <el-table-column
+                            type="selection"
+                            width="25px"
+                            show-overflow-tooltip>
+                        </el-table-column>
+                        <el-table-column
+                            label="序号">
+                            <template slot-scope="scope">
+                                {{scope.$index + 1 + (currentPage - 1) * pageSize}}
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="batchName" label="监考名称" show-overflow-tooltip>
+                            <template slot-scope="scope">
+                                <span v-html="highlightSearchTerm(scope.row.batchName)"></span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="startDate" label="报名开始时间" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="endDate" label="报名结束时间" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="year" label="创建时间" show-overflow-tooltip></el-table-column>
+                        <el-table-column label="批次状态"></el-table-column>
+                        <el-table-column label="操作">
+                            <el-button type="text">查看名单</el-button>
+                            <el-dropdown>
+                                <span class="el-dropdown-link">
+                                    更多<i class="el-icon-arrow-down el-icon--right"></i>
+                                </span>
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item>查看详情</el-dropdown-item>
+                                    <el-dropdown-item>编辑</el-dropdown-item>
+                                    <el-dropdown-item>删除</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                        </el-table-column>
+                    </el-table>
+                    <div class="pagination-container">
+                        <el-pagination
+                            background
+                            @size-change="handleSizeChange"
+                            @current-change="handleCurrentChange"
+                            :current-page="currentPage"
+                            :page-sizes="[10, 20, 30, 40]"
+                            :page-size="pageSize"
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="filteredData.length"
+                            class="ye">
+                        </el-pagination>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import { debounce } from 'lodash'
+import {_getAllBatches} from '../../../../api/user'
+
 export default {
   data () {
     return {
       activeName: 'second',
       currentPage: 1,
       pageSize: 10,
-      value: '',
       input: '',
       dialogVisible: false,
       ruleForm: {
         name: '',
         year: '',
-        region: '',
         bmkssj: '',
         bmjssj: '',
-        delivery: false,
-        jksm: '',
-        kcmc: '',
-        xq: '',
-        xndz: '',
-        jksj: ''
+        jksm: ''
       },
       rules: {
         name: [
@@ -194,48 +131,40 @@ export default {
           { required: true, message: '请选择关联年份', trigger: 'change' }
         ],
         bmkssj: [
-          { required: true, message: '请选择批次开始时间', trigger: 'change' }
+          { required: true, message: '请输入批次开始时间', trigger: 'change' }
         ],
         bmjssj: [
-          { required: true, message: '请选择批次结束时间', trigger: 'change' }
+          { required: true, message: '请输入批次结束时间', trigger: 'change' }
         ]
       },
-      fliterData1: [],
-      tableData: [
-        {
-          name: '2022年A楼2023监考报名',
-          bmqk: '2/20',
-          bmkssj: '2023-09-12-10:30:00',
-          bmjssj: '2023-09-12-10:30:00',
-          cjsj: '2023-09-12-10:30:00'
-        }]
+      tableData: [],
+      filteredData: []
     }
   },
   computed: {
     paginatedData () {
       const start = (this.currentPage - 1) * this.pageSize
       const end = this.currentPage * this.pageSize
-      return this.fliterData1.slice(start, end)
+      return this.filteredData.slice(start, end)
     }
   },
-  mounted () {
-    this.fliterData1 = this.tableData
+  created () {
+    this.getList()
+    this.debouncedSearch = debounce(this.searchData, 300)
   },
   methods: {
-    handleClick (tab, event) {
-      console.log(tab, event)
-    },
-    indexMethod (index) {
-      return (this.currentPage - 1) * this.pageSize + index + 1
+    getList () {
+      _getAllBatches().then(res => {
+        this.tableData = res.data
+        this.filteredData = res.data
+      })
     },
     handleSizeChange (val) {
       this.pageSize = val
+      this.currentPage = 1
     },
     handleCurrentChange (val) {
       this.currentPage = val
-    },
-    handleClick1 () {
-      alert('button click')
     },
     handleClose (done) {
       this.$confirm('确认关闭？')
@@ -245,16 +174,14 @@ export default {
         .catch(_ => {})
     },
     submitForm (formName) {
-      this.$refs.ruleForm.validate((valid) => {
+      this.$refs[formName].validate((valid) => {
         if (valid) {
           this.tableData.push({ ...this.ruleForm })
+          this.filteredData = this.tableData
           this.dialogVisible = false
-          this.$refs.ruleForm.resetFields()
+          this.$refs[formName].resetFields()
         }
       })
-    },
-    resetForm (formName) {
-      this.$refs[formName].resetFields()
     },
     handleRemove (file, fileList) {
       console.log(file, fileList)
@@ -262,17 +189,22 @@ export default {
     handlePreview (file) {
       console.log(file)
     },
-    // 搜索函数
-    searchData1 () {
+    searchData () {
       const searchQuery = this.input.toLowerCase()
-      console.info(searchQuery)
-      this.fliterData1 = this.tableData.filter(item => {
-        return item.name.toLowerCase().includes(searchQuery)
+      this.filteredData = this.tableData.filter(item => {
+        return item.batchName.toLowerCase().includes(searchQuery)
       })
+      this.currentPage = 1
     },
-    resetData1 () {
+    resetData () {
       this.input = ''
-      this.fliterData1 = this.tableData
+      this.filteredData = this.tableData
+      this.currentPage = 1
+    },
+    highlightSearchTerm (text) {
+      if (!this.input) return text
+      const regex = new RegExp(`(${this.input})`, 'gi')
+      return text.replace(regex, '<span class="highlight">$1</span>')
     }
   }
 }
@@ -342,7 +274,7 @@ export default {
     padding-right: 10px;
     background: white;
 }
-.shuru{
+.shuru {
     position: absolute;
     right: 172px;
     width: 230px;
@@ -354,12 +286,12 @@ export default {
 .el-icon-arrow-down {
     font-size: 15px;
 }
-.scwj{
+.scwj {
     background-color: #FFFFFF;
     position: absolute;
     left:0px;
 }
-.wjxianzhi{
+.wjxianzhi {
     width: 261px;
     height: 20px;
     font-weight: 400;
@@ -371,5 +303,8 @@ export default {
     display: flex;
     justify-content: center;
     margin-top: 15px;
+}
+.highlight {
+    background-color: yellow;
 }
 </style>

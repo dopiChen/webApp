@@ -5,93 +5,85 @@
         <span class="title2">监考详细名单</span>
         <div class="top">
             <div class="top1">
-                <el-button type="primary" icon="el-icon-document"  style="background-color:dodgerblue;">导入监考信息</el-button>
+                <el-button type="primary" icon="el-icon-document" style="background-color:dodgerblue;">导入监考信息</el-button>
                 <el-button type="primary" plain class="shu" @click="dialogVisible = true">数据导出</el-button>
                 <el-input
-                        placeholder="请输入姓名/工号查询"
-                        v-model="input"
-                        class="shuru">
+                    placeholder="请输入姓名/工号查询"
+                    v-model="input"
+                    class="shuru">
                 </el-input>
-                <el-button type="primary" class="shu2"  style="background-color:dodgerblue;"  @click="searchData1">查询</el-button>
+                <el-button type="primary" class="shu2" style="background-color:dodgerblue;" @click="searchData1">查询</el-button>
                 <el-button type="primary" plain class="shu1" @click="resetData1">重置</el-button>
-                <div class="table-container"><el-table
+                <div class="table-container">
+                    <el-table
                         ref="multipleTable"
                         :data="paginatedData"
                         tooltip-effect="dark"
-                        style="width: 100%"
-                        @selection-change="handleSelectionChange">
-                    <el-table-column
+                        style="width: 100%">
+                        <el-table-column
                             type="selection"
                             width="25px"
                             show-overflow-tooltip>
-                    </el-table-column>
-                    <el-table-column
-                            type="index"
-                            :index="indexMethod"
-                            label="序号"
-                            show-overflow-tooltip>
-                    </el-table-column>
-                    <el-table-column
-                            prop="name"
+                        </el-table-column>
+                        <el-table-column
+                            label="序号">
+                            <template slot-scope="scope">
+                                {{scope.$index + 1 + (currentPage - 1) * pageSize}}
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="personnel.name"
                             label="姓名"
                             show-overflow-tooltip>
-                    </el-table-column>
-                    <el-table-column
-                            prop="xb"
+                        </el-table-column>
+                        <el-table-column
+                            prop="personnel.gender"
                             label="性别">
-                    </el-table-column>
-                    <el-table-column
-                            prop="gh"
+                        </el-table-column>
+                        <el-table-column
+                            prop="personnel.username"
                             label="工号"
                             show-overflow-tooltip>
-                    </el-table-column>
-                    <el-table-column
-                            prop="szdw"
+                        </el-table-column>
+                        <el-table-column
+                            prop="personnel.unit"
                             label="所在单位"
                             show-overflow-tooltip>
-                    </el-table-column>
-                    <el-table-column
-                            prop="sfzh"
-                            label="身份证号"
+                        </el-table-column>
+                        <el-table-column
+                            prop="personnel.phone"
+                            label="移动电话"
                             show-overflow-tooltip>
-                    </el-table-column>
-                    <el-table-column
-                        prop="yddh"
-                        label="移动电话"
-                        show-overflow-tooltip>
-                    </el-table-column>
-                    <el-table-column
-                        prop="jkzz"
-                        label="监考职责"
-                        show-overflow-tooltip>
-                    </el-table-column>
-                    <el-table-column
-                        prop="jkcc"
-                        label="监考场次"
-                        show-overflow-tooltip>
-                    </el-table-column>
-                    <el-table-column
-                        prop="kcmc"
-                        label="考场名称"
-                        show-overflow-tooltip>
-                    </el-table-column>
-                    <el-table-column
-                        prop="jksj"
-                        label="监考时间"
-                        width="150">
-                    </el-table-column>
-                </el-table>
+                        </el-table-column>
+                        <el-table-column
+                            prop="examination.examId"
+                            label="监考场次"
+                            show-overflow-tooltip>
+                        </el-table-column>
+                        <el-table-column
+                            prop="examination.examRoom"
+                            label="考场名称"
+                            show-overflow-tooltip>
+                        </el-table-column>
+                        <el-table-column
+                            label="监考时间"
+                            width="150">
+                            <template slot-scope="scope">
+                                {{ scope.row.examination.fromTime }} 至 {{ scope.row.examination.endTime }}
+                            </template>
+                        </el-table-column>
+                    </el-table>
                     <div class="pagination-container">
                         <el-pagination
-                                background
-                                @size-change="handleSizeChange"
-                                @current-change="handleCurrentChange"
-                                :current-page="currentPage"
-                                :page-sizes="[10]"
-                                :page-size="pageSize"
-                                layout="prev, pager, next"
-                                :total="tableData.length"
-                                class="ye">
+                            background
+                            @size-change="handleSizeChange"
+                            @current-change="handleCurrentChange"
+                            :current-page="currentPage"
+                            :page-sizes="[10]"
+                            :page-size="pageSize"
+                            layout="prev, pager, next"
+                            :total="total"
+                            class="ye">
                         </el-pagination>
                     </div>
                 </div>
@@ -101,254 +93,59 @@
 </template>
 
 <script>
+import { getFinalList } from '../../../../api/user'
+
 export default {
   data () {
     return {
-      activeName: 'second',
+      total: 0,
       currentPage: 1,
       pageSize: 10,
-      value: '',
-      input: '',
       dialogVisible: false,
-      ruleForm: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
-      },
-      fliterData1: [],
-      tableData: [
-        {
-          name: '林家栋',
-          xb: '男',
-          gh: '34099001',
-          szdw: '计算机智能学院',
-          sfzh: '370345198009091234',
-          yddh: '18789000998',
-          jkzz: '副监考',
-          jkcc: '1',
-          kcmc: 'A栋301',
-          jksj: '12月25日全天-12月26日全天'
-        },
-        {
-          name: '薛家栋',
-          xb: '男',
-          gh: '34099001',
-          szdw: '艺术学院',
-          sfzh: '370345198009091234',
-          yddh: '18789000998',
-          jkzz: '副监考',
-          jkcc: '2',
-          kcmc: 'A栋301',
-          jksj: '12月25日全天-12月26日全天'
-        },
-        {
-          name: '张家栋',
-          xb: '男',
-          gh: '34099001',
-          szdw: '人工智能学院',
-          sfzh: '370345198009091234',
-          yddh: '18789000998',
-          jkzz: '副监考',
-          jkcc: '4',
-          kcmc: 'A栋301',
-          jksj: '12月25日全天-12月26日全天'
-        },
-        {
-          name: '王家栋',
-          xb: '男',
-          gh: '34099001',
-          szdw: '艺术学院',
-          sfzh: '370345198009091234',
-          yddh: '18789000998',
-          jkzz: '副监考',
-          jkcc: '2',
-          kcmc: 'A栋301',
-          jksj: '12月25日全天-12月26日全天'
-        },
-        {
-          name: '王家栋',
-          xb: '男',
-          gh: '34099001',
-          szdw: '计算机智能学院',
-          sfzh: '370345198009091234',
-          yddh: '18789000998',
-          jkzz: '副监考',
-          jkcc: '1',
-          kcmc: 'A栋301',
-          jksj: '12月25日全天-12月26日全天'
-        },
-        {
-          name: '王家栋',
-          xb: '男',
-          gh: '34099001',
-          szdw: '人工智能学院',
-          sfzh: '370345198009091234',
-          yddh: '18789000998',
-          jkzz: '副监考',
-          jkcc: '3',
-          kcmc: 'A栋301',
-          jksj: '12月25日全天-12月26日全天'
-        },
-        {
-          name: '王家栋',
-          xb: '男',
-          gh: '34099001',
-          szdw: '计算机智能学院',
-          sfzh: '370345198009091234',
-          yddh: '18789000998',
-          jkzz: '副监考',
-          jkcc: '2',
-          kcmc: 'A栋301',
-          jksj: '12月25日全天-12月26日全天'
-        },
-        {
-          name: '王家栋',
-          xb: '男',
-          gh: '34099001',
-          szdw: '艺术学院',
-          sfzh: '370345198009091234',
-          yddh: '18789000998',
-          jkzz: '副监考',
-          jkcc: '1',
-          kcmc: 'A栋301',
-          jksj: '12月25日全天-12月26日全天'
-        },
-        {
-          name: '王家栋',
-          xb: '男',
-          gh: '34099001',
-          szdw: '人工智能学院',
-          sfzh: '370345198009091234',
-          yddh: '18789000998',
-          jkzz: '副监考',
-          jkcc: '2',
-          kcmc: 'A栋301',
-          jksj: '12月25日全天-12月26日全天'
-        },
-        {
-          name: '王家栋',
-          xb: '男',
-          gh: '34099001',
-          szdw: '艺术学院',
-          sfzh: '370345198009091234',
-          yddh: '18789000998',
-          jkzz: '副监考',
-          jkcc: '4',
-          kcmc: 'A栋301',
-          jksj: '12月25日全天-12月26日全天'
-        },
-        {
-          name: '王家栋',
-          xb: '男',
-          gh: '34099001',
-          szdw: '计算机智能学院',
-          sfzh: '370345198009091234',
-          yddh: '18789000998',
-          jkzz: '副监考',
-          jkcc: '3',
-          kcmc: 'A栋301',
-          jksj: '12月25日全天-12月26日全天'
-        },
-        {
-          name: '王家栋',
-          xb: '男',
-          gh: '34099001',
-          szdw: '人工智能学院',
-          sfzh: '370345198009091234',
-          yddh: '18789000998',
-          jkzz: '副监考',
-          jkcc: '2',
-          kcmc: 'A栋301',
-          jksj: '12月25日全天-12月26日全天'
-        },
-        {
-          name: '王家栋',
-          xb: '男',
-          gh: '34099001',
-          szdw: '计算机智能学院',
-          sfzh: '370345198009091234',
-          yddh: '18789000998',
-          jkzz: '副监考',
-          jkcc: '1',
-          kcmc: 'A栋301',
-          jksj: '12月25日全天-12月26日全天'
-        }
-      ]
+      input: '',
+      users: []
     }
   },
   computed: {
     paginatedData () {
       const start = (this.currentPage - 1) * this.pageSize
       const end = this.currentPage * this.pageSize
-      return this.fliterData1.slice(start, end)
+      return this.users.slice(start, end)
     }
   },
-  mounted () {
-    this.fliterData1 = this.tableData
+  created () {
+    this.getList()
   },
   methods: {
-    handleClick (tab, event) {
-      console.log(tab, event)
-    },
-    indexMethod (index) {
-      return (this.currentPage - 1) * this.pageSize + index + 1
+    getList () {
+      getFinalList().then(res => {
+        this.users = res.data
+        this.total = res.data.length
+      })
     },
     handleSizeChange (val) {
       this.pageSize = val
+      this.currentPage = 1
     },
     handleCurrentChange (val) {
       this.currentPage = val
-    },
-    handleClick1 () {
-      alert('button click')
-    },
-    handleClose (done) {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          done()
-        })
-        .catch(_ => {})
-    },
-    submitForm (formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          alert('submit!')
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
-    },
-    resetForm (formName) {
-      this.$refs[formName].resetFields()
-    },
-    handleRemove (file, fileList) {
-      console.log(file, fileList)
-    },
-    handlePreview (file) {
-      console.log(file)
     },
     returnclick () {
       this.$router.push({
         path: '/main/second/second3'
       })
     },
-    // 搜索函数
     searchData1 () {
       const searchQuery = this.input.toLowerCase()
-      console.info(searchQuery)
-      this.fliterData1 = this.tableData.filter(item => {
-        return item.name.toLowerCase().includes(searchQuery) || item.gh.toLowerCase().includes(searchQuery)
+      this.users = this.users.filter(item => {
+        return item.personnel.name.toLowerCase().includes(searchQuery) || item.personnel.username.toLowerCase().includes(searchQuery)
       })
+      this.total = this.users.length
+      this.currentPage = 1
     },
     resetData1 () {
       this.input = ''
-      this.fliterData1 = this.tableData
+      this.getList()
     }
   }
 }
@@ -373,7 +170,7 @@ export default {
     left: 32px;
     right: 32px;
     top: 18px;
-    bottom:16px;
+    bottom: 16px;
 }
 .shu {
     background-color: #ffffff;
@@ -401,7 +198,7 @@ export default {
     padding-right: 10px;
     background: white;
 }
-.shuru{
+.shuru {
     position: absolute;
     right: 172px;
     width: 230px;
@@ -428,5 +225,4 @@ export default {
     paragraph-spacing: 0;
     text-align: right;
 }
-
 </style>

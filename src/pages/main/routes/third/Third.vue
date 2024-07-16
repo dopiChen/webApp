@@ -28,10 +28,10 @@
                             width="55">
                     </el-table-column>
                     <el-table-column
-                            fixed
-                            prop="batchId"
-                            label="序号"
-                            width="100">
+                            label="序号">
+                        <template slot-scope="scope">
+                            {{scope.$index+1}}
+                        </template>
                     </el-table-column>
                     <el-table-column
                             prop="batchName"

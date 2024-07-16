@@ -50,13 +50,13 @@
                         show-overflow-tooltip>
                     </el-table-column>
                     <el-table-column
-                        type="index"
-                        :index="indexMethod"
-                        label="序号"
-                        show-overflow-tooltip>
+                        label="序号">
+                        <template slot-scope="scope">
+                            {{scope.$index + 1 + (currentPage - 1) * pageSize}}
+                        </template>
                     </el-table-column>
                     <el-table-column
-                        prop="name"
+                        prop="unit"
                         label="部门名称"
                         show-overflow-tooltip>
                     </el-table-column>

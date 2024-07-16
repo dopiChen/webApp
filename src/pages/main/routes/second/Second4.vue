@@ -95,32 +95,32 @@
                             show-overflow-tooltip>
                     </el-table-column>
                     <el-table-column
-                            type="index"
-                            :index="indexMethod"
-                            label="序号"
-                            show-overflow-tooltip>
+                        label="序号">
+                        <template slot-scope="scope">
+                            {{scope.$index + 1 + (currentPage - 1) * pageSize}}
+                        </template>
                     </el-table-column>
                     <el-table-column
-                            prop="name"
+                            prop="batchName"
                             label="监考名称"
                             show-overflow-tooltip>
                     </el-table-column>
                     <el-table-column
-                            prop="bmqk"
+                            prop="b"
                             label="报名情况">
                     </el-table-column>
                     <el-table-column
-                            prop="bmkssj"
+                            prop="startDate"
                             label="报名开始时间"
                             show-overflow-tooltip>
                     </el-table-column>
                     <el-table-column
-                            prop="bmjssj"
+                            prop="endDate"
                             label="报名结束时间"
                             show-overflow-tooltip>
                     </el-table-column>
                     <el-table-column
-                            prop="cjsj"
+                            prop="year"
                             label="创建时间"
                             show-overflow-tooltip>
                     </el-table-column>

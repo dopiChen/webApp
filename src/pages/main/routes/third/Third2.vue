@@ -7,15 +7,15 @@
                     <el-input
                             placeholder="输入监考名称关键词"
                             prefix-icon="el-icon-search"
-                            v-model="input">
+                            v-model="query.batchName">
                     </el-input>
-                    <el-button type="primary" @click="searchData1">搜索</el-button>
-                    <el-button type="info" @click="resetData1">重置</el-button>
+                    <el-button type="primary" @click="getList">搜索</el-button>
+                    <el-button type="info">重置</el-button>
                 </div>
             </div>
             <div class="tablebody">
                 <el-table
-                        :data="currentTableData"
+                        :data="lists"
                         stripe
                         style="width: 100%">
                     <el-table-column
@@ -23,26 +23,30 @@
                             width="55">
                     </el-table-column>
                     <el-table-column
-                            fixed
-                            prop="index"
-                            label="序号"
-                            width="200">
+                        label="序号">
+                        <template slot-scope="scope">
+                            {{scope.$index+1}}
+                        </template>
                     </el-table-column>
                     <el-table-column
-                            prop="round"
+                            prop="batchName"
                             width="400"
                             label="监考批次">
-
                     </el-table-column>
                     <el-table-column
-                            prop="startdate"
+                            prop="startDate"
                             label="报名开始时间"
                             width="450">
                     </el-table-column>
                     <el-table-column
-                            prop="overdate"
+                            prop="endDate"
                             label="报名结束时间"
                             width="400">
+                    </el-table-column>
+                    <el-table-column
+                        prop="year"
+                        label="创建时间"
+                        show-overflow-tooltip>
                     </el-table-column>
                     <el-table-column
                             label="是否确认"
@@ -66,13 +70,15 @@
             </div>
             <div class="block">
                 <el-pagination
-                        background
-                        small
-                        layout="prev, pager, next"
-                        :total="total"
-                        :page-size="pageSize"
-                        @current-change="handleCurrentChange"
-                >
+                    style="margin-top: 20px"
+                    background
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="query.pageNo"
+                    :page-sizes="[10, 20, 30, 40]"
+                    :page-size="query.pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="total">
                 </el-pagination>
             </div>
         </div>
@@ -80,192 +86,36 @@
 </template>
 
 <script>
+import {batchList} from '../../../../api/user'
+
 export default {
   name: 'Third2',
   data () {
     return {
+      total: 0,
       welcome: '欢迎第三用户！',
       input: '',
       checked: true,
-      teams: [{
-        id: 'A',
-        index: '00',
-        round: '2023A楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        state: '已确认'
-
-      }, {
-        id: 'B',
-        index: '01',
-        round: '2023B楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        state: '已确认'
-      }, {
-        id: 'C',
-        index: '02',
-        round: '2023C楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        state: '已确认'
-      }, {
-        id: 'D',
-        index: '03',
-        round: '2023D楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        state: '已确认'
-      }, {
-        id: 'E',
-        index: '04',
-        round: '2023E楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        state: '已确认'
-      }, {
-        id: 'A',
-        index: '05',
-        round: '2023A楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        state: '已确认'
-      }, {
-        id: 'A',
-        index: '06',
-        round: '2023A楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        state: '已确认'
-      }, {
-        id: 'A',
-        index: '07',
-        round: '2023A楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        state: '已确认'
-      }, {
-        id: 'A',
-        index: '08',
-        round: '2023A楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        state: '已确认'
-      }, {
-        id: 'A',
-        index: '09',
-        round: '2023A楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        state: '已确认'
-      }, {
-        id: 'A',
-        index: '10',
-        round: '2023A楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        state: '已确认'
-      }, {
-        id: 'A',
-        index: '11',
-        round: '2023A楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        state: '已确认'
-      }, {
-        id: 'A',
-        index: '12',
-        round: '2023A楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        state: '已确认'
-      }, {
-        id: 'A',
-        index: '13',
-        round: '2023A楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        state: '已确认'
-      }, {
-        id: 'A',
-        index: '14',
-        round: '2023A楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        state: '已确认'
-      }, {
-        id: 'A',
-        index: '15',
-        round: '2023A楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        state: '已确认'
-      }, {
-        id: 'A',
-        index: '16',
-        round: '2023A楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        state: '已确认'
-      }, {
-        id: 'A',
-        index: '17',
-        round: '2023A楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        state: '已确认'
-      }, {
-        id: 'A',
-        index: '18',
-        round: '2023A楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        state: '已确认'
-      }, {
-        id: 'A',
-        index: '19',
-        round: '2023A楼2023监考报名',
-        startdate: '2023-9-12-10:30:00',
-        overdate: '2023-10-12-10:30:00',
-        state: '已确认'
-      }
-      ],
+      lists: [],
       expandedTeam: null, // 存储当前展开的队伍信息
-      pageSize: 15, // 每页显示行数
-      currentPage: 1, // 当前页码
-      // 搜索函数
-      fliterData1: []
-    }
-  },
-  // 计算换页显示
-  computed: {
-    total () {
-      return this.teams.length
-    },
-    currentTableData () {
-      const start = (this.currentPage - 1) * this.pageSize
-      const end = start + this.pageSize
-      return this.fliterData1.slice(start, end)
+      query: {
+        batchName: '',
+        startTime: '',
+        endTime: '',
+        pageNo: 1,
+        pageSize: 10
+      }
     }
   },
   methods: {
-    handleclick (row) {
-      this.$router.push({
-        name: 'third3A',
-        query: {
-          id: row.id
-        }
-      })
+    handleSizeChange (value) {
+      // 吧页面大小重新赋值，然后重新获取数据
+      this.query.pageSize = value
+      this.getList()
     },
-    handleCurrentChange (page) {
-      this.currentPage = page
-    },
-    updateTableHeight () {
-      this.$nextTick(() => {
-        const tableBody = this.$refs.tableBody
-        const height = tableBody.clientHeight * 0.9
-        this.tableHeight = height
-      })
+    handleCurrentChange (value) {
+      this.query.pageNo = value
+      this.getList()
     },
     handlecomfirm (row) {
       if (row.state === '已确认') {
@@ -274,26 +124,17 @@ export default {
         row.state = '已确认'
       }
     },
-    // 搜索函数
-    searchData1 () {
-      const searchQuery = this.input.toLowerCase()
-      console.info(searchQuery)
-      this.fliterData1 = this.teams.filter(item => {
-        return item.round.toLowerCase().includes(searchQuery)
+    getList () {
+      console.info(this.query.batchName)
+      batchList(this.query).then(res => {
+        console.info(res)
+        this.lists = res.data.records
+        this.total = res.data.total
       })
-    },
-    resetData1 () {
-      this.input = ''
-      this.fliterData1 = this.teams
     }
   },
-  mounted () {
-    this.updateTableHeight()
-    this.fliterData1 = this.teams
-    window.addEventListener('resize', this.updateTableHeight)
-  },
-  beforeDestroy () {
-    window.removeEventListener('resize', this.updateTableHeight)
+  created () {
+    this.getList()
   }
 }
 </script>

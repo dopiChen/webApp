@@ -131,7 +131,6 @@
 
 <script>
 import {Message} from 'element-ui'
-import {mapState} from 'vuex'
 import {_commitSignup, _getBatch, _getBatchDetail, _getExamDetail, _getUserData} from '../../../../api/api'
 
 export default {
@@ -139,6 +138,7 @@ export default {
   data () {
     return {
       batchid: this.$route.query.ids,
+      username: this.$route.query.username,
       issubmitVisible: true,
       issuccessVisible: false,
       isunsuccessVisible: false,
@@ -158,9 +158,6 @@ export default {
     this.fetchData3()
   },
   computed: {
-    ...mapState({
-      username: state => state.user.id // 映射 userId
-    })
   },
   methods: {
     handlesubmit () {

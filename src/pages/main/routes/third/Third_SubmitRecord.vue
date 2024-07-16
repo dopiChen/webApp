@@ -79,7 +79,7 @@
 
 <script>
 import {mapState} from 'vuex'
-import {_getAllSignUp, _getUserData} from '../../../../api/api'
+import {_getAllSignUp, _getLeaders, _getUserData} from '../../../../api/api'
 
 export default {
   name: 'UserProfile',
@@ -91,7 +91,8 @@ export default {
         avatar: 'https://via.placeholder.com/150',
         name: this.name
       },
-      applications: []
+      applications: [],
+      leaderData: []
     }
   },
   created () {
@@ -99,6 +100,7 @@ export default {
     console.info(11111)
     this.fetchData2()
     console.info(11111)
+    this.fetchData4()
   },
   computed: {
     ...mapState({
@@ -145,7 +147,7 @@ export default {
       return '未知状态' // 如果有其他情况，可以返回一个默认状态
     },
     viewSignUp (row) {
-      this.$router.push({name: 'third_signUpGoOn', query: {examId: row.examId, username: this.username}})
+      this.$router.push({name: 'third_signUpGoOn', query: {examId: row.examId, username: this.username, lederdata: this.leaderData}})
     },
     async fetchData1 () {
       _getUserData(this.username).then(res => {
@@ -156,6 +158,13 @@ export default {
       _getAllSignUp(this.username).then(res => {
         console.info(res)
         this.applications = res.data
+      })
+    },
+    async fetchData4 () {
+      _getLeaders(this.username).then(res => {
+        this.leaderData = res.data
+        console.info(1111)
+        console.log(this.leaderData[0].user.username)
       })
     }
   }

@@ -60,20 +60,20 @@
                                      alt="Avatar" style="width: 40px;height: 40px;">
                                 <div :class="{ 'red-text': getStatus(2) === '审批失败' }" style="font-size: 15px">
                                     <p>审批人(学院研工办主任)</p>
-                                    <p>{{ teacher_data2.name }}&nbsp;&nbsp;&nbsp;&nbsp;{{ teacher_data2.id }}&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                                    <p>{{leaderData[0].personnel.name }}&nbsp;&nbsp;&nbsp;&nbsp;{{ leaderData[0].personnel.username  }}&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                     <p>状态: {{ getStatus(2) }}</p>
                                 </div>
                             </div>
                         </template>
                     </el-step>
                     <el-step title="步骤 3">
-                        <template #description>
+                        <template #description >
                             <div class="info-box">
                                 <img src="../../../../../src/assets/images/teacher3.jpg" class="avatar"
                                      alt="Avatar" style="width: 40px;height: 40px;">
                                 <div :class="{ 'red-text': getStatus(3) === '审批失败' }" style="font-size: 15px">
                                     <p>审批人(职能部门综合办主任)</p>
-                                    <p>{{ teacher_data3.name }}&nbsp;&nbsp;&nbsp;&nbsp;{{ teacher_data3.id }}&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                                    <p>{{ leaderData[1].personnel.name }}&nbsp;&nbsp;&nbsp;&nbsp;{{ leaderData[1].personnel.username  }}&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                     <p>状态: {{ getStatus(3) }}</p>
                                 </div>
                             </div>
@@ -86,7 +86,7 @@
                                      alt="Avatar" style="width: 40px;height: 40px;">
                                 <div :class="{ 'red-text': getStatus(4) === '审批失败' }" style="font-size: 15px">
                                     <p>审批人(学院分管研究生工作副院长)</p>
-                                    <p>{{ teacher_data4.name }}&nbsp;&nbsp;&nbsp;&nbsp;{{ teacher_data4.id }}&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                                    <p>{{ leaderData[2].personnel.name }}&nbsp;&nbsp;&nbsp;&nbsp;{{ leaderData[2].personnel.username  }}&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                     <p>状态: {{ getStatus(4) }}</p>
                                 </div>
                             </div>
@@ -99,7 +99,7 @@
                                      alt="Avatar" style="width: 40px;height: 40px;">
                                 <div :class="{ 'red-text': getStatus(5) === '审批失败' }" style="font-size: 15px">
                                     <p>审批人(研究生招生考务科科长)</p>
-                                    <p>{{ teacher_data5.name }}&nbsp;&nbsp;&nbsp;&nbsp;{{ teacher_data5.id }}&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                                    <p>{{ leaderData[3].personnel.name }}&nbsp;&nbsp;&nbsp;&nbsp;{{ leaderData[3].personnel.username  }}&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                     <p>状态: {{ getStatus(5) }}</p>
                                 </div>
                             </div>
@@ -113,7 +113,7 @@
 </template>
 
 <script>
-import {_getExamDetail, _getOneSignUp, _getUserData} from '../../../../api/api'
+import {_getAllNotComfirms, _getExamDetail, _getLeaders, _getOneSignUp, _getUserData} from '../../../../api/api'
 
 export default {
   name: 'Third_signUpGoOn',
@@ -131,41 +131,79 @@ export default {
         date: '2023-09-12',
         time: '12:09:23'
       },
-      // 学院研工办主任
-      teacher_data2: {
-        name: '刘洋',
-        id: '100901',
-        date: '2023-09-13',
-        time: '11:09:23'
-      },
-      // 职能部门综合办主任
-      teacher_data3: {
-        name: '张莉莎',
-        id: '100902',
-        date: '2023-09-15',
-        time: '12:09:23'
-      },
-      // 学院分管研究生工作副院长
-      teacher_data4: {
-        name: '林朝阳',
-        id: '100903',
-        date: '2023-11-16',
-        time: '12:09:23'
-      },
-      // 研究生招生考务科科长
-      teacher_data5: {
-        name: '陈晨',
-        id: '100904',
-        date: '2023-10-19',
-        time: '12:09:23'
-      },
-      activeStep: 1
+      leaderData: [],
+      activeStep: 1,
+      leaderData2: [
+        {
+          'personnel': {
+            'name': '孙八',
+            'unit': null,
+            'gender': null,
+            'eduBackground': null,
+            'phone': null,
+            'backupPhone': null,
+            'photo': null,
+            'username': '10009',
+            'address': null
+          },
+          'user': {
+            'username': '10009',
+            'password': null,
+            'name': null,
+            'usertype': 2,
+            'isDeleted': null,
+            'isEnabled': null
+          }
+        },
+        {
+          'personnel': {
+            'name': '周九',
+            'unit': null,
+            'gender': null,
+            'eduBackground': null,
+            'phone': null,
+            'backupPhone': null,
+            'photo': null,
+            'username': '10010',
+            'address': null
+          },
+          'user': {
+            'username': '10010',
+            'password': null,
+            'name': null,
+            'usertype': 3,
+            'isDeleted': null,
+            'isEnabled': null
+          }
+        },
+        {
+          'personnel': {
+            'name': '吴十',
+            'unit': null,
+            'gender': null,
+            'eduBackground': null,
+            'phone': null,
+            'backupPhone': null,
+            'photo': null,
+            'username': '10011',
+            'address': null
+          },
+          'user': {
+            'username': '10011',
+            'password': null,
+            'name': null,
+            'usertype': 4,
+            'isDeleted': null,
+            'isEnabled': null
+          }
+        }]
     }
   },
   created () {
     this.fetchData1()
     this.fetchData2()
     this.fetchData3()
+    this.fetchData4()
   },
   methods: {
     getStatus (step) {
@@ -190,7 +228,7 @@ export default {
       }
     },
     returnclick () {
-      this.$router.push({ name: 'third_submitrecord' })
+      this.$router.push({name: 'third_submitrecord'})
     },
     async fetchData1 () {
       _getExamDetail(this.examId).then(res => {
@@ -207,6 +245,14 @@ export default {
         this.signupdetail = res.data
         this.activeStep += this.signupdetail.approvalStatus
       })
+    },
+    async fetchData4 () {
+      try {
+        const res = await _getLeaders(this.username)
+        this.leaderData = res.data
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
     }
   }
 }

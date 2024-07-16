@@ -80,7 +80,7 @@ const mainPage = [
       },
       {
         path: 'third2',
-        name: 'third',
+        name: 'third2',
         component: () =>
           import(/* webpackChunkName: "First" */ '../pages/main/routes/third/Third2')
       },

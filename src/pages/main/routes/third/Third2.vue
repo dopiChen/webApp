@@ -5,17 +5,17 @@
             <div class="selectbody">
                 <div class="demo-input-suffix">
                     <el-input
-                            placeholder="输入监考名称关键词"
+                            placeholder="输入考试编号查询"
                             prefix-icon="el-icon-search"
-                            v-model="query.batchName">
+                            v-model="input">
                     </el-input>
-                    <el-button type="primary" @click="getList">搜索</el-button>
-                    <el-button type="info">重置</el-button>
+                    <el-button type="primary" @click="searchData1">搜索</el-button>
+                    <el-button type="info" @click="resetData1">重置</el-button>
                 </div>
             </div>
             <div class="tablebody">
                 <el-table
-                        :data="lists"
+                        :data="currentdata"
                         stripe
                         style="width: 100%">
                     <el-table-column
@@ -23,62 +23,56 @@
                             width="55">
                     </el-table-column>
                     <el-table-column
-                        label="序号">
-                        <template slot-scope="scope">
-                            {{scope.$index+1}}
-                        </template>
+                            fixed
+                            prop="examId"
+                            label="考试编号"
+                            width="200">
                     </el-table-column>
                     <el-table-column
-                            prop="batchName"
-                            width="400"
-                            label="监考批次">
-                    </el-table-column>
-                    <el-table-column
-                            prop="startDate"
-                            label="报名开始时间"
+                            prop="username"
+                            label="工号"
                             width="450">
                     </el-table-column>
                     <el-table-column
-                            prop="endDate"
-                            label="报名结束时间"
+                        prop="name"
+                        label="姓名"
+                        width="450">
+                    </el-table-column>
+                    <el-table-column
+                        prop="way"
+                        label="报名方式"
+                        width="450">
+                    </el-table-column>
+                    <el-table-column
+                            prop="intendedCampus"
+                            label="校区"
                             width="400">
                     </el-table-column>
                     <el-table-column
-                        prop="year"
-                        label="创建时间"
-                        show-overflow-tooltip>
-                    </el-table-column>
-                    <el-table-column
-                            label="是否确认"
-                            width="400">
+                        prop="isComfirm"
+                        label="是否确认"
+                        width="400">
                         <template v-slot="scope">
-                            <el-button type="text" size="small" @click="handlecomfirm(scope.row)">{{
-                                scope.row.state
-                                }}
+                            <el-button
+                                type="text"
+                                size="small"
+                                :disabled="scope.row.isComfirm === 1"
+                                @click="scope.row.isComfirm === 0 ? handlecomfirm(scope.row) : null">
+                                {{ scope.row.isComfirm === 1 ? '已确认' : '未确认' }}
                             </el-button>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                            fixed="right"
-                            label="操作"
-                            width="300">
-                        <template v-slot="scope">
-                            <el-button type="text" size="small" @click="handleclick(scope.row)">查看</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
             </div>
             <div class="block">
                 <el-pagination
-                    style="margin-top: 20px"
-                    background
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="query.pageNo"
-                    :page-sizes="[10, 20, 30, 40]"
-                    :page-size="query.pageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="total">
+                        background
+                        small
+                        layout="prev, pager, next"
+                        :total="total"
+                        :page-size="pageSize"
+                        @current-change="handleCurrentChange"
+                >
                 </el-pagination>
             </div>
         </div>
@@ -86,55 +80,78 @@
 </template>
 
 <script>
-import {batchList} from '../../../../api/user'
+import {mapState} from 'vuex'
+import {_doComfirm, _getAllComfirm, _searchComfirm} from '../../../../api/api'
 
 export default {
   name: 'Third2',
   data () {
     return {
-      total: 0,
-      welcome: '欢迎第三用户！',
       input: '',
       checked: true,
-      lists: [],
-      expandedTeam: null, // 存储当前展开的队伍信息
-      query: {
-        batchName: '',
-        startTime: '',
-        endTime: '',
-        pageNo: 1,
-        pageSize: 10
-      }
-    }
-  },
-  methods: {
-    handleSizeChange (value) {
-      // 吧页面大小重新赋值，然后重新获取数据
-      this.query.pageSize = value
-      this.getList()
-    },
-    handleCurrentChange (value) {
-      this.query.pageNo = value
-      this.getList()
-    },
-    handlecomfirm (row) {
-      if (row.state === '已确认') {
-        row.state = '未确认'
-      } else {
-        row.state = '已确认'
-      }
-    },
-    getList () {
-      console.info(this.query.batchName)
-      batchList(this.query).then(res => {
-        console.info(res)
-        this.lists = res.data.records
-        this.total = res.data.total
-      })
+      currentdata: [],
+      teams: [],
+      expandedTeam: null // 存储当前展开的队伍信息
     }
   },
   created () {
-    this.getList()
+    this.fetchData1()
+  },
+  computed: {
+    ...mapState({
+      username: state => state.user.id // 映射 userId
+    })
+  },
+  methods: {
+    handleclick (row) {
+      this.$router.push({
+        name: 'third3A',
+        query: {
+          id: row.id
+        }
+      })
+    },
+    handleCurrentChange (page) {
+      this.currentPage = page
+    },
+    updateTableHeight () {
+      this.$nextTick(() => {
+        const tableBody = this.$refs.tableBody
+        const height = tableBody.clientHeight * 0.9
+        this.tableHeight = height
+      })
+    },
+    handlecomfirm (row) {
+      _doComfirm(this.username, row.examId).then(res => {
+        this.$message({
+          message: '确认成功',
+          type: 'success'
+        })
+      })
+      this.fetchData1()
+    },
+    resetData1 () {
+      this.input = ''
+      this.currentdata = this.teams
+    },
+    searchData1 () {
+      if (this.input === '') {
+        this.currentdata = this.teams
+      } else {
+        _searchComfirm(this.username, this.input).then(res => {
+          this.currentdata = res.data
+        })
+      }
+    },
+    async fetchData1 () {
+      _getAllComfirm(this.username).then(res => {
+        this.teams = res.data
+        this.currentdata = this.teams
+      })
+    }
+  },
+  beforeDestroy () {
+    window.removeEventListener('resize', this.updateTableHeight)
   }
 }
 </script>

@@ -17,7 +17,7 @@
             </div>
             <div class="tablebody">
                 <el-table
-                        :data="teams"
+                        :data="fliterData1"
                         stripe
                         style="width: 100%"
                         @selection-change="handleSelelctionChange"
@@ -28,10 +28,15 @@
                             width="55">
                     </el-table-column>
                     <el-table-column
-                            label="序号">
-                        <template slot-scope="scope">
-                            {{scope.$index+1}}
-                        </template>
+                        fixed
+                        type="index"
+                        label="序号"
+                        show-overflow-tooltip>
+                    </el-table-column>
+                    <el-table-column
+                            prop="batchId"
+                            label="批次编号"
+                            width="100">
                     </el-table-column>
                     <el-table-column
                             prop="batchName"
@@ -69,48 +74,50 @@
                 </el-table>
             </div>
             <div class="block">
+                <span class="demonstration">调整每页显示条数</span>
                 <el-pagination
-                        background
-                        small
-                        layout="prev, pager, next"
-                        :total="total"
-                        :page-size="pageSize"
-                        @current-change="handleCurrentChange"
-                >
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page.sync="currentPage2"
+                    :page-sizes="[10, 15, 20, 25]"
+                    :page-size="10"
+                    layout="sizes, prev, pager, next"
+                    :total="this.total">
                 </el-pagination>
             </div>
-            <!--            <el-dialog-->
-            <!--                :visible.sync="dialogVisible"-->
-            <!--                width="50%"-->
-            <!--                :before-close="handleClose"-->
-            <!--                custom-class="custom-dialog">-->
-            <!--                <div class="dialog-content">-->
-            <!--                    <div class="dialog-header">-->
-            <!--                        <img src="../../../../assets/images/bg/bg.jpg" alt="背景图片" class="dialog-background">-->
-            <!--                        <h3 class="dialog-title">未确认申请提醒</h3>-->
-            <!--                    </div>-->
-            <!--                    <div class="dialog-body">-->
-            <!--                        <div v-for="(item, index) in notComfirmlist" :key="index" class="record-item">-->
-            <!--                            <p><strong>申请人:</strong> {{ item.name }}</p>-->
-            <!--                            <p><strong>申请时间:</strong> {{ item.time }}</p>-->
-            <!--                            <p><strong>申请内容:</strong> {{ item.content }}</p>-->
-            <!--                            <el-divider></el-divider>-->
-            <!--                        </div>-->
-            <!--                    </div>-->
-            <!--                </div>-->
-            <!--                <span slot="footer" class="dialog-footer">-->
-            <!--        <el-button @click="dialogVisible = false">取消</el-button>-->
-            <!--        <el-button type="primary" @click="handleConfirm">前往确认</el-button>-->
-            <!--      </span>-->
-            <!--            </el-dialog>-->
+                        <el-dialog
+                            :visible.sync="dialogVisible"
+                            width="25%"
+                            :before-close="handleClose"
+                            custom-class="custom-dialog">
+                            <div class="dialog-content">
+                                <div class="dialog-header"  style="width: 100%">
+                                    <img src="../../../../assets/images/bg/bg.jpg" alt="背景图片" class="dialog-background">
+                                    <h3 class="dialog-title">未确认申请提醒</h3>
+                                </div>
+                                <div class="dialog-body">
+                                    <div v-for="(item, index) in notComfirmlist" :key="index" class="record-item">
+                                        <p><strong>申请人:</strong> {{ item.name }}</p>
+                                        <p><strong>考试编号:</strong> {{ item.examId }}</p>
+                                        <p><strong>校区:</strong> {{ item.intendedCampus }}</p>
+                                        <el-divider></el-divider>
+                                    </div>
+                                </div>
+                            </div>
+                            <span slot="footer" class="dialog-footer">
+                    <el-button @click="handleClose">取消</el-button>
+                    <el-button type="primary" @click="handleConfirm">前往确认</el-button>
+                  </span>
+                        </el-dialog>
         </div>
     </div>
 </template>
 
 <script>
 import {Message} from 'element-ui'
-import {_getAllBatches} from '@/api/api'
-import {_searchBatches} from '../../../../api/api'
+
+import {_getAllBatches, _getAllNotComfirms, _searchBatches} from '../../../../api/api'
+import {mapState} from 'vuex'
 
 export default {
   name: 'third',
@@ -122,28 +129,31 @@ export default {
       teams: [],
       selectedIds: [],
       currentPage: 1, // 当前页码
-      pageSize: 15, // 每页显示行数
+      pageSize: 10, // 每页显示行数
       tableHeight: 0,
+      total: 0,
       // 搜索数据
       fliterData1: [],
-      notComfirmlist: []
+      notComfirmlist: [],
+      dialogVisible: false
     }
   },
   // 生成页面时从后端获取数据
   created () {
     this.fetchData()
     console.info(this.teams)
+    this.fetchData2(this.currentPage)
   },
-  // 计算换页显示
+  currentTableData () {
+    const start = (this.currentPage - 1) * this.pageSize
+    const end = start + this.pageSize
+    return this.fliterData1.slice(start, end)
+  },
   computed: {
-    total () {
-      return this.teams.length
-    },
-    currentTableData () {
-      const start = (this.currentPage - 1) * this.pageSize
-      const end = start + this.pageSize
-      return this.fliterData1.slice(start, end)
-    }
+    ...mapState({
+      username: state => state.user.id, // 映射 userId
+      name: state => state.user.name
+    })
   },
   beforeDestroy () {
     window.removeEventListener('resize', this.updateTableHeight)
@@ -169,28 +179,60 @@ export default {
         return
       }
       // 路由跳转
-      this.$router.push({name: 'third_submit', query: {ids: this.selectedIds.join(',')}})
+      this.$router.push({name: 'third_submit', query: {ids: this.selectedIds.join(','), username: this.username}})
     },
-    searchData1 () {
-      _searchBatches(this.input).then(res => {
-        this.teams = res.data
+    searchData1 (page) {
+      const params = {page: page, size: this.pageSize}
+      _searchBatches(this.input, params).then(res => {
+        this.fliterData1 = res.data
+        this.total = res.data.total
       })
     },
     resetData1 () {
       this.input = ''
       this.fliterData1 = this.teams
     },
+    handleClose () {
+      this.dialogVisible = false
+    },
+    handleConfirm () {
+      // 处理前往确认的逻辑
+      this.dialogVisible = false
+      this.$router.push({name: 'third2'})
+      // 可以跳转到其他页面或执行其他操作
+    },
     // 异步函数
-    async fetchData () {
-      _getAllBatches().then(res => {
-        console.info(res)
-        this.teams = res.data
-      })
+    async fetchData (page) {
+      try {
+        const params = {page: page, size: this.pageSize}
+        const response = await _getAllBatches(params)
+        this.teams = response.data
+        console.info(this.teams)
+        this.fliterData1 = this.teams
+        this.total = response.data.total
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    },
+    async fetchData2 () {
+      try {
+        const res = await _getAllNotComfirms(this.username)
+        this.notComfirmlist = res.data
+        if (this.notComfirmlist.length > 0) {
+          this.dialogVisible = true
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    handleCurrentChange (page) {
+      this.currentPage = page
+      this.fetchData(page)
+    },
+    handleSizeChange (size) {
+      this.pageSize = size
+      this.fetchData(this.currentPage) // 使用当前页重新获取数据
     }
-    // 提醒通过审核但未确认的申请
-    // async fetchData2 () {
-    //
-    // }
   }
 
 }
@@ -304,6 +346,73 @@ export default {
 
 .expanded-row + .nested-table {
     display: block;
+}
+/////
+.custom-dialog .el-dialog__header {
+    display: none;
+}
+
+.custom-dialog .dialog-content {
+    padding-top: 0;
+}
+
+.custom-dialog .dialog-header {
+    position: relative;
+    height: 25%;
+}
+
+.custom-dialog .dialog-background {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.custom-dialog .dialog-title {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    font-size: 20px;
+    text-align: center;
+}
+
+.custom-dialog .dialog-body {
+    padding: 20px;
+}
+
+.record-item {
+    margin-bottom: 10px;
+}
+
+.record-item p {
+    margin: 5px 0;
+    font-size: 16px;
+}
+
+.dialog-footer {
+    text-align: right;
+}
+
+.dialog-footer .el-button {
+    margin-left: 10px;
+}
+
+.dialog-footer .el-button--primary {
+    background-color: #409eff;
+    border-color: #409eff;
+}
+
+.el-divider {
+    margin: 10px 0;
+}
+
+.el-button {
+    font-size: 14px;
+    padding: 10px 20px;
 }
 
 </style>

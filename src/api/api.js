@@ -7,7 +7,7 @@ export const _getBatch = (id) => http.GET(`api/examination/${id}`, id)
 export const _getNamelist = (params) => http.GET('api/approve/detail', params)
 
 // 通过批次关键词搜索
-export const _searchBatches = (keyword, parms) => http.GET(`api/batch/searchBatch/${keyword}`, keyword, parms)
+export const _searchBatches = (keyword, parms) => http.GET(`api/batch/searchBatch/${keyword}`, { params: parms })
 // 提交报名
 export const _commitSignup = (signup) => http.POST('api/signup/addSignup', signup)
 // 通过批次id获取指定批次的详细信息

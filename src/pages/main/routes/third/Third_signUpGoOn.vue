@@ -113,7 +113,7 @@
 </template>
 
 <script>
-import {_getAllNotComfirms, _getExamDetail, _getLeaders, _getOneSignUp, _getUserData} from '../../../../api/api'
+import {_getExamDetail, _getLeaders, _getOneSignUp, _getUserData} from '../../../../api/api'
 
 export default {
   name: 'Third_signUpGoOn',

@@ -113,6 +113,12 @@ const mainPage = [
         name: 'third_test',
         component: () =>
           import(/* webpackChunkName: "First" */ '../pages/main/routes/third/test.vue')
+      },
+      {
+        path: 'third_signUpGoOn',
+        name: 'third_signUpGoOn',
+        component: () =>
+          import(/* webpackChunkName: "First" */ '../pages/main/routes/third/Third_signUpGoOn.vue')
       }
     ]
   }

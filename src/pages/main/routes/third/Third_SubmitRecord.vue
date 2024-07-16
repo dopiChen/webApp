@@ -8,12 +8,12 @@
                     :on-success="handleAvatarSuccess"
                     :before-upload="beforeAvatarUpload"
             >
-                <img v-if="user.avatar" :src="user.avatar" class="avatar">
+                <img v-if="user.avatar" :src="this.user.avatar" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
             <div class="info">
-                <h2 style="font-size: 40px">{{ user.name }}</h2>
-                <p style="font-size: 20px;margin-top: 10px">{{ user.role }}</p>
+                <h2 style="font-size: 40px">{{ this.personnelData.name }}</h2>
+<!--                <p style="font-size: 20px;margin-top: 10px">{{ user.role }}</p>-->
             </div>
             <el-descriptions class="table" :column="1" :size="medium" border style="width: 1000px;height: 500px">
                 <el-descriptions-item>
@@ -21,21 +21,21 @@
                         <i class="el-icon-user"></i>
                         用户名
                     </template>
-                    kooriookami
+                    {{personnelData.username}}
                 </el-descriptions-item>
                 <el-descriptions-item>
                     <template slot="label">
                         <i class="el-icon-mobile-phone"></i>
                         手机号
                     </template>
-                    18100000000
+                    {{personnelData.phone}}
                 </el-descriptions-item>
                 <el-descriptions-item>
                     <template slot="label">
                         <i class="el-icon-location-outline"></i>
                         居住地
                     </template>
-                    苏州市
+                    {{personnelData.address}}
                 </el-descriptions-item>
                 <el-descriptions-item>
                     <template slot="label">
@@ -47,9 +47,9 @@
                 <el-descriptions-item>
                     <template slot="label">
                         <i class="el-icon-office-building"></i>
-                        联系地址
+                        备用电话
                     </template>
-                    江苏省苏州市吴中区吴中大道 1188 号
+                    {{personnelData.backupPhone}}
                 </el-descriptions-item>
             </el-descriptions>
         </div>
@@ -57,37 +57,54 @@
         <h2>我的申请记录</h2>
         <div class="applications">
             <el-table :data="applications" stripe class="centered-table">
-                <el-table-column prop="id" label="申请编号" width="280"></el-table-column>
-                <el-table-column prop="title" label="申请标题" width="400"></el-table-column>
-                <el-table-column prop="status" label="状态" width="280">
+                <el-table-column prop="examId" label="考试编号" width="280"></el-table-column>
+                <el-table-column prop="way" label="报名方式" width="400"></el-table-column>
+                <el-table-column  label="状态" width="280">
                     <template v-slot="scope">
-                        <el-tag :type="getTagType(scope.row.status)">{{ scope.row.status }}</el-tag>
+                        <el-tag :type="getTagType(getStatus(scope.row))">{{getStatus(scope.row) }}</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column prop="createdAt" label="提交时间" width="400"></el-table-column>
+                <el-table-column prop="createdAt" label="查看报名" width="400" v-slot="scope">
+                    <el-button
+                        type="text"
+                        size="small"
+                        @click="viewSignUp(scope.row)">
+                        查看流程
+                    </el-button>
+                </el-table-column>
             </el-table>
         </div>
     </div>
 </template>
 
 <script>
+import {mapState} from 'vuex'
+import {_getAllSignUp, _getUserData} from '../../../../api/api'
+
 export default {
   name: 'UserProfile',
   data () {
     return {
+      personnelData: [],
       // 介入数据库
       user: {
         avatar: 'https://via.placeholder.com/150',
-        name: '张三',
-        role: '在职在岗教师'
+        name: this.name
       },
-      applications: [
-        {id: 'A001', title: '监考报名 - 2023A楼', status: '审核中', createdAt: '2023-07-01'},
-        {id: 'A002', title: '监考报名 - 2023B楼', status: '审核失败', createdAt: '2023-07-02'},
-        {id: 'A003', title: '监考报名 - 2023C楼', status: '审核通过', createdAt: '2023-07-03'}
-        // 更多申请记录...
-      ]
+      applications: []
     }
+  },
+  created () {
+    this.fetchData1()
+    console.info(11111)
+    this.fetchData2()
+    console.info(11111)
+  },
+  computed: {
+    ...mapState({
+      username: state => state.user.id, // 映射 userId
+      name: state => state.user.name
+    })
   },
   methods: {
     handleAvatarSuccess (res, file) {
@@ -116,9 +133,34 @@ export default {
         default:
           return ''
       }
+    },
+    getStatus (row) {
+      if (row.isOut === 1) {
+        return '审核失败'
+      } else if (row.isOut !== 1 && row.approvalStatus < 5) {
+        return '审核中'
+      } else if (row.isOut !== 1 && row.approvalStatus === 5) {
+        return '审核成功'
+      }
+      return '未知状态' // 如果有其他情况，可以返回一个默认状态
+    },
+    viewSignUp (row) {
+      this.$router.push({name: 'third_signUpGoOn', query: {examId: row.examId, username: this.username}})
+    },
+    async fetchData1 () {
+      _getUserData(this.username).then(res => {
+        this.personnelData = res.data
+      })
+    },
+    async fetchData2 () {
+      _getAllSignUp(this.username).then(res => {
+        console.info(res)
+        this.applications = res.data
+      })
     }
   }
 }
+
 </script>
 
 <style scoped>

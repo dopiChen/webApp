@@ -1,5 +1,5 @@
 export default {
-  id: null,
+  id: '',
   name: '',
   type: null
 }

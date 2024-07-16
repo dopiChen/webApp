@@ -9,10 +9,10 @@
             <span class="tag1">|</span>
             <span class="subtitle1">监考批次情况</span><br>
             <el-descriptions :column="1" class="custom1">
-                <el-descriptions-item label="批次名称">{{ batchName }}</el-descriptions-item>
-                <el-descriptions-item label="关联年份">{{ year }}</el-descriptions-item>
-                <el-descriptions-item label="批次开始时间">{{ batchStartTime }}</el-descriptions-item>
-                <el-descriptions-item label="批次结束时间">{{ batchEndTime }}</el-descriptions-item>
+                <el-descriptions-item label="批次名称">{{ this.batch.batchName }}</el-descriptions-item>
+                <el-descriptions-item label="关联年份">{{ this.batch.year }}</el-descriptions-item>
+                <el-descriptions-item label="批次开始时间">{{ this.batch.startDate}}</el-descriptions-item>
+                <el-descriptions-item label="批次结束时间">{{ this.batch.endDate }}</el-descriptions-item>
                 <el-descriptions-item label="批次时长">两天</el-descriptions-item>
                 <el-descriptions-item label="监考说明">
                     监考人员需要分别站在教室前后，在不影响考生情况下，适当走动。
@@ -30,6 +30,7 @@
 
             <div v-for="exam in exams" :key="exam.examId">
                 <el-descriptions :column="1" class="custom2">
+                    <el-descriptions-item label="考试编号(与报名时相同)">{{ exam.examRoom }}</el-descriptions-item>
                     <el-descriptions-item label="考场名称">{{ exam.examRoom }}</el-descriptions-item>
                     <el-descriptions-item label="校区">{{ exam.campus }}</el-descriptions-item>
                     <el-descriptions-item label="校内地址">{{ exam.address ? exam.address : '暂无地址' }}</el-descriptions-item>
@@ -42,6 +43,7 @@
 
 <script>
 import {_getBatch} from '@/api/api'
+import {_getBatchDetail} from '../../../../api/api'
 
 export default {
   name: 'Third3.vue',
@@ -49,6 +51,7 @@ export default {
   data () {
     return {
       batchId: this.$route.query.id,
+      batch: [],
       exams: [],
       batchName: '',
       batchStartTime: '',
@@ -57,35 +60,24 @@ export default {
     }
   },
   created () {
-    this.fetchData()
+    this.fetchData1()
+    this.fetchData2()
   },
   methods: {
     returnclick () {
       this.$router.push('/main/third1')
     },
-    async fetchData () {
+    async fetchData1 () {
       _getBatch(this.batchId).then(res => {
         console.info(res)
         this.exams = res.data
-        if (this.exams.length > 0) {
-          const firstExam = this.exams[0]
-          console.info(firstExam)
-          this.batchName = `2023年${firstExam.examRoom.split('-')[0]}监考报名`
-          this.batchStartTime = firstExam.fromTime
-          this.batchEndTime = firstExam.endTime
-          this.year = new Date(firstExam.fromTime).getFullYear()
-        }
       })
     },
-    initializeBatchInfo () {
-      if (this.exams.length > 0) {
-        const firstExam = this.exams[0]
-        console.info(firstExam)
-        this.batchName = `2023年${firstExam.examRoom.split('-')[0]}监考报名`
-        this.batchStartTime = firstExam.fromTime
-        this.batchEndTime = firstExam.endTime
-        this.year = new Date(firstExam.fromTime).getFullYear()
-      }
+    async fetchData2 () {
+      _getBatchDetail(this.batchId).then(res => {
+        console.info(res)
+        this.batch = res.data
+      })
     }
   }
 }

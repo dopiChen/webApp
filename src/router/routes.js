@@ -32,7 +32,7 @@ const mainPage = [
       },
       {
         path: 'first_enroll',
-        name: 'first',
+        name: 'first_enroll',
         component: () =>
           import('../pages/main/routes/first/First_Enroll.vue')
       },

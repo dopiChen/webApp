@@ -8,15 +8,6 @@
                         <div class="select">
                             <el-button type="primary" icon="el-icon-user-solid" style="font-size: 22px" @click="openApprovalDialog2">邀约</el-button>
                             <el-button type="primary" plain class="shu" style="font-size: 22px" @click="outdata">数据导出</el-button>
-                            <el-select v-model="value" placeholder="请选择监考批次" class="xuanze"
-                                       style="font-size: 25px">
-                                <el-option
-                                        v-for="item in options"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
-                                </el-option>
-                            </el-select>
                             <el-input
                                     placeholder="请输入报名人姓名/工号查询"
                                     v-model="input"
@@ -37,7 +28,7 @@
                                 <div class="table">
                                     <el-form ref="form" :model="form" label-width="80px">
                                         <el-form-item label="监考批次">
-                                            <el-select v-model="form.round" placeholder="请选择活动区域">
+                                            <el-select v-model="form.round" placeholder="请选择活动区域" >
                                             <el-option
                                                 v-for="item in options"
                                                 :key="item.value"
@@ -183,15 +174,6 @@
                     <el-tab-pane label="同意报名" name="second">
                         <div class="select">
                             <el-button type="primary" plain class="shu" style="font-size: 22px" @click="outdata">数据导出</el-button>
-                            <el-select v-model="value" placeholder="请选择监考批次" class="xuanze"
-                                       style="font-size: 25px">
-                                <el-option
-                                        v-for="item in options"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
-                                </el-option>
-                            </el-select>
                             <el-input
                                 placeholder="请输入报名人姓名/工号查询"
                                 v-model="input"
@@ -266,15 +248,6 @@
                     <el-tab-pane label="不同意报名" name="third">
                         <div class="select">
                             <el-button type="primary" plain class="shu" style="font-size: 22px" @click="outdata">数据导出</el-button>
-                            <el-select v-model="value" placeholder="请选择监考批次" class="xuanze"
-                                       style="font-size: 25px">
-                                <el-option
-                                        v-for="item in options"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
-                                </el-option>
-                            </el-select>
                             <el-input
                                 placeholder="请输入报名人姓名/工号查询"
                                 v-model="input"
@@ -386,7 +359,7 @@ export default {
       dialogFormVisible: false,
       options: [],
       allBatchs: [],
-      value: '',
+      value: null,
       input: '',
       WaiteData: [],
       acceptData: [],
@@ -449,6 +422,9 @@ export default {
   },
   methods: {
     // 调整页面 引用时不用改动
+    batchvalueHandler () {
+      console.log(this.value)
+    },
     getAllBatchs () {
       _getAllBatches().then(res => {
         this.allBatchs = res.data
@@ -537,7 +513,7 @@ export default {
     oncomfirm () {
       if (this.form.way === '帮助报名') {
         // 如果需要携带参数可以在这里携带
-        this.$router.push({ name: 'third_submit', query: {ids: this.value, username: this.form.input} })
+        this.$router.push({ name: 'first_enroll', query: {ids: this.form.round, username: this.form.input} })
       } else {
         // 向老师端发送邀请短信
       }

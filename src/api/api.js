@@ -47,3 +47,5 @@ export const _rejectApprove = (username, examId, reason) => http.POST(`api/batch
 export const _getApprovedList = (username) => http.GET(`api/batch/approved/${username}`, username)
 
 export const _getDisapprovedList = (username) => http.GET(`api/batch/disapproved/${username}`, username)
+
+export const _getFinalList = () => http.GET('/api/finalNameList')

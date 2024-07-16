@@ -19,7 +19,7 @@
             </div>
             <div class="tablebody">
                 <el-table
-                        :data="currentTableData"
+                        :data="finalList"
                         stripe
                         style="width: 100%;font-size:18px"
                         @selection-change="handleSelelctionChange"
@@ -30,42 +30,34 @@
                             width="55">
                     </el-table-column>
                     <el-table-column
-                            prop="name"
+                            prop="personnel.name"
                             label="姓名"
                             width="200">
                     </el-table-column>
                     <el-table-column
-                            prop="gender"
+                            prop="personnel.gender"
                             label="性别"
                             width="250">
                     </el-table-column>
                     <el-table-column
-                            prop="personnelId"
+                            prop="personnel.username"
                             label="工号"
                             width="300">
                     </el-table-column>
                     <el-table-column
-                            prop="unit"
+                            prop="personnel.unit"
                             label="工作单位"
                             width="300">
                     </el-table-column>
                     <el-table-column
-                            prop="phone"
+                            prop="personnel.phone"
                             label="移动电话"
                             width="300">
                     </el-table-column>
                     <el-table-column
-                            prop="examRoom"
-                            label="来源"
+                            prop="examination.examRoom"
+                            label="教室"
                             width="300">
-                    </el-table-column>
-                    <el-table-column
-                            fixed="right"
-                            label="操作"
-                            width="200">
-                        <template v-slot="scope">
-                            <el-button type="text" size="small" @click="removeclick(scope.row)" style="font-size: 15px">移除</el-button>
-                        </template>
                     </el-table-column>
                 </el-table>
             </div>
@@ -125,6 +117,7 @@
 <script>
 import * as XLSX from 'xlsx'
 import {_getNamelist} from '@/api/api'
+import {_getFinalList} from '../../../../api/api'
 export default {
   name: 'third',
   data () {
@@ -133,6 +126,7 @@ export default {
       input: '',
       checked: true,
       teams: [],
+      finalList: [],
       selectedIds: [],
       currentPage: 1, // 当前页码
       pageSize: 15, // 每页显示行数
@@ -152,7 +146,7 @@ export default {
     }
   },
   created () {
-    this.fetchData()
+    this.getFinalList()
   },
   // 计算换页显示
   computed: {
@@ -167,6 +161,11 @@ export default {
   },
   methods: {
     // 调整页面 引用时不用改动
+    getFinalList () {
+      _getFinalList().then(res => {
+        this.finalList = res.data
+      })
+    },
     handleSelelctionChange (val) {
       this.selectedIds = val.map(item => item.id)
       // 处理表格选择变化
@@ -224,12 +223,6 @@ export default {
     resetData1 () {
       this.input = ''
       this.fliterData1 = this.teams
-    },
-    async fetchData () {
-      _getNamelist().then(res => {
-        this.teams = res.data
-        this.fliterData1 = this.teams
-      })
     }
   },
   beforeDestroy () {

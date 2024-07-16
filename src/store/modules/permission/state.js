@@ -2,13 +2,13 @@ export default {
   whiteList: ['/', 'notFound', 'login', 'forbidden', 'badGateway'],
   permissionMap: {
     4: {
-      main: ['first']
+      main: ['first', 'first_enroll']
     },
     3: {
-      main: ['first']
+      main: ['first', 'first_enroll']
     },
     2: {
-      main: ['first']
+      main: ['first', 'first_enroll']
     },
     5: {
       main: ['second']

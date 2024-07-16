@@ -37,3 +37,13 @@ export const _getAllNotComfirms = (username) => http.GET(`api/getComfirm/allNotC
 
 // 获取与老师同院的领导团队
 export const _getLeaders = (username) => http.GET(`api/flow/${username}`, username)
+
+export const _getApproveList = (username) => http.GET(`api/batch/examine/${username}`, username)
+
+export const _submitApprove = (username, examId) => http.POST(`api/batch/approve/${username}/${examId}`, username, examId)
+
+export const _rejectApprove = (username, examId, reason) => http.POST(`api/batch/disapprove/${username}/${examId}/${reason}`, username, examId, reason)
+
+export const _getApprovedList = (username) => http.GET(`api/batch/approved/${username}`, username)
+
+export const _getDisapprovedList = (username) => http.GET(`api/batch/disapproved/${username}`, username)

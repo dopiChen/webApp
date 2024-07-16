@@ -38,8 +38,12 @@
                                     <el-form ref="form" :model="form" label-width="80px">
                                         <el-form-item label="监考批次">
                                             <el-select v-model="form.round" placeholder="请选择活动区域">
-                                                <el-option label="批次一" value="shanghai"></el-option>
-                                                <el-option label="批次二" value="beijing"></el-option>
+                                            <el-option
+                                                v-for="item in options"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value">
+                                            </el-option>
                                             </el-select>
                                         </el-form-item>
                                         <el-form-item label="选择方式">
@@ -54,14 +58,11 @@
                                                 v-model="form.input"
                                             style="margin-right: 50px;margin-right: 20px;width: 80%">
                                             </el-input>
-                                            <el-button icon="el-icon-search" circle></el-button>
+                                            <el-button icon="el-icon-search" circle  @click='search'></el-button>
                                         </el-form-item>
-                                        <el-input
-                                            v-model="approvalForm.reason"
-                                            placeholder="老师信息"
-                                            type="textarea"
-                                            style="background-color: #f0f0f0; width: 100%; margin-bottom: 20px"
-                                        height="300px"></el-input>
+                                        <div>
+                                          <p>{{form.result}}</p>
+                                        </div>
                                         <el-form-item >
                                             <el-button type="primary" @click="oncomfirm">确认</el-button>
                                             <el-button @click="isApprovalDialogVisible2=false">取消</el-button>
@@ -73,7 +74,7 @@
                         <div class="table-container">
                             <el-table
                                     ref="multipleTable"
-                                    :data="paginatedData1"
+                                    :data="WaiteData"
                                     tooltip-effect="dark"
                                     style="width: 100%;overflow: auto; flex: 0 1 auto;font-size: 24px;margin-top: 10px"
                                     @selection-change="handleSelelctionChange">
@@ -94,19 +95,19 @@
                                         show-overflow-tooltip>
                                 </el-table-column>
                                 <el-table-column
-                                        prop="num"
+                                        prop="username"
                                         label="工号">
                                 </el-table-column>
                                 <el-table-column
-                                        prop="jkpc"
-                                        label="监考批次"
-                                        show-overflow-tooltip>
-                                </el-table-column>
-                                <el-table-column
-                                        prop="yxjkxq"
+                                        prop="intendedCampus"
                                         label="意向监考校区"
                                         show-overflow-tooltip>
                                 </el-table-column>
+                              <el-table-column
+                                  prop="way"
+                                  label="报名方式"
+                                  show-overflow-tooltip>
+                              </el-table-column>
                                 <el-table-column
                                         label="上传材料">
                                     <el-button type="text" @click="dialogFormVisible=true">预览</el-button>
@@ -203,7 +204,7 @@
                         <div class="table-container">
                             <el-table
                                     ref="multipleTable"
-                                    :data="paginatedData2"
+                                    :data="acceptData"
                                     tooltip-effect="dark"
                                     style="width: 100%;overflow: auto; flex: 0 1 auto;font-size: 24px;margin-top: 10px"
                                     @selection-change="handleSelelctionChange">
@@ -218,29 +219,29 @@
                                         label="序号"
                                         show-overflow-tooltip>
                                 </el-table-column>
-                                <el-table-column
-                                        prop="name"
-                                        label="报名人"
-                                        show-overflow-tooltip>
-                                </el-table-column>
-                                <el-table-column
-                                        prop="num"
-                                        label="工号">
-                                </el-table-column>
-                                <el-table-column
-                                        prop="jkpc"
-                                        label="监考批次"
-                                        show-overflow-tooltip>
-                                </el-table-column>
-                                <el-table-column
-                                        prop="yxjkxq"
-                                        label="意向监考校区"
-                                        show-overflow-tooltip>
-                                </el-table-column>
-                                <el-table-column
-                                        label="上传材料">
-                                    <el-button type="text">预览</el-button>
-                                </el-table-column>
+                              <el-table-column
+                                  prop="name"
+                                  label="报名人"
+                                  show-overflow-tooltip>
+                              </el-table-column>
+                              <el-table-column
+                                  prop="username"
+                                  label="工号">
+                              </el-table-column>
+                              <el-table-column
+                                  prop="intendedCampus"
+                                  label="意向监考校区"
+                                  show-overflow-tooltip>
+                              </el-table-column>
+                              <el-table-column
+                                  prop="way"
+                                  label="报名方式"
+                                  show-overflow-tooltip>
+                              </el-table-column>
+                              <el-table-column
+                                  label="上传材料">
+                                <el-button type="text">预览</el-button>
+                              </el-table-column>
                                 <el-table-column
                                         label="操作"
                                         v-slot="scope">
@@ -286,7 +287,7 @@
                         <div class="table-container">
                             <el-table
                                     ref="multipleTable"
-                                    :data="paginatedData3"
+                                    :data="rejectdata"
                                     tooltip-effect="dark"
                                     style="width: 100%;overflow: auto; flex: 0 1 auto;font-size: 24px;margin-top: 10px"
                                     @selection-change="handleSelelctionChange">
@@ -301,28 +302,28 @@
                                         label="序号"
                                         show-overflow-tooltip>
                                 </el-table-column>
-                                <el-table-column
-                                        prop="name"
-                                        label="报名人"
-                                        show-overflow-tooltip>
-                                </el-table-column>
-                                <el-table-column
-                                        prop="num"
-                                        label="工号">
-                                </el-table-column>
-                                <el-table-column
-                                        prop="jkpc"
-                                        label="监考批次"
-                                        show-overflow-tooltip>
-                                </el-table-column>
-                                <el-table-column
-                                        prop="yxjkxq"
-                                        label="意向监考校区"
-                                        show-overflow-tooltip>
-                                </el-table-column>
-                                <el-table-column
-                                        label="上传材料">
-                                    <el-button type="text">预览</el-button>
+                              <el-table-column
+                                  prop="name"
+                                  label="报名人"
+                                  show-overflow-tooltip>
+                              </el-table-column>
+                              <el-table-column
+                                  prop="username"
+                                  label="工号">
+                              </el-table-column>
+                              <el-table-column
+                                  prop="intendedCampus"
+                                  label="意向监考校区"
+                                  show-overflow-tooltip>
+                              </el-table-column>
+                              <el-table-column
+                                  prop="way"
+                                  label="报名方式"
+                                  show-overflow-tooltip>
+                              </el-table-column>
+                              <el-table-column
+                                  label="上传材料">
+                                <el-button type="text" >预览</el-button>
                                 </el-table-column>
                                 <el-table-column
                                         label="操作"
@@ -366,6 +367,15 @@
 
 <script>
 import * as XLSX from 'xlsx'
+import {
+  _getAllBatches,
+  _getApprovedList,
+  _getApproveList,
+  _getDisapprovedList, _getUserData,
+  _rejectApprove,
+  _submitApprove
+} from '../../../../api/api'
+import {mapState} from 'vuex'
 export default {
   data () {
     return {
@@ -374,276 +384,11 @@ export default {
       pageSize: 15,
       dialogTableVisible: false,
       dialogFormVisible: false,
-      options: [{
-        value: '选项1',
-        label: '批次1'
-      }, {
-        value: '选项2',
-        label: '批次2'
-      }, {
-        value: '选项3',
-        label: '批次3'
-      }, {
-        value: '选项4',
-        label: '批次4'
-      }, {
-        value: '选项5',
-        label: '批次5'
-      }],
+      options: [],
+      allBatchs: [],
       value: '',
       input: '',
-      WaiteData: [{
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '南湖校区'
-      },
-      {
-        name: '赖家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '南湖校区'
-      },
-      {
-        name: '薛志恒',
-        num: '34099002',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '南湖校区'
-      },
-      {
-        name: '好家栋',
-        num: '34099003',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '南湖校区'
-      },
-      {
-        name: '浩家栋',
-        num: '34099004',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '南湖校区'
-      },
-      {
-        name: '去家栋',
-        num: '34099005',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '南湖校区'
-      },
-      {
-        name: '擦家栋',
-        num: '34099006',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '服从调剂'
-      },
-      {
-        name: '哲家栋',
-        num: '34099006',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      },
-      {
-        name: '刘家栋',
-        num: '34099007',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      },
-      {
-        name: '六家栋',
-        num: '34099008',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      },
-      {
-        name: '陈家栋',
-        num: '34099009',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      },
-      {
-        name: '李家栋',
-        num: '34099010',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      },
-      {
-        name: '王家',
-        num: '34099011',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '南湖校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '南湖校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '南湖校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '南湖校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '南湖校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '服从调剂'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099002',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099002',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '南湖校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099002',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '南湖校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099002',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '南湖校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '南湖校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '南湖校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '南湖校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '服从调剂'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      },
-      {
-        name: '王家栋',
-        num: '34099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      },
-      {
-        name: '王家栋',
-        num: '44099001',
-        jkpc: '2023年A楼2023监考报名',
-        yxjkxq: '余家头校区'
-      }],
+      WaiteData: [],
       acceptData: [],
       rejectdata: [],
       isApprovalDialogVisible2: false,
@@ -657,7 +402,8 @@ export default {
       form: {
         round: '',
         way: '',
-        input: ''
+        input: '',
+        result: ''
       },
       currentRow: null,
       // 过滤数据
@@ -671,29 +417,64 @@ export default {
   },
   computed: {
     // 1：待审批 2：同意 3：拒绝
-    paginatedData1 () {
-      const start = (this.currentPage - 1) * this.pageSize
-      const end = this.currentPage * this.pageSize
-      return this.fliterData1.slice(start, end)
-    },
-    paginatedData2 () {
-      const start = (this.currentPage - 1) * this.pageSize
-      const end = this.currentPage * this.pageSize
-      return this.fliterData2.slice(start, end)
-    },
-    paginatedData3 () {
-      const start = (this.currentPage - 1) * this.pageSize
-      const end = this.currentPage * this.pageSize
-      return this.fliterData3.slice(start, end)
-    }
+    // paginatedData1 () {
+    //   const start = (this.currentPage - 1) * this.pageSize
+    //   const end = this.currentPage * this.pageSize
+    //   return this.fliterData1.slice(start, end)
+    // },
+    // paginatedData2 () {
+    //   const start = (this.currentPage - 1) * this.pageSize
+    //   const end = this.currentPage * this.pageSize
+    //   return this.fliterData2.slice(start, end)
+    // },
+    // paginatedData3 () {
+    //   const start = (this.currentPage - 1) * this.pageSize
+    //   const end = this.currentPage * this.pageSize
+    //   return this.fliterData3.slice(start, end)
+    // },
+    ...mapState({
+      username: state => state.user.id // 映射 userId
+    })
   },
   mounted () {
     this.fliterData1 = this.WaiteData
     this.fliterData2 = this.acceptData
     this.fliterData3 = this.rejectdata
   },
+  created () {
+    this.getApproveList()
+    this.getApprovedList()
+    this.getDisapprovedList()
+    this.getAllBatchs()
+  },
   methods: {
     // 调整页面 引用时不用改动
+    getAllBatchs () {
+      _getAllBatches().then(res => {
+        this.allBatchs = res.data
+        this.processData()
+      })
+    },
+    search () {
+      _getUserData(this.form.input).then(res => {
+        this.form.result = `工号：${res.data.username},姓名：${res.data.name},单位：${res.data.unit},电话：${res.data.phone}`
+      })
+    },
+    getApproveList () {
+      _getApproveList(this.username).then(res => {
+        this.WaiteData = res.data
+      })
+    },
+    getApprovedList () {
+      _getApprovedList(this.username).then(res => {
+        this.acceptData = res.data
+      })
+    },
+    getDisapprovedList () {
+      _getDisapprovedList(this.username).then(res => {
+        this.rejectdata = res.data
+      })
+    },
     handleSelelctionChange (val) {
       this.selectedIds = val.map(item => item.id)
       // 处理表格选择变化
@@ -728,8 +509,10 @@ export default {
     submitApproval () {
       if (this.approvalForm.approval === '同意') {
         this.acceptData.push(this.currentRow)
+        _submitApprove(this.currentRow.username, this.currentRow.examId)
       } else if (this.approvalForm.approval === '不同意') {
         this.rejectdata.push({ ...this.currentRow, reason: this.approvalForm.reason })
+        _rejectApprove(this.currentRow.username, this.currentRow.examId, this.approvalForm.reason)
       }
       const index = this.WaiteData.indexOf(this.currentRow)
       if (index > -1) {
@@ -754,10 +537,16 @@ export default {
     oncomfirm () {
       if (this.form.way === '帮助报名') {
         // 如果需要携带参数可以在这里携带
-        this.$router.push({ path: '/main/first_enroll' })
+        this.$router.push({ name: 'third_submit', query: {ids: this.value, username: this.form.input} })
       } else {
         // 向老师端发送邀请短信
       }
+    },
+    processData () {
+      this.options = this.allBatchs.map(item => ({
+        value: item.batchId,
+        label: item.batchName
+      }))
     },
     // 搜索函数
     searchData1 () {

@@ -15,19 +15,30 @@
                             <el-form-item label="批次名称" prop="name">
                                 <el-input placeholder="请输入批次名称" v-model="ruleForm.name"></el-input>
                             </el-form-item>
-                            <el-form-item label="关联年份" prop="region">
-                                <el-select v-model="ruleForm.year" placeholder="请选择关联年份" style="width:526px" required>
-                                    <el-option label="2022" value="2022"></el-option>
-                                    <el-option label="2023" value="2023"></el-option>
-                                    <el-option label="2024" value="2024"></el-option>
-                                    <el-option label="2025" value="2025"></el-option>
-                                </el-select>
+                            <el-form-item label="关联年份" prop="year">
+                                <el-date-picker
+                                    v-model="ruleForm.year"
+                                    type="year"
+                                    placeholder="请选择关联年份"
+                                    :clearable="false"
+                                    style="width: 100%;">
+                                </el-date-picker>
                             </el-form-item>
                             <el-form-item label="批次开始时间" required>
-                                <el-input v-model="ruleForm.bmkssj" placeholder="请输入批次开始时间"></el-input>
+                                <el-date-picker
+                                    v-model="ruleForm.bmkssj"
+                                    type="datetime"
+                                    placeholder="请选择批次开始时间"
+                                    style="width: 100%;">
+                                </el-date-picker>
                             </el-form-item>
                             <el-form-item label="批次结束时间" required>
-                                <el-input v-model="ruleForm.bmjssj" placeholder="请输入批次结束时间"></el-input>
+                                <el-date-picker
+                                    v-model="ruleForm.bmjssj"
+                                    type="datetime"
+                                    placeholder="请选择批次结束时间"
+                                    style="width: 100%;">
+                                </el-date-picker>
                             </el-form-item>
                             <el-form-item label="监考说明">
                                 <el-input type="textarea" placeholder="请输入监考说明" v-model="ruleForm.jksm" maxlength="200" show-word-limit></el-input>
@@ -46,7 +57,7 @@
                     </span>
                 </el-dialog>
                 <el-button type="primary" plain class="shu4">数据导出</el-button>
-                <el-input placeholder="请输入监考名称关键词查询" v-model="input" class="shuru" @input="debouncedSearch"></el-input>
+                <el-input placeholder="请输入监考名称关键词查询" v-model="input" class="shuru" @keyup.enter="searchData"></el-input>
                 <el-button type="primary" class="shu2" style="background-color:dodgerblue;" @click="searchData">查询</el-button>
                 <el-button type="primary" plain class="shu1" @click="resetData">重置</el-button>
                 <div class="table-container">
@@ -67,10 +78,16 @@
                                 <span v-html="highlightSearchTerm(scope.row.batchName)"></span>
                             </template>
                         </el-table-column>
+                        <el-table-column prop="batchId" label="批次代码" show-overflow-tooltip>
+                        </el-table-column>
                         <el-table-column prop="startDate" label="报名开始时间" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="endDate" label="报名结束时间" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="year" label="创建时间" show-overflow-tooltip></el-table-column>
-                        <el-table-column label="批次状态"></el-table-column>
+                        <el-table-column label="批次状态">
+                            <template slot-scope="scope">
+                                <el-tag :type="getStatusType(scope.row)" class="status-tag">{{ getStatusText(scope.row) }}</el-tag>
+                            </template>
+                        </el-table-column>
                         <el-table-column label="操作">
                             <el-button type="text">查看名单</el-button>
                             <el-dropdown>
@@ -106,7 +123,7 @@
 
 <script>
 import { debounce } from 'lodash'
-import {_getAllBatches} from '../../../../api/user'
+import { _getAllBatches } from '../../../../api/user'
 
 export default {
   data () {
@@ -138,7 +155,8 @@ export default {
         ]
       },
       tableData: [],
-      filteredData: []
+      filteredData: [],
+      now: new Date() // 新增的当前时间变量
     }
   },
   computed: {
@@ -205,6 +223,32 @@ export default {
       if (!this.input) return text
       const regex = new RegExp(`(${this.input})`, 'gi')
       return text.replace(regex, '<span class="highlight">$1</span>')
+    },
+    getStatusType (row) {
+      const now = this.now
+      const start = new Date(row.startDate)
+      const end = new Date(row.endDate)
+
+      if (now < start) {
+        return 'info'
+      } else if (now > end) {
+        return 'danger'
+      } else {
+        return 'success'
+      }
+    },
+    getStatusText (row) {
+      const now = this.now
+      const start = new Date(row.startDate)
+      const end = new Date(row.endDate)
+
+      if (now < start) {
+        return '未开始'
+      } else if (now > end) {
+        return '已结束'
+      } else {
+        return '进行中'
+      }
     }
   }
 }

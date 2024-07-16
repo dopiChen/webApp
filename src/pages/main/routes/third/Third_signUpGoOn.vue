@@ -35,6 +35,10 @@
                 <div class="subtitle1" v-if="signupdetail.isOut===1">
                     <span class="info3">您的申请已被拒绝！</span><br>
                 </div>
+                <div class="subtitle1" v-if="signupdetail.isOut===1">
+                    <span class="info3" style="margin-top:20px">拒绝理由：</span><br>
+                    <span class="info4">{{examdetail.reson}}</span>
+                </div>
             </div>
         </div>
         <div class="indexbody" style="margin-right: 100px">
@@ -132,71 +136,7 @@ export default {
         time: '12:09:23'
       },
       leaderData: [],
-      activeStep: 1,
-      leaderData2: [
-        {
-          'personnel': {
-            'name': '孙八',
-            'unit': null,
-            'gender': null,
-            'eduBackground': null,
-            'phone': null,
-            'backupPhone': null,
-            'photo': null,
-            'username': '10009',
-            'address': null
-          },
-          'user': {
-            'username': '10009',
-            'password': null,
-            'name': null,
-            'usertype': 2,
-            'isDeleted': null,
-            'isEnabled': null
-          }
-        },
-        {
-          'personnel': {
-            'name': '周九',
-            'unit': null,
-            'gender': null,
-            'eduBackground': null,
-            'phone': null,
-            'backupPhone': null,
-            'photo': null,
-            'username': '10010',
-            'address': null
-          },
-          'user': {
-            'username': '10010',
-            'password': null,
-            'name': null,
-            'usertype': 3,
-            'isDeleted': null,
-            'isEnabled': null
-          }
-        },
-        {
-          'personnel': {
-            'name': '吴十',
-            'unit': null,
-            'gender': null,
-            'eduBackground': null,
-            'phone': null,
-            'backupPhone': null,
-            'photo': null,
-            'username': '10011',
-            'address': null
-          },
-          'user': {
-            'username': '10011',
-            'password': null,
-            'name': null,
-            'usertype': 4,
-            'isDeleted': null,
-            'isEnabled': null
-          }
-        }]
+      activeStep: 1
     }
   },
   created () {
@@ -362,6 +302,9 @@ export default {
 }
 .info3{
     color: red;
+}
+.info4{
+    color: indianred;
 }
 
 .red-text {

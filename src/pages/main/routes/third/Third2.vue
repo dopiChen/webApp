@@ -90,6 +90,9 @@ export default {
       input: '',
       checked: true,
       currentdata: [],
+      total: 0,
+      currentPage: 1, // 当前页码
+      pageSize: 10,
       teams: [],
       expandedTeam: null // 存储当前展开的队伍信息
     }
@@ -110,9 +113,6 @@ export default {
           id: row.id
         }
       })
-    },
-    handleCurrentChange (page) {
-      this.currentPage = page
     },
     updateTableHeight () {
       this.$nextTick(() => {
@@ -143,11 +143,21 @@ export default {
         })
       }
     },
-    async fetchData1 () {
-      _getAllComfirm(this.username).then(res => {
+    async fetchData1 (page) {
+      const params = {page: page, size: this.pageSize}
+      _getAllComfirm(this.username, params).then(res => {
         this.teams = res.data
+        this.total = res.data.total
         this.currentdata = this.teams
       })
+    },
+    handleCurrentChange (page) {
+      this.currentPage = page
+      this.fetchData1(page)
+    },
+    handleSizeChange (size) {
+      this.pageSize = size
+      this.fetchData1(this.currentPage) // 使用当前页重新获取数据
     }
   },
   beforeDestroy () {

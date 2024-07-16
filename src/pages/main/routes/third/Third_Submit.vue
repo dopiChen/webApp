@@ -254,6 +254,7 @@ export default {
       }))
     },
     handleChange () {
+      console.log(this.value)
       _getExamDetail(this.value).then(res => {
         this.examdetail = res.data
       })

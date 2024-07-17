@@ -10,11 +10,11 @@
                             <el-button type="primary" plain class="shu" style="font-size: 22px" @click="outdata">数据导出</el-button>
                             <el-input
                                     placeholder="请输入报名人姓名/工号查询"
-                                    v-model="input"
+                                    v-model="input1"
                                     class="shuru"
                                     style="font-size: 18px">
                             </el-input>
-                            <el-button type="primary" class="shu2" style="font-size: 20px;margin-left: 5px" @click="searchData1">查询</el-button>
+                            <el-button type="primary" class="shu2" style="font-size: 20px;margin-left: 5px" @click="search1">查询</el-button>
                             <el-button type="primary" plain class="shu1" style="font-size: 20px" @click="resetData1">重置</el-button>
                             <el-dialog :visible.sync="isApprovalDialogVisible2" title="邀约" width="800px" height="1000px" center style="font-weight: bolder">
                                 <hr />
@@ -46,7 +46,7 @@
                                         <el-form-item label="查询">
                                             <el-input
                                                 placeholder="请输入报名人姓名/工号查询"
-                                                v-model="form.input"
+                                                v-model="input2"
                                             style="margin-right: 50px;margin-right: 20px;width: 80%">
                                             </el-input>
                                             <el-button icon="el-icon-search" circle  @click='search'></el-button>
@@ -65,7 +65,7 @@
                         <div class="table-container">
                             <el-table
                                     ref="multipleTable"
-                                    :data="WaiteData"
+                                    :data="show1"
                                     tooltip-effect="dark"
                                     style="width: 100%;overflow: auto; flex: 0 1 auto;font-size: 24px;margin-top: 10px"
                                     @selection-change="handleSelelctionChange">
@@ -111,17 +111,13 @@
                                 </el-table-column>
                             </el-table>
                             <div class="pagination-container">
-                                <el-pagination
-                                        background
-                                        @size-change="handleSizeChange"
-                                        @current-change="handleCurrentChange"
-                                        :current-page="currentPage"
-                                        :page-sizes="[10]"
-                                        :page-size="pageSize"
-                                        layout="prev, pager, next"
-                                        :total="WaiteData.length"
-                                        class="ye">
-                                </el-pagination>
+                              <el-pagination
+                                  @current-change="handleCurrentChange1"
+                                  :current-page.sync="currentPage1"
+                                  :page-size="2"
+                                  layout="total, prev, pager, next"
+                                  :total="total1">
+                              </el-pagination>
                             </div>
                             <el-dialog :visible.sync="isApprovalDialogVisible" title="审批" width="600px" center style="font-weight: bolder">
                                 <el-form :model="approvalForm">
@@ -176,17 +172,17 @@
                             <el-button type="primary" plain class="shu" style="font-size: 22px" @click="outdata">数据导出</el-button>
                             <el-input
                                 placeholder="请输入报名人姓名/工号查询"
-                                v-model="input"
+                                v-model="input2"
                                 class="shuru"
                                 style="font-size: 18px">
                             </el-input>
-                            <el-button type="primary" class="shu2" style="font-size: 20px;margin-left: 5px" @click="searchData2">查询</el-button>
+                            <el-button type="primary" class="shu2" style="font-size: 20px;margin-left: 5px" @click="search2">查询</el-button>
                             <el-button type="primary" plain class="shu1" style="font-size: 20px" @click="resetData2">重置</el-button>
                         </div>
                         <div class="table-container">
                             <el-table
                                     ref="multipleTable"
-                                    :data="acceptData"
+                                    :data="show2"
                                     tooltip-effect="dark"
                                     style="width: 100%;overflow: auto; flex: 0 1 auto;font-size: 24px;margin-top: 10px"
                                     @selection-change="handleSelelctionChange">
@@ -230,19 +226,15 @@
                                     <el-button type="text" @click="accepttowaite(scope.row)">移除</el-button>
                                 </el-table-column>
                             </el-table>
-                            <div class="pagination-container">
-                                <el-pagination
-                                        background
-                                        @size-change="handleSizeChange"
-                                        @current-change="handleCurrentChange"
-                                        :current-page="currentPage"
-                                        :page-sizes="[10]"
-                                        :page-size="pageSize"
-                                        layout="prev, pager, next"
-                                        :total="acceptData.length"
-                                        class="ye">
-                                </el-pagination>
-                            </div>
+                          <div class="pagination-container">
+                            <el-pagination
+                                @current-change="handleCurrentChange2"
+                                :current-page.sync="currentPage2"
+                                :page-size="2"
+                                layout="total, prev, pager, next"
+                                :total="total2">
+                            </el-pagination>
+                          </div>
                         </div>
                     </el-tab-pane>
                     <el-tab-pane label="不同意报名" name="third">
@@ -250,17 +242,17 @@
                             <el-button type="primary" plain class="shu" style="font-size: 22px" @click="outdata">数据导出</el-button>
                             <el-input
                                 placeholder="请输入报名人姓名/工号查询"
-                                v-model="input"
+                                v-model="input3"
                                 class="shuru"
                                 style="font-size: 18px">
                             </el-input>
-                            <el-button type="primary" class="shu2" style="font-size: 20px;margin-left: 5px" @click="searchData3">查询</el-button>
+                            <el-button type="primary" class="shu2" style="font-size: 20px;margin-left: 5px" @click="search3">查询</el-button>
                             <el-button type="primary" plain class="shu1" style="font-size: 20px" @click="resetData3">重置</el-button>
                         </div>
                         <div class="table-container">
                             <el-table
                                     ref="multipleTable"
-                                    :data="rejectdata"
+                                    :data="show3"
                                     tooltip-effect="dark"
                                     style="width: 100%;overflow: auto; flex: 0 1 auto;font-size: 24px;margin-top: 10px"
                                     @selection-change="handleSelelctionChange">
@@ -304,19 +296,15 @@
                                     <el-button type="text" @click="rejecttowaite(scope.row)">移除</el-button>
                                 </el-table-column>
                             </el-table>
-                            <div class="pagination-container">
-                                <el-pagination
-                                        background
-                                        @size-change="handleSizeChange"
-                                        @current-change="handleCurrentChange"
-                                        :current-page="currentPage"
-                                        :page-sizes="[10]"
-                                        :page-size="pageSize"
-                                        layout="prev, pager, next"
-                                        :total="rejectdata.length"
-                                        class="ye">
-                                </el-pagination>
-                            </div>
+                          <div class="pagination-container">
+                            <el-pagination
+                                @current-change="handleCurrentChange3"
+                                :current-page.sync="currentPage3"
+                                :page-size="2"
+                                layout="total, prev, pager, next"
+                                :total="total3">
+                            </el-pagination>
+                          </div>
                         </div>
                     </el-tab-pane>
                 </el-tabs>
@@ -345,13 +333,19 @@ import {
   _getApprovedList,
   _getApproveList,
   _getDisapprovedList, _getUserData,
-  _rejectApprove,
+  _rejectApprove, _searchApprovedList, _searchApproveList, _searchDisapprovedList,
   _submitApprove
 } from '../../../../api/api'
 import {mapState} from 'vuex'
 export default {
   data () {
     return {
+      total1: 0,
+      total2: 0,
+      total3: 0,
+      currentPage1: 1,
+      currentPage2: 1,
+      currentPage3: 1,
       activeName: 'second',
       currentPage: 1,
       pageSize: 15,
@@ -360,10 +354,20 @@ export default {
       options: [],
       allBatchs: [],
       value: null,
-      input: '',
+      input1: '',
+      input2: '',
+      input3: '',
       WaiteData: [],
       acceptData: [],
       rejectdata: [],
+      // 过滤数据
+      fliterData1: [],
+      fliterData2: [],
+      fliterData3: [],
+      // 展示的数据
+      show1: [],
+      show2: [],
+      show3: [],
       isApprovalDialogVisible2: false,
       isApprovalDialogVisible: false,
       approvalForm: {
@@ -375,14 +379,12 @@ export default {
       form: {
         round: '',
         way: '',
-        input: '',
+        input1: '',
+        input2: '',
+        input3: '',
         result: ''
       },
       currentRow: null,
-      // 过滤数据
-      fliterData1: [],
-      fliterData2: [],
-      fliterData3: [],
       // 导出数据
       selectedData: [],
       isExportDialogVisible: false
@@ -409,22 +411,14 @@ export default {
       username: state => state.user.id // 映射 userId
     })
   },
-  mounted () {
-    this.fliterData1 = this.WaiteData
-    this.fliterData2 = this.acceptData
-    this.fliterData3 = this.rejectdata
-  },
   created () {
-    this.getApproveList()
-    this.getApprovedList()
-    this.getDisapprovedList()
+    this.getApproveList(1)
+    this.getApprovedList(1)
+    this.getDisapprovedList(1)
     this.getAllBatchs()
   },
   methods: {
     // 调整页面 引用时不用改动
-    batchvalueHandler () {
-      console.log(this.value)
-    },
     getAllBatchs () {
       _getAllBatches().then(res => {
         this.allBatchs = res.data
@@ -436,19 +430,25 @@ export default {
         this.form.result = `工号：${res.data.username},姓名：${res.data.name},单位：${res.data.unit},电话：${res.data.phone}`
       })
     },
-    getApproveList () {
-      _getApproveList(this.username).then(res => {
-        this.WaiteData = res.data
+    getApproveList (pageNum) {
+      _getApproveList(this.username, pageNum).then(res => {
+        this.WaiteData = res.data.data
+        this.total1 = res.data.total
+        this.show1 = this.WaiteData
       })
     },
-    getApprovedList () {
-      _getApprovedList(this.username).then(res => {
-        this.acceptData = res.data
+    getApprovedList (pageNum) {
+      _getApprovedList(this.username, pageNum).then(res => {
+        this.acceptData = res.data.data
+        this.total2 = res.data.total
+        this.show2 = this.acceptData
       })
     },
-    getDisapprovedList () {
-      _getDisapprovedList(this.username).then(res => {
-        this.rejectdata = res.data
+    getDisapprovedList (pageNum) {
+      _getDisapprovedList(this.username, pageNum).then(res => {
+        this.rejectdata = res.data.data
+        this.total3 = res.data.total
+        this.show3 = this.rejectdata
       })
     },
     handleSelelctionChange (val) {
@@ -462,11 +462,50 @@ export default {
     indexMethod (index) {
       return (this.currentPage - 1) * this.pageSize + index + 1
     },
-    handleSizeChange (val) {
-      this.pageSize = val
+    search1 () {
+      _searchApproveList(this.username, this.currentPage, this.input1).then(res => {
+        this.fliterData1 = res.data.data
+        this.total1 = res.data.total
+        this.show1 = this.fliterData1
+      })
     },
-    handleCurrentChange (val) {
-      this.currentPage = val
+    search2 () {
+      _searchApprovedList(this.username, this.currentPage, this.input2).then(res => {
+        this.fliterData2 = res.data.data
+        this.total2 = res.data.total
+        this.show2 = this.fliterData2
+      })
+    },
+    search3 () {
+      _searchDisapprovedList(this.username, this.currentPage, this.input3).then(res => {
+        this.fliterData3 = res.data.data
+        this.total3 = res.data.total
+        this.show3 = this.fliterData3
+      })
+    },
+    handleCurrentChange1 (page) {
+      this.currentPage1 = page
+      if (this.input1 === '') {
+        this.getApproveList(page)
+      } else {
+        this.search1()
+      }
+    },
+    handleCurrentChange2 (page) {
+      this.currentPage2 = page
+      if (this.input2 === '') {
+        this.getApprovedList(page)
+      } else {
+        this.search2()
+      }
+    },
+    handleCurrentChange3 (page) {
+      this.currentPage3 = page
+      if (this.input3 === '') {
+        this.getDisapprovedList(page)
+      } else {
+        this.search3()
+      }
     },
     handleClick1 () {
       alert('button click')
@@ -534,8 +573,8 @@ export default {
       })
     },
     resetData1 () {
-      this.input = ''
-      this.fliterData1 = this.WaiteData
+      this.input1 = ''
+      this.getApproveList(1)
     },
     searchData2 () {
       const searchQuery = this.input.toLowerCase()
@@ -546,8 +585,8 @@ export default {
       })
     },
     resetData2 () {
-      this.input = ''
-      this.fliterData2 = this.acceptData
+      this.input2 = ''
+      this.getApprovedList(1)
     },
     searchData3 () {
       const searchQuery = this.input.toLowerCase()
@@ -558,8 +597,8 @@ export default {
       })
     },
     resetData3 () {
-      this.input = ''
-      this.fliterData3 = this.rejectdata
+      this.input3 = ''
+      this.getDisapprovedList(1)
     },
     // 导出数据的方法
     outdata () {

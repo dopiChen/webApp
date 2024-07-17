@@ -116,7 +116,6 @@
 
 <script>
 import * as XLSX from 'xlsx'
-import {_getNamelist} from '@/api/api'
 import {_getFinalList} from '../../../../api/api'
 export default {
   name: 'third',

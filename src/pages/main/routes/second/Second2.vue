@@ -3,8 +3,7 @@
         <span class="title">监考管理</span>
         <div class="top">
             <div class="top1">
-                <el-button type="primary" icon="el-icon-search" style="background-color:dodgerblue;">快速找人</el-button>
-                <el-button type="primary" plain class="shu" @click="dialogVisible = true">创建批次</el-button>
+                <el-button type="primary" style="background-color:dodgerblue;"  @click="dialogVisible = true" icon="el-icon-circle-plus-outline">创建批次</el-button>
                 <el-dialog
                     title="创造监考报名批次"
                     :visible.sync="dialogVisible"
@@ -13,20 +12,11 @@
                     <div>
                         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="150px" label-position="left" class="demo-ruleForm">
                             <el-form-item label="批次名称" prop="name">
-                                <el-input placeholder="请输入批次名称" v-model="ruleForm.name"></el-input>
-                            </el-form-item>
-                            <el-form-item label="关联年份" prop="year">
-                                <el-date-picker
-                                    v-model="ruleForm.year"
-                                    type="year"
-                                    placeholder="请选择关联年份"
-                                    :clearable="false"
-                                    style="width: 100%;">
-                                </el-date-picker>
+                                <el-input placeholder="请输入批次名称" v-model="ruleForm.batchName"></el-input>
                             </el-form-item>
                             <el-form-item label="批次开始时间" required>
                                 <el-date-picker
-                                    v-model="ruleForm.bmkssj"
+                                    v-model="ruleForm.startDate"
                                     type="datetime"
                                     placeholder="请选择批次开始时间"
                                     style="width: 100%;">
@@ -34,17 +24,17 @@
                             </el-form-item>
                             <el-form-item label="批次结束时间" required>
                                 <el-date-picker
-                                    v-model="ruleForm.bmjssj"
+                                    v-model="ruleForm.endDate"
                                     type="datetime"
                                     placeholder="请选择批次结束时间"
                                     style="width: 100%;">
                                 </el-date-picker>
                             </el-form-item>
                             <el-form-item label="监考说明">
-                                <el-input type="textarea" placeholder="请输入监考说明" v-model="ruleForm.jksm" maxlength="200" show-word-limit></el-input>
+                                <el-input type="textarea" placeholder="请输入监考说明" v-model="ruleForm.description" maxlength="200" show-word-limit></el-input>
                             </el-form-item>
                             <el-form-item label="上传附件">
-                                <el-upload class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/" :on-preview="handlePreview" :on-remove="handleRemove">
+                                <el-upload  class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/" :on-preview="handlePreview" :on-remove="handleRemove">
                                     <el-button size="small" type="primary" class="scwj" plain icon="el-icon-upload2">上传文件</el-button>
                                     <div class="wjxianzhi" style="margin-top: 40px">限制上传文件10个以下，单个大小不超过100M；</div>
                                 </el-upload>
@@ -56,7 +46,7 @@
                         <el-button @click="dialogVisible = false">取消</el-button>
                     </span>
                 </el-dialog>
-                <el-button type="primary" plain class="shu4">数据导出</el-button>
+                <el-button type="primary" plain class="shu">数据导出</el-button>
                 <el-input placeholder="请输入监考名称关键词查询" v-model="input" class="shuru" @keyup.enter="searchData"></el-input>
                 <el-button type="primary" class="shu2" style="background-color:dodgerblue;" @click="searchData">查询</el-button>
                 <el-button type="primary" plain class="shu1" @click="resetData">重置</el-button>
@@ -89,17 +79,9 @@
                             </template>
                         </el-table-column>
                         <el-table-column label="操作">
-                            <el-button type="text">查看名单</el-button>
-                            <el-dropdown>
-                                <span class="el-dropdown-link">
-                                    更多<i class="el-icon-arrow-down el-icon--right"></i>
-                                </span>
-                                <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item>查看详情</el-dropdown-item>
-                                    <el-dropdown-item>编辑</el-dropdown-item>
-                                    <el-dropdown-item>删除</el-dropdown-item>
-                                </el-dropdown-menu>
-                            </el-dropdown>
+                            <template slot-scope="scope">
+                            <el-button type="text" @click="removeBatch(scope.row.batchId)">删除</el-button>
+                            </template>
                         </el-table-column>
                     </el-table>
                     <div class="pagination-container">
@@ -110,7 +92,7 @@
                             :current-page="currentPage"
                             :page-sizes="[10, 20, 30, 40]"
                             :page-size="pageSize"
-                            layout="total, sizes, prev, pager, next, jumper"
+                            layout="total, sizes, prev, pager, next"
                             :total="filteredData.length"
                             class="ye">
                         </el-pagination>
@@ -123,7 +105,7 @@
 
 <script>
 import { debounce } from 'lodash'
-import { _getAllBatches } from '../../../../api/user'
+import {_creatBatch, _getAllBatches, _removeBatch} from '../../../../api/user'
 
 export default {
   data () {
@@ -134,11 +116,13 @@ export default {
       input: '',
       dialogVisible: false,
       ruleForm: {
-        name: '',
-        year: '',
-        bmkssj: '',
-        bmjssj: '',
-        jksm: ''
+        attachment: 'string',
+        batchId: 0,
+        batchName: '',
+        description: '',
+        endDate: '',
+        startDate: '',
+        year: 2024
       },
       rules: {
         name: [
@@ -171,6 +155,25 @@ export default {
     this.debouncedSearch = debounce(this.searchData, 300)
   },
   methods: {
+    removeBatch (id) {
+      this.$confirm('此操作将永久删除该批次, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        _removeBatch(id)
+        this.getList()
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
     getList () {
       _getAllBatches().then(res => {
         this.tableData = res.data
@@ -192,14 +195,9 @@ export default {
         .catch(_ => {})
     },
     submitForm (formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.tableData.push({ ...this.ruleForm })
-          this.filteredData = this.tableData
-          this.dialogVisible = false
-          this.$refs[formName].resetFields()
-        }
-      })
+      _creatBatch(this.ruleForm)
+      this.dialogVisible = false
+      this.getList()
     },
     handleRemove (file, fileList) {
       console.log(file, fileList)
@@ -299,11 +297,6 @@ export default {
     position: absolute;
     right: 85px;
 }
-.shu4 {
-    background-color: #ffffff;
-    position: absolute;
-    left: 235px;
-}
 .table-container {
     position: relative;
     padding-bottom: 50px;
@@ -322,13 +315,6 @@ export default {
     position: absolute;
     right: 172px;
     width: 230px;
-}
-.el-dropdown-link {
-    cursor: pointer;
-    color: #409EFF;
-}
-.el-icon-arrow-down {
-    font-size: 15px;
 }
 .scwj {
     background-color: #FFFFFF;

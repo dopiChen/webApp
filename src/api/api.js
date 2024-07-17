@@ -19,7 +19,7 @@ export const _getExamDetail = (id) => http.GET(`api/examination/getDetail/${id}`
 export const _getUserData = (username) => http.GET(`api/personnel/information/${username}`, username)
 
 // 通过老师工号查所有通过的监考记录
-export const _getAllComfirm = (username,parms) => http.GET(`api/getComfirm/allComfirms/${username}`, { params: parms })
+export const _getAllComfirm = (username, parms) => http.GET(`api/getComfirm/allComfirms/${username}`, { params: parms })
 
 // 通过老师工号考试号确认参加监考
 

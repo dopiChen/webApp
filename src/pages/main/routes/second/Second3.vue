@@ -1,8 +1,6 @@
 <template>
     <div class="body">
-        <el-button type="text" @click="returnclick" icon="el-icon-back" style="font-size: 30px;color: #d3dce6;margin-left:24px"></el-button>
-        <span class="title1">监考安排表/</span>
-        <span class="title2">监考详细名单</span>
+        <span class="title">监考安排表</span>
         <div class="top">
             <div class="top1">
                 <el-button type="primary" icon="el-icon-document" style="background-color:dodgerblue;">导入监考信息</el-button>
@@ -81,7 +79,7 @@
                             :current-page="currentPage"
                             :page-sizes="[10]"
                             :page-size="pageSize"
-                            layout="prev, pager, next"
+                            layout="total, sizes, prev, pager, next"
                             :total="users.length"
                             class="ye">
                         </el-pagination>
@@ -150,6 +148,18 @@ export default {
 </script>
 
 <style scoped>
+.title {
+    width: 100px;
+    height: 28px;
+    font-weight: 500;
+    font-size: 20px;
+    color: #000000e6;
+    text-align: right;
+    line-height: 28px;
+    position: absolute;
+    left: 24px;
+    top: 18px;
+}
 .body {
     height: 100%;
 }
@@ -202,25 +212,15 @@ export default {
     width: 230px;
 }
 .title1 {
-    margin-left: 10px;
-    margin-top: 5px;
-    color: #00000066;
-    font-size: 25px;
-    font-weight: 1000;
-    line-height: 28px;
-    letter-spacing: 0;
-    paragraph-spacing: 0;
+    width: 160px;
+    height: 28px;
+    font-weight: 500;
+    font-size: 20px;
+    color: #000000e6;
     text-align: right;
+    line-height: 28px;
+    position: absolute;
+    top: 18px;
 }
 
-.title2 {
-    margin-top: 5px;
-    color: #000000e6;
-    font-size: 25px;
-    font-weight: 1000;
-    line-height: 28px;
-    letter-spacing: 0;
-    paragraph-spacing: 0;
-    text-align: right;
-}
 </style>

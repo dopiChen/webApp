@@ -61,10 +61,6 @@
                         show-overflow-tooltip>
                     </el-table-column>
                     <el-table-column
-                        prop="bmdm"
-                        label="部门代码">
-                    </el-table-column>
-                    <el-table-column
                         prop="bmlx"
                         label="部门类型"
                         show-overflow-tooltip>

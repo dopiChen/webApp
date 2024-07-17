@@ -3,9 +3,8 @@ export const _getUserInfo = (errMsg) => http.GET('/api/auth/userInfo', {}, errMs
 
 // 登出
 export const userLogout = () => http.GET('/api/whitelistSetting/logout')
-// 分页查询用户
-export const batchList = (obj) => http.GET('/api/batch/pageList', obj)
-
 export const _login = (account) => http.POST('/api/user/login', account)
 export const getFinalList = () => http.GET('/api/finalNameList')
 export const _getAllBatches = () => http.GET('/api/batch/AllBatches')
+export const _creatBatch = (obj) => http.POST('/api/batch/createBatch', obj)
+export const _removeBatch = id => http.GET('/api/batch/removeById?id=' + id)

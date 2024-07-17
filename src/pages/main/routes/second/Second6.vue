@@ -33,14 +33,14 @@
                 <el-button type="primary" plain class="shu">数据导出</el-button>
                 <el-input
                     placeholder="请输入部门名称/代码查询"
-                    v-model="input"
+                    v-model="query.unit"
                     class="shuru">
                 </el-input>
-                <el-button type="primary" class="shu2" style="background-color:dodgerblue;" @click="searchData1">查询</el-button>
+                <el-button type="primary" class="shu2" style="background-color:dodgerblue;" @click="getList">查询</el-button>
                 <el-button type="primary" plain class="shu1" @click="resetData1">重置</el-button>
                 <div class="table-container"><el-table
                     ref="multipleTable"
-                    :data="paginatedData"
+                    :data="units"
                     tooltip-effect="dark"
                     style="width: 100%"
                     @selection-change="handleSelectionChange">
@@ -52,7 +52,7 @@
                     <el-table-column
                         label="序号">
                         <template slot-scope="scope">
-                            {{scope.$index + 1 + (currentPage - 1) * pageSize}}
+                            {{scope.$index + 1 + (query.pageNo - 1) * query.pageSize}}
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -61,30 +61,13 @@
                         show-overflow-tooltip>
                     </el-table-column>
                     <el-table-column
-                        prop="bmlx"
-                        label="部门类型"
-                        show-overflow-tooltip>
-                    </el-table-column>
-                    <el-table-column
-                        prop="cyrs"
+                        prop="count"
                         label="成员人数"
                         show-overflow-tooltip>
                     </el-table-column>
                     <el-table-column
                         label="操作">
                         <el-button type="text" @click="openMemberlist">查看成员</el-button>
-                        <el-dropdown>
-                                    <span class="el-dropdown-link">
-                                     更多<i class="el-icon-arrow-down el-icon--right"></i>
-                                    </span>
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item>黄金糕</el-dropdown-item>
-                                <el-dropdown-item>狮子头</el-dropdown-item>
-                                <el-dropdown-item>螺蛳粉</el-dropdown-item>
-                                <el-dropdown-item disabled>双皮奶</el-dropdown-item>
-                                <el-dropdown-item divided>蚵仔煎</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
                     </el-table-column>
                 </el-table>
                     <div class="pagination-container">
@@ -92,11 +75,11 @@
                             background
                             @size-change="handleSizeChange"
                             @current-change="handleCurrentChange"
-                            :current-page="currentPage"
-                            :page-sizes="[10]"
-                            :page-size="pageSize"
-                            layout="prev, pager, next"
-                            :total="tableData.length"
+                            :current-page="query.pageNo"
+                            :page-sizes="[10,20,30,40]"
+                            :page-size="query.pageSize"
+                            layout="total,sizes,prev, pager, next"
+                            :total="total"
                             class="ye">
                         </el-pagination>
                     </div>
@@ -107,14 +90,14 @@
 </template>
 
 <script>
+import {_getUnit} from '../../../../api/user'
+
 export default {
   data () {
     return {
+      total: 0,
       activeName: 'second',
-      currentPage: 1,
-      pageSize: 10,
       value: '',
-      input: '',
       dialogVisible: false,
       ruleForm: {
         name: '',
@@ -134,51 +117,25 @@ export default {
         ]
       },
       fliterData1: [],
-      tableData: [
-        {
-          name: 'A部门',
-          bmdm: 'xy1001',
-          bmlx: '行政部门',
-          cyrs: '4'
-        },
-        {
-          name: 'A学院',
-          bmdm: 'xy1002',
-          bmlx: '教学部门',
-          cyrs: '3'
-        },
-        {
-          name: 'B部门',
-          bmdm: 'xy1003',
-          bmlx: '行政部门',
-          cyrs: '6'
-        },
-        {
-          name: 'B学院',
-          bmdm: 'xy1004',
-          bmlx: '教学部门',
-          cyrs: '2'
-        },
-        {
-          name: 'A部门',
-          bmdm: 'xy1001',
-          bmlx: '行政部门',
-          cyrs: '4'
-        }
-      ]
+      units: [],
+      query: {
+        unit: '',
+        pageNo: 1,
+        pageSize: 10
+      }
     }
   },
-  computed: {
-    paginatedData () {
-      const start = (this.currentPage - 1) * this.pageSize
-      const end = this.currentPage * this.pageSize
-      return this.fliterData1.slice(start, end)
-    }
-  },
-  mounted () {
-    this.fliterData1 = this.tableData
+  created () {
+    this.getList()
   },
   methods: {
+    getList () {
+      _getUnit(this.query).then(res => {
+        console.info(res)
+        this.units = res.data.records
+        this.total = res.data.records.length
+      })
+    },
     handleClick (tab, event) {
       console.log(tab, event)
     },
@@ -186,11 +143,12 @@ export default {
       return (this.currentPage - 1) * this.pageSize + index + 1
     },
     handleSizeChange (val) {
-      this.pageSize = val
-      this.currentPage = 1
+      this.query.pageSize = val
+      this.getList()
     },
     handleCurrentChange (val) {
-      this.currentPage = val
+      this.query.pageNo = val
+      this.getList()
     },
     handleClick1 () {
       alert('button click')

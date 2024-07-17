@@ -19,7 +19,7 @@ export const _getExamDetail = (id) => http.GET(`api/examination/getDetail/${id}`
 export const _getUserData = (username) => http.GET(`api/personnel/information/${username}`, username)
 
 // 通过老师工号查所有通过的监考记录
-export const _getAllComfirm = (username,parms) => http.GET(`api/getComfirm/allComfirms/${username}`, { params: parms })
+export const _getAllComfirm = (username, parms) => http.GET(`api/getComfirm/allComfirms/${username}`, { params: parms })
 
 // 通过老师工号考试号确认参加监考
 
@@ -49,3 +49,8 @@ export const _getApprovedList = (username) => http.GET(`api/batch/approved/${use
 export const _getDisapprovedList = (username) => http.GET(`api/batch/disapproved/${username}`, username)
 
 export const _getFinalList = () => http.GET('/api/finalNameList')
+
+// 通过短信验证码确定用户是否存在
+export const _checkUser = (username, parmas) => http.POST(`api/user/comfirmWithSms/${username}`, parmas)
+// 重设密码
+export const _resetPassword = (parmas) => http.POST('api/user/resetPassword', parmas)

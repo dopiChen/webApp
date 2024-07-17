@@ -3,10 +3,9 @@ const loginPage = [
     path: '/login',
     name: 'login',
     component: () =>
-      import(/* webpackChunkName: "Login" */ '../pages/login/Login')
+      import(/* webpackChunkName: "Login" */ '../pages/login/Login2')
   }
 ]
-
 const mainPage = [
   {
     path: '/',

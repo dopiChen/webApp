@@ -55,27 +55,6 @@ export default {
   },
   methods: {
     submitForm () {
-      // let obj = {
-      //   sn: this.ruleForm.sn,
-      //   password: this.ruleForm.password
-      // }
-      // userLogin(obj).then(res => {
-      //   // 这里是没有axios封装的res
-      //   // res.data就是后端返回的数据，要与下面用axios的区分开
-      //   if (res.data !== null) {
-      //     this.$message({
-      //       message: '登陆成功',
-      //       type: 'success'
-      //     })
-      //     this.$router.push({path: '/main'})
-      //   } else {
-      //     this.$message({
-      //       message: '用户名或密码错误',
-      //       type: 'warning'
-      //     })
-      //   }
-      //   console.info(res)
-      // })
       console.log(this.form.username)
       console.log(this.form.password)
       _login(this.form).then(res => {

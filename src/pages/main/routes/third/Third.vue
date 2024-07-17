@@ -226,8 +226,13 @@ export default {
       }
     },
     handleCurrentChange (page) {
-      this.currentPage = page
-      this.fetchData(page)
+      if (this.input === '') {
+        this.currentPage = page
+        this.fetchData(page)
+      } else {
+        this.currentPage = page
+        this.searchData1(page)
+      }
     },
     handleSizeChange (size) {
       this.pageSize = size

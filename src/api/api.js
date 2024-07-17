@@ -38,14 +38,22 @@ export const _getAllNotComfirms = (username) => http.GET(`api/getComfirm/allNotC
 // 获取与老师同院的领导团队
 export const _getLeaders = (username) => http.GET(`api/flow/${username}`, username)
 
-export const _getApproveList = (username) => http.GET(`api/batch/examine/${username}`, username)
+export const _getApproveList = (username, pageNum) => http.GET(`api/batch/examine/${username}/${pageNum}`, username, pageNum)
+
+export const _searchApproveList = (username, pageNum, keyword) => http.GET(`api/batch/examine/${username}/${pageNum}/${keyword}`, username, keyword, pageNum)
 
 export const _submitApprove = (username, examId) => http.POST(`api/batch/approve/${username}/${examId}`, username, examId)
 
 export const _rejectApprove = (username, examId, reason) => http.POST(`api/batch/disapprove/${username}/${examId}/${reason}`, username, examId, reason)
 
-export const _getApprovedList = (username) => http.GET(`api/batch/approved/${username}`, username)
+export const _getApprovedList = (username, pageNum) => http.GET(`api/batch/approved/${username}/${pageNum}`, username, pageNum)
 
-export const _getDisapprovedList = (username) => http.GET(`api/batch/disapproved/${username}`, username)
+export const _searchApprovedList = (username, pageNum, keyword) => http.GET(`api/batch/approved/${username}/${pageNum}/${keyword}`, username, keyword, pageNum)
 
-export const _getFinalList = () => http.GET('/api/finalNameList')
+export const _getDisapprovedList = (username, pageNum) => http.GET(`api/batch/disapproved/${username}/${pageNum}`, username, pageNum)
+
+export const _searchDisapprovedList = (username, pageNum, keyword) => http.GET(`api/batch/disapproved/${username}/${pageNum}/${keyword}`, username, keyword, pageNum)
+
+export const _getFinalList = (pageNum) => http.GET(`/api/finalNameList/${pageNum}`, pageNum)
+
+export const _searchFinalList = (pageNum, keyword) => http.GET(`api/finalNameList/search/${keyword}/${pageNum}`, pageNum, keyword)

@@ -132,7 +132,7 @@
 <script>
 import {Message} from 'element-ui'
 import {_commitSignup, _getBatch, _getBatchDetail, _getExamDetail, _getUserData} from '../../../../api/api'
-import {mapState} from "vuex";
+import {mapState} from 'vuex'
 
 export default {
   name: 'Third4',

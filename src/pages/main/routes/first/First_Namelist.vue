@@ -19,7 +19,7 @@
             </div>
             <div class="tablebody">
                 <el-table
-                        :data="finalList"
+                        :data="showList"
                         stripe
                         style="width: 100%;font-size:18px"
                         @selection-change="handleSelelctionChange"
@@ -100,15 +100,13 @@
       </span>
             </el-dialog>
             <div class="block">
-                <el-pagination
-                        background
-                        small
-                        layout="prev, pager, next"
-                        :total="total"
-                        :page-size="pageSize"
-                        @current-change="handleCurrentChange"
-                >
-                </el-pagination>
+              <el-pagination
+                  @current-change="handleCurrentChange"
+                  :current-page.sync="currentPage"
+                  :page-size="2"
+                  layout="total, prev, pager, next"
+                  :total="total">
+              </el-pagination>
             </div>
         </div>
     </div>
@@ -116,17 +114,18 @@
 
 <script>
 import * as XLSX from 'xlsx'
-import {_getNamelist} from '@/api/api'
-import {_getFinalList} from '../../../../api/api'
+import {_getFinalList, _searchFinalList} from '../../../../api/api'
 export default {
   name: 'third',
   data () {
     return {
       welcome: '欢迎第三用户！',
       input: '',
+      total: 0,
       checked: true,
       teams: [],
       finalList: [],
+      showList: [],
       selectedIds: [],
       currentPage: 1, // 当前页码
       pageSize: 15, // 每页显示行数
@@ -141,18 +140,15 @@ export default {
       selectedData: [],
       // 搜索数据
       // 过滤数据
-      fliterData1: []
+      fliterData: []
 
     }
   },
   created () {
-    this.getFinalList()
+    this.getFinalList(1)
   },
   // 计算换页显示
   computed: {
-    total () {
-      return this.teams.length
-    },
     currentTableData () {
       const start = (this.currentPage - 1) * this.pageSize
       const end = start + this.pageSize
@@ -161,9 +157,18 @@ export default {
   },
   methods: {
     // 调整页面 引用时不用改动
-    getFinalList () {
-      _getFinalList().then(res => {
-        this.finalList = res.data
+    getFinalList (page) {
+      _getFinalList(page).then(res => {
+        this.finalList = res.data.data
+        this.total = res.data.total
+        this.showList = this.finalList
+      })
+    },
+    search () {
+      _searchFinalList(this.currentPage, this.input).then(res => {
+        this.fliterData = res.data.data
+        this.total = res.data.total
+        this.showList = this.fliterData
       })
     },
     handleSelelctionChange (val) {
@@ -173,6 +178,11 @@ export default {
     },
     handleCurrentChange (page) {
       this.currentPage = page
+      if (this.input === '') {
+        this.getFinalList(page)
+      } else {
+        this.search()
+      }
     },
     updateTableHeight () {
       this.$nextTick(() => {
@@ -213,16 +223,11 @@ export default {
     },
     // 搜索函数
     searchData1 () {
-      const searchQuery = this.input.toLowerCase()
-      console.info(searchQuery)
-      this.fliterData1 = this.teams.filter(item => {
-        return item.name.toLowerCase().includes(searchQuery) ||
-                  item.personnelId.includes(searchQuery)
-      })
+      this.search()
     },
     resetData1 () {
       this.input = ''
-      this.fliterData1 = this.teams
+      this.getFinalList(1)
     }
   },
   beforeDestroy () {

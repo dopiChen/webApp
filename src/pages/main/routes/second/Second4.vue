@@ -3,12 +3,13 @@
         <span class="title">监考通知确认情况</span>
         <div class="top">
             <div class="top1">
-                <el-button type="primary" plain class="shu">数据导出</el-button>
+                <el-button type="primary" plain>数据导出</el-button>
                 <el-input placeholder="请输入监考名称关键词查询" v-model="input" class="shuru" @keyup.enter="searchData"></el-input>
-                <el-button type="primary" class="shu2" style="background-color:dodgerblue;" @click="searchData">查询</el-button>
-                <el-button type="primary" plain class="shu1" @click="resetData">重置</el-button>
+                <el-button type="primary" class="shu3" style="background-color:dodgerblue;" @click="searchData">查询</el-button>
+                <el-button type="primary" plain class="shu2" @click="resetData">重置</el-button>
+                <el-button type="primary" plain class="shu1" warning @click="removeBatchs">删除选中</el-button>
                 <div class="table-container">
-                    <el-table ref="multipleTable" :data="paginatedData" tooltip-effect="dark" style="width: 100%">
+                    <el-table @selection-change="sg" ref="multipleTable" :data="paginatedData" tooltip-effect="dark" style="width: 100%">
                         <el-table-column
                             type="selection"
                             width="25px"
@@ -35,11 +36,6 @@
                                 <el-tag :type="getStatusType(scope.row)" class="status-tag">{{ getStatusText(scope.row) }}</el-tag>
                             </template>
                         </el-table-column>
-                        <el-table-column label="操作">
-                            <template slot-scope="scope">
-                                <el-button type="text" @click="removeBatch(scope.row.batchId)">删除</el-button>
-                            </template>
-                        </el-table-column>
                     </el-table>
                     <div class="pagination-container">
                         <el-pagination
@@ -62,7 +58,7 @@
 
 <script>
 import { debounce } from 'lodash'
-import {_creatBatch, _getAllBatches, _removeBatch} from '../../../../api/user'
+import {_creatBatch, _getAllBatches, _removeBatch, _removeBatchs} from '../../../../api/user'
 
 export default {
   data () {
@@ -97,7 +93,8 @@ export default {
       },
       tableData: [],
       filteredData: [],
-      now: new Date() // 新增的当前时间变量
+      now: new Date(), // 新增的当前时间变量
+      selectdata: []
     }
   },
   computed: {
@@ -112,6 +109,37 @@ export default {
     this.debouncedSearch = debounce(this.searchData, 300)
   },
   methods: {
+    sg (value) {
+      // 这的value就是选中的数据构成的数组
+      this.selectdata = value
+    },
+    removeBatchs () {
+      this.$confirm('此操作将永久删除该批次, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        let ids = this.selectdata.map(tableData => tableData.batchId)
+        let obj = {
+          ids: ids
+        }
+        _removeBatchs(obj).then(res => {
+          if (res.data === true) {
+            this.$message({
+              message: '删除成功',
+              type: 'success'
+            })
+            this.getList()
+          } else {
+            this.$message({
+              message: '删除失败',
+              type: 'warning'
+            })
+          }
+        })
+      }).catch(() => {
+      })
+    },
     removeBatch (id) {
       this.$confirm('此操作将永久删除该批次, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -171,8 +199,7 @@ export default {
     },
     resetData () {
       this.input = ''
-      this.filteredData = this.tableData
-      this.currentPage = 1
+      this.getList()
     },
     highlightSearchTerm (text) {
       if (!this.input) return text
@@ -196,7 +223,6 @@ export default {
       const now = this.now
       const start = new Date(row.startDate)
       const end = new Date(row.endDate)
-
       if (now < start) {
         return '未开始'
       } else if (now > end) {
@@ -252,7 +278,11 @@ export default {
 }
 .shu2 {
     position: absolute;
-    right: 85px;
+    right: 120px;
+}
+.shu3 {
+    position: absolute;
+    right: 210px;
 }
 .table-container {
     position: relative;
@@ -270,7 +300,7 @@ export default {
 }
 .shuru {
     position: absolute;
-    right: 172px;
+    right: 300px;
     width: 230px;
 }
 .scwj {

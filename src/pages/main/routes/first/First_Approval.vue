@@ -110,15 +110,18 @@
                                     </template>
                                 </el-table-column>
                             </el-table>
-                            <div class="pagination-container">
-                              <el-pagination
-                                  @current-change="handleCurrentChange1"
-                                  :current-page.sync="currentPage1"
-                                  :page-size="2"
-                                  layout="total, prev, pager, next"
-                                  :total="total1">
-                              </el-pagination>
-                            </div>
+                          <div class="block">
+                            <el-pagination
+                                @size-change="handleSizeChange1"
+                                @current-change="handleCurrentChange1"
+                                :current-page.sync="currentPage1"
+                                :page-sizes="[10, 20, 30, 40]"
+                                :page-size="100"
+                                layout="total, sizes, prev, pager, next"
+                                :total="total1"
+                                background>
+                            </el-pagination>
+                          </div>
                             <el-dialog :visible.sync="isApprovalDialogVisible" title="审批" width="600px" center style="font-weight: bolder">
                                 <el-form :model="approvalForm">
                                     <el-table :data="[approvalForm]" stripe style="width: 100%; margin-bottom: 20px;">
@@ -226,15 +229,18 @@
                                     <el-button type="text" @click="accepttowaite(scope.row)">移除</el-button>
                                 </el-table-column>
                             </el-table>
-                          <div class="pagination-container">
+                          <div class="block">
                             <el-pagination
+                                @size-change="handleSizeChange2"
                                 @current-change="handleCurrentChange2"
                                 :current-page.sync="currentPage2"
-                                :page-size="2"
-                                layout="total, prev, pager, next"
-                                :total="total2">
+                                :page-sizes="[10, 20, 30, 40]"
+                                :page-size="100"
+                                layout="total, sizes, prev, pager, next"
+                                :total="total2"
+                                background>
                             </el-pagination>
-                          </div>
+                        </div>
                         </div>
                     </el-tab-pane>
                     <el-tab-pane label="不同意报名" name="third">
@@ -296,13 +302,16 @@
                                     <el-button type="text" @click="rejecttowaite(scope.row)">移除</el-button>
                                 </el-table-column>
                             </el-table>
-                          <div class="pagination-container">
+                          <div class="block">
                             <el-pagination
+                                @size-change="handleSizeChange3"
                                 @current-change="handleCurrentChange3"
                                 :current-page.sync="currentPage3"
-                                :page-size="2"
-                                layout="total, prev, pager, next"
-                                :total="total3">
+                                :page-sizes="[10, 20, 30, 40]"
+                                :page-size="100"
+                                layout="total, sizes, prev, pager, next"
+                                :total="total3"
+                                background>
                             </el-pagination>
                           </div>
                         </div>
@@ -346,6 +355,9 @@ export default {
       currentPage1: 1,
       currentPage2: 1,
       currentPage3: 1,
+      size1: 10,
+      size2: 10,
+      size3: 10,
       activeName: 'second',
       currentPage: 1,
       pageSize: 15,
@@ -412,13 +424,25 @@ export default {
     })
   },
   created () {
-    this.getApproveList(1)
-    this.getApprovedList(1)
-    this.getDisapprovedList(1)
+    this.getApproveList(this.size1, 1)
+    this.getApprovedList(this.size2, 1)
+    this.getDisapprovedList(this.size3, 1)
     this.getAllBatchs()
   },
   methods: {
     // 调整页面 引用时不用改动
+    handleSizeChange1 (size) {
+      this.size1 = size
+      this.getApproveList(this.size1, this.currentPage1)
+    },
+    handleSizeChange2 (size) {
+      this.size2 = size
+      this.getApprovedList(this.size2, this.currentPage2)
+    },
+    handleSizeChange3 (size) {
+      this.size3 = size
+      this.getDisapprovedList(this.size2, this.currentPage3)
+    },
     getAllBatchs () {
       _getAllBatches().then(res => {
         this.allBatchs = res.data
@@ -430,22 +454,22 @@ export default {
         this.form.result = `工号：${res.data.username},姓名：${res.data.name},单位：${res.data.unit},电话：${res.data.phone}`
       })
     },
-    getApproveList (pageNum) {
-      _getApproveList(this.username, pageNum).then(res => {
+    getApproveList (pageSize, pageNum) {
+      _getApproveList(this.username, pageSize, pageNum).then(res => {
         this.WaiteData = res.data.data
         this.total1 = res.data.total
         this.show1 = this.WaiteData
       })
     },
-    getApprovedList (pageNum) {
-      _getApprovedList(this.username, pageNum).then(res => {
+    getApprovedList (pageSize, pageNum) {
+      _getApprovedList(this.username, pageSize, pageNum).then(res => {
         this.acceptData = res.data.data
         this.total2 = res.data.total
         this.show2 = this.acceptData
       })
     },
-    getDisapprovedList (pageNum) {
-      _getDisapprovedList(this.username, pageNum).then(res => {
+    getDisapprovedList (pageSize, pageNum) {
+      _getDisapprovedList(this.username, pageSize, pageNum).then(res => {
         this.rejectdata = res.data.data
         this.total3 = res.data.total
         this.show3 = this.rejectdata
@@ -463,21 +487,21 @@ export default {
       return (this.currentPage - 1) * this.pageSize + index + 1
     },
     search1 () {
-      _searchApproveList(this.username, this.currentPage, this.input1).then(res => {
+      _searchApproveList(this.username, this.size1, this.currentPage, this.input1).then(res => {
         this.fliterData1 = res.data.data
         this.total1 = res.data.total
         this.show1 = this.fliterData1
       })
     },
     search2 () {
-      _searchApprovedList(this.username, this.currentPage, this.input2).then(res => {
+      _searchApprovedList(this.username, this.size2, this.currentPage, this.input2).then(res => {
         this.fliterData2 = res.data.data
         this.total2 = res.data.total
         this.show2 = this.fliterData2
       })
     },
     search3 () {
-      _searchDisapprovedList(this.username, this.currentPage, this.input3).then(res => {
+      _searchDisapprovedList(this.username, this.size3, this.currentPage, this.input3).then(res => {
         this.fliterData3 = res.data.data
         this.total3 = res.data.total
         this.show3 = this.fliterData3
@@ -486,7 +510,7 @@ export default {
     handleCurrentChange1 (page) {
       this.currentPage1 = page
       if (this.input1 === '') {
-        this.getApproveList(page)
+        this.getApproveList(this.size1, page)
       } else {
         this.search1()
       }
@@ -494,7 +518,7 @@ export default {
     handleCurrentChange2 (page) {
       this.currentPage2 = page
       if (this.input2 === '') {
-        this.getApprovedList(page)
+        this.getApprovedList(this.size2, page)
       } else {
         this.search2()
       }
@@ -502,7 +526,7 @@ export default {
     handleCurrentChange3 (page) {
       this.currentPage3 = page
       if (this.input3 === '') {
-        this.getDisapprovedList(page)
+        this.getDisapprovedList(this.size3, page)
       } else {
         this.search3()
       }
@@ -574,7 +598,7 @@ export default {
     },
     resetData1 () {
       this.input1 = ''
-      this.getApproveList(1)
+      this.getApproveList(this.size1, 1)
     },
     searchData2 () {
       const searchQuery = this.input.toLowerCase()
@@ -586,7 +610,7 @@ export default {
     },
     resetData2 () {
       this.input2 = ''
-      this.getApprovedList(1)
+      this.getApprovedList(this.size2, 1)
     },
     searchData3 () {
       const searchQuery = this.input.toLowerCase()
@@ -598,7 +622,7 @@ export default {
     },
     resetData3 () {
       this.input3 = ''
-      this.getDisapprovedList(1)
+      this.getDisapprovedList(this.size3, 1)
     },
     // 导出数据的方法
     outdata () {

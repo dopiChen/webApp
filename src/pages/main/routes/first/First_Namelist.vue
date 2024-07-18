@@ -99,15 +99,18 @@
         <el-button type="primary" @click="confirmExportExcel">确认导出</el-button>
       </span>
             </el-dialog>
-            <div class="block">
-              <el-pagination
-                  @current-change="handleCurrentChange"
-                  :current-page.sync="currentPage"
-                  :page-size="2"
-                  layout="total, prev, pager, next"
-                  :total="total">
-              </el-pagination>
-            </div>
+          <div class="block">
+            <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page.sync="currentPage"
+                :page-sizes="[10, 20, 30, 40]"
+                :page-size="100"
+                layout="total, sizes, prev, pager, next"
+                :total="total"
+                background>
+            </el-pagination>
+          </div>
         </div>
     </div>
 </template>
@@ -128,6 +131,7 @@ export default {
       showList: [],
       selectedIds: [],
       currentPage: 1, // 当前页码
+      size: 10,
       pageSize: 15, // 每页显示行数
       tableHeight: 0,
       isRemoveDialogVisible: false,
@@ -157,15 +161,24 @@ export default {
   },
   methods: {
     // 调整页面 引用时不用改动
+    handleSizeChange (size) {
+      this.size = size
+      this.currentPage = page
+      if (this.input === '') {
+        this.getFinalList(this.currentPage)
+      } else {
+        this.search()
+      }
+    },
     getFinalList (page) {
-      _getFinalList(page).then(res => {
+      _getFinalList(this.size, page).then(res => {
         this.finalList = res.data.data
         this.total = res.data.total
         this.showList = this.finalList
       })
     },
     search () {
-      _searchFinalList(this.currentPage, this.input).then(res => {
+      _searchFinalList(this.size, this.currentPage, this.input).then(res => {
         this.fliterData = res.data.data
         this.total = res.data.total
         this.showList = this.fliterData

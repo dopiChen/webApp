@@ -37,25 +37,25 @@ export const _getAllNotComfirms = (username) => http.GET(`api/getComfirm/allNotC
 // 获取与老师同院的领导团队
 export const _getLeaders = (username) => http.GET(`api/flow/${username}`, username)
 
-export const _getApproveList = (username, pageNum) => http.GET(`api/batch/examine/${username}/${pageNum}`, username, pageNum)
+export const _getApproveList = (username, pageSize, pageNum) => http.GET(`api/batch/examine/${username}/${pageSize}/${pageNum}`, username, pageSize, pageNum)
 
-export const _searchApproveList = (username, pageNum, keyword) => http.GET(`api/batch/examine/${username}/${pageNum}/${keyword}`, username, keyword, pageNum)
+export const _searchApproveList = (username, pageSize, pageNum, keyword) => http.GET(`api/batch/examine/${username}/${pageSize}/${pageNum}/${keyword}`, username, keyword, pageSize, pageNum)
 
 export const _submitApprove = (username, examId) => http.POST(`api/batch/approve/${username}/${examId}`, username, examId)
 
 export const _rejectApprove = (username, examId, reason) => http.POST(`api/batch/disapprove/${username}/${examId}/${reason}`, username, examId, reason)
 
-export const _getApprovedList = (username, pageNum) => http.GET(`api/batch/approved/${username}/${pageNum}`, username, pageNum)
+export const _getApprovedList = (username, pageSize, pageNum) => http.GET(`api/batch/approved/${username}/${pageSize}/${pageNum}`, username, pageSize, pageNum)
 
-export const _searchApprovedList = (username, pageNum, keyword) => http.GET(`api/batch/approved/${username}/${pageNum}/${keyword}`, username, keyword, pageNum)
+export const _searchApprovedList = (username, pageSize, pageNum, keyword) => http.GET(`api/batch/approved/${username}/${pageSize}/${pageNum}/${keyword}`, username, keyword, pageSize, pageNum)
 
-export const _getDisapprovedList = (username, pageNum) => http.GET(`api/batch/disapproved/${username}/${pageNum}`, username, pageNum)
+export const _getDisapprovedList = (username, pageSize, pageNum) => http.GET(`api/batch/disapproved/${username}/${pageSize}/${pageNum}`, username, pageSize, pageNum)
 
-export const _searchDisapprovedList = (username, pageNum, keyword) => http.GET(`api/batch/disapproved/${username}/${pageNum}/${keyword}`, username, keyword, pageNum)
+export const _searchDisapprovedList = (username, pageSize, pageNum, keyword) => http.GET(`api/batch/disapproved/${username}/${pageSize}/${pageNum}/${keyword}`, username, keyword, pageSize, pageNum)
 
-export const _getFinalList = (pageNum) => http.GET(`/api/finalNameList/${pageNum}`, pageNum)
+export const _getFinalList = (pageSize, pageNum) => http.GET(`/api/finalNameList/${pageSize}/${pageNum}`, pageSize, pageNum)
 
-export const _searchFinalList = (pageNum, keyword) => http.GET(`api/finalNameList/search/${keyword}/${pageNum}`, pageNum, keyword)
+export const _searchFinalList = (pageSize, pageNum, keyword) => http.GET(`api/finalNameList/search/${keyword}/${pageSize}/${pageNum}`, pageSize, pageNum, keyword)
 
 // 通过短信验证码确定用户是否存在
 export const _checkUser = (username, parmas) => http.POST(`api/user/comfirmWithSms/${username}`, parmas)

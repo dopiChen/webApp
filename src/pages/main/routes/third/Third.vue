@@ -11,7 +11,7 @@
                             prefix-icon="el-icon-search"
                             v-model="input">
                     </el-input>
-                    <el-button type="primary" @click="searchData1">搜索</el-button>
+                    <el-button type="primary" @click="fetchData">搜索</el-button>
                     <el-button type="info" @click="resetData1">重置</el-button>
                 </div>
             </div>
@@ -21,7 +21,6 @@
                         stripe
                         style="width: 100%"
                         @selection-change="handleSelelctionChange"
-                        :height="tableHeight"
                         class="table">
                     <el-table-column
                             type="selection"
@@ -73,15 +72,14 @@
                     </el-table-column>
                 </el-table>
                 <div class="block">
-                    <span class="demonstration">调整每页显示条数</span>
                     <el-pagination
                         @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
-                        :current-page.sync="currentPage2"
-                        :page-sizes="[10, 15, 20, 25]"
-                        :page-size="10"
-                        layout="sizes, prev, pager, next"
-                        :total="this.total">
+                        :page-sizes="[10, 20, 30, 40]"
+                        :page-size="100"
+                        layout="total, sizes, prev, pager, next"
+                        :total="total"
+                        background>
                     </el-pagination>
                 </div>
             </div>
@@ -116,7 +114,7 @@
 <script>
 import {Message} from 'element-ui'
 
-import {_getAllBatches, _getAllNotComfirms, _searchBatches} from '../../../../api/api'
+import {_getAllNotComfirms, _getBatchList, _searchBatches} from '../../../../api/api'
 import {mapState} from 'vuex'
 
 export default {
@@ -190,7 +188,7 @@ export default {
     },
     resetData1 () {
       this.input = ''
-      this.fliterData1 = this.teams
+      this.fetchData()
     },
     handleClose () {
       this.dialogVisible = false
@@ -202,11 +200,12 @@ export default {
       // 可以跳转到其他页面或执行其他操作
     },
     // 异步函数
-    async fetchData (page) {
+    async fetchData () {
       try {
-        const params = {page: page, size: this.pageSize}
-        const response = await _getAllBatches(params)
-        this.teams = response.data
+        // const params = {page: page, size: this.pageSize}
+        const query = {pageNo: this.currentPage, pageSize: this.pageSize, batchName: this.input}
+        const response = await _getBatchList(query)
+        this.teams = response.data.records
         console.info(this.teams)
         this.fliterData1 = this.teams
         this.total = response.data.total
@@ -226,17 +225,12 @@ export default {
       }
     },
     handleCurrentChange (page) {
-      if (this.input === '') {
-        this.currentPage = page
-        this.fetchData(page)
-      } else {
-        this.currentPage = page
-        this.searchData1(page)
-      }
+      this.currentPage = page
+      this.fetchData()
     },
     handleSizeChange (size) {
       this.pageSize = size
-      this.fetchData(this.currentPage) // 使用当前页重新获取数据
+      this.fetchData() // 使用当前页重新获取数据
     }
   }
 
@@ -297,7 +291,7 @@ export default {
     margin-top: 1rem;
     width: 95%;
     background-color: white;
-    flex: 1 1 auto; /* 让 tablebody 占据剩余的所有空间 */
+    /*flex: 1 1 auto; !* 让 tablebody 占据剩余的所有空间 *!*/
     overflow: auto; /* 当内容超出时，允许滚动 */
     display: flex;
     flex-direction: column;

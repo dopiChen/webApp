@@ -66,13 +66,13 @@
             </div>
             <div class="block">
                 <el-pagination
-                        background
-                        small
-                        layout="prev, pager, next"
-                        :total="total"
-                        :page-size="pageSize"
-                        @current-change="handleCurrentChange"
-                >
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :page-sizes="[10, 15, 20, 25]"
+                    :page-size="100"
+                    layout="total, sizes, prev, pager, next"
+                    :total="total"
+                    background>
                 </el-pagination>
             </div>
         </div>
@@ -132,32 +132,42 @@ export default {
     },
     resetData1 () {
       this.input = ''
-      this.currentdata = this.teams
+      this.fetchData1()
     },
     searchData1 () {
       if (this.input === '') {
         this.currentdata = this.teams
       } else {
-        _searchComfirm(this.username, this.input).then(res => {
-          this.currentdata = res.data
+        const query = {pageNo: this.currentPage, pageSize: this.pageSize}
+        _searchComfirm(this.username, this.input, query).then(res => {
+          this.currentdata = res.data.records
+          this.total = res.data.total
         })
       }
     },
-    async fetchData1 (page) {
-      const params = {page: page, size: this.pageSize}
-      _getAllComfirm(this.username, params).then(res => {
-        this.teams = res.data
+    async fetchData1 () { // eslint-disable-next-line standard/object-curly-even-spacing
+      const query = { pageNo: this.currentPage, pageSize: this.pageSize}
+      _getAllComfirm(this.username, query).then(res => {
+        this.teams = res.data.records
         this.total = res.data.total
         this.currentdata = this.teams
       })
     },
     handleCurrentChange (page) {
       this.currentPage = page
-      this.fetchData1(page)
+      if (this.input === '') {
+        this.fetchData1()
+      } else {
+        this.searchData1()
+      }
     },
     handleSizeChange (size) {
       this.pageSize = size
-      this.fetchData1(this.currentPage) // 使用当前页重新获取数据
+      if (this.input === '') {
+        this.fetchData1()
+      } else {
+        this.searchData1()
+      }
     }
   },
   beforeDestroy () {
@@ -217,8 +227,6 @@ export default {
     margin-top: 1rem;
     width: 95%;
     background-color: white;
-    flex: 1 1 auto; /* 让 tablebody 占据剩余的所有空间 */
-
 }
 
 .block {

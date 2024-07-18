@@ -69,6 +69,7 @@ export default {
         store.dispatch('user/clearUserInfo')
         // 跳转登录
         this.$router.push({path: '/login'})
+        this.$message.success('退出成功')
       })
     }
   }

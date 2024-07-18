@@ -19,15 +19,14 @@ export const _getExamDetail = (id) => http.GET(`api/examination/getDetail/${id}`
 export const _getUserData = (username) => http.GET(`api/personnel/information/${username}`, username)
 
 // 通过老师工号查所有通过的监考记录
-export const _getAllComfirm = (username, parms) => http.GET(`api/getComfirm/allComfirms/${username}`, { params: parms })
+export const _getAllComfirm = (username, parms) => http.POST(`api/getComfirm/allComfirms/${username}`, parms)
 
 // 通过老师工号考试号确认参加监考
 
 export const _doComfirm = (username, examid) => http.POST(`api/getComfirm/Docomfirm/${username}/${examid}`, username, examid)
 
 // 老师通过考试编号查询已经通过的审批考试
-export const _searchComfirm = (username, examid) => http.GET(`api/getComfirm/allComfirms/search/${username}/${examid}`, username, examid)
-
+export const _searchComfirm = (username, examid, query) => http.POST(`api/getComfirm/allComfirms/search/${username}/${examid}`, query)
 // 老师通过工号查询已经提交的审批
 export const _getAllSignUp = (username) => http.GET(`api/signup/getSignup/${username}`, username)
 // 老师通过工号和考试编号查询某次提交记录
@@ -62,3 +61,5 @@ export const _searchFinalList = (pageNum, keyword) => http.GET(`api/finalNameLis
 export const _checkUser = (username, parmas) => http.POST(`api/user/comfirmWithSms/${username}`, parmas)
 // 重设密码
 export const _resetPassword = (parmas) => http.POST('api/user/resetPassword', parmas)
+// 获取全部批次
+export const _getBatchList = (query) => http.GET('api/batch/pageList', query)

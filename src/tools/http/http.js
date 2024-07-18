@@ -54,8 +54,8 @@ function checkCode (res, errMsg) {
       case 70005:
         Message.error('您需要重新登录！')
         break
-      default:
-        errMsg ? Message.error(errMsg) : Message.error(res.data.message || '未知异常')
+      // default:
+      //   errMsg ? Message.error(errMsg) : Message.error(res.data.message || '未知异常')
     }
   }
   return res.data

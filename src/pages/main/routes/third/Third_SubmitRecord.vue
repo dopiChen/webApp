@@ -2,13 +2,13 @@
     <div class="mainbody">
         <div class="profile">
             <el-upload
-                    class="avatar-uploader"
-                    action="https://jsonplaceholder.typicode.com/posts/"
-                    :show-file-list="false"
-                    :on-success="handleAvatarSuccess"
-                    :before-upload="beforeAvatarUpload"
+                class="avatar-uploader"
+                :action="uploadUrl"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess"
+                :before-upload="beforeAvatarUpload"
             >
-                <img v-if="user.avatar" :src="this.user.avatar" class="avatar">
+                <img v-if="user.avatar" :src="user.avatar" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
             <div class="info">
@@ -80,6 +80,7 @@
 <script>
 import {mapState} from 'vuex'
 import {_getAllSignUp, _getLeaders, _getUserData} from '../../../../api/api'
+import {_getUserAvatar} from '../../../../api/user'
 
 export default {
   name: 'UserProfile',
@@ -88,7 +89,7 @@ export default {
       personnelData: [],
       // 介入数据库
       user: {
-        avatar: 'https://via.placeholder.com/150',
+        avatar: '', // 头像url
         name: this.name
       },
       applications: [],
@@ -106,24 +107,12 @@ export default {
     ...mapState({
       username: state => state.user.id, // 映射 userId
       name: state => state.user.name
-    })
+    }),
+    uploadUrl () {
+      return `/file/upload/avatar/${this.username}`
+    }
   },
   methods: {
-    handleAvatarSuccess (res, file) {
-      this.user.avatar = URL.createObjectURL(file.raw)
-    },
-    beforeAvatarUpload (file) {
-      const isJPG = file.type === 'image/jpeg'
-      const isLt2M = file.size / 1024 / 1024 < 2
-
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!')
-      }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
-      }
-      return isJPG && isLt2M
-    },
     getTagType (status) {
       switch (status) {
         case '审核中':
@@ -153,6 +142,14 @@ export default {
       _getUserData(this.username).then(res => {
         this.personnelData = res.data
       })
+      _getUserAvatar(this.username).then(res => {
+        if (res.url === null) {
+          this.user.avatar = 'https://jsonplaceholder.typicode.com/posts/'
+        } else {
+          this.user.avatar = res.url
+          console.info(this.user.avatar)
+        }
+      })
     },
     async fetchData2 () {
       _getAllSignUp(this.username).then(res => {
@@ -166,6 +163,26 @@ export default {
         console.info(1111)
         console.log(this.leaderData[0].user.username)
       })
+    },
+    handleAvatarSuccess (response, file) {
+      // 假设后端返回的响应中包含文件 URL
+      this.user.avatar = response.url
+      console.log(this.user.avatar)
+    },
+    beforeAvatarUpload (file) {
+      const isJPG = file.type === 'image/jpeg'
+      const isPNG = file.type === 'image/png'
+      const isLt2M = file.size / 1024 / 1024 < 2
+
+      if (!isJPG && !isPNG) {
+        this.$message.error('上传头像图片只能是 JPG 或 PNG 格式!')
+        return false
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+        return false
+      }
+      return true
     }
   }
 }

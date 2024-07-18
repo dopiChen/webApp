@@ -71,7 +71,7 @@ export default {
         {
           path: '/main/second2',
           icon: 'suncaper-menu-unfold',
-          title: '监考管理'
+          title: '批次管理'
         },
         {
           path: '/main/second3',

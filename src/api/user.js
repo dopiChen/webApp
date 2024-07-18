@@ -4,16 +4,21 @@ export const _getUserInfo = (errMsg) => http.GET('/api/auth/userInfo', {}, errMs
 // 登出
 export const userLogout = () => http.GET('/api/user/whitelistSetting/logout')
 export const _login = (account) => http.POST('/api/user/login', account)
-export const getFinalList = () => http.GET('/api/finalNameList')
+export const getFinalList = (obj) => http.GET(`api/finalNameList/${obj}`)
+export const getFinalListsearch = (keyword, pageNum, pageSize) => http.GET(`api/finalNameList/search/${keyword}/${pageNum}/${pageSize}`, keyword, pageNum, pageSize)
 export const _getAllBatches = () => http.GET('/api/batch/AllBatches')
+export const getBatchList = (obj) => http.GET('/api/batch/pageList', obj)
 export const _creatBatch = (obj) => http.POST('/api/batch/createBatch', obj)
 export const _removeBatch = id => http.GET('/api/batch/removeById?id=' + id)
 export const _removeBatchs = obj => http.POST('/api/batch/removeByIds', obj)
-export const _getUnit = () => http.GET('api/personnel/unitList')
-
+export const _getPersonnel = (obj) => http.GET('api/personnel/pageList', obj)
+export const _selectUnit = (pageNum, pageSize) => http.GET(`/api/peruser/${pageNum}/${pageSize}`, pageNum, pageSize)
+export const _getperuser = (unit, pageNum, pageSize) => http.GET(`/api/peruser/${unit}/${pageNum}/${pageSize}`, unit, pageNum, pageSize)
 // 向指定手机发送验证码
 export const _sendCode = (phone) => http.GET(`/api/user/sendSmsCode/${phone}`, {phone})
 // 验证码登录
 export const _loginByCode = (codeform) => http.POST('/api/user/loginWithSms', codeform)
 // 获取用户头像
 export const _getUserAvatar = (username) => http.GET(`/api/file/get/avatar/${username}`, username)
+export const _postionChange = (username, usertype) => http.POST(`/api/positionChange/changePosition/${username}/${usertype}`, username, usertype)
+export const _statusChange = (username, status) => http.POST(`/api/positionChange/changeStatus/${username}/${status}`, username, status)

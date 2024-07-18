@@ -3,7 +3,7 @@
         <span class="title">部门与角色管理</span>
         <div class="top">
             <div class="top1">
-                <el-button type="primary" icon="el-icon-search" style="background-color:dodgerblue;">快速找人</el-button>
+                <el-button type="primary" plain class="shu">数据导出</el-button>
 <!--                <el-button type="primary" plain class="shu" @click="dialogVisible = true">添加部门</el-button>-->
 <!--                <el-dialog-->
 <!--                    title="添加部门"-->
@@ -30,20 +30,18 @@
 <!--                         <el-button @click="dialogVisible = false">取消</el-button>-->
 <!--                    </span>-->
 <!--                </el-dialog>-->
-                <el-button type="primary" plain class="shu">数据导出</el-button>
-                <el-input
-                    placeholder="请输入部门名称/代码查询"
-                    v-model="query.unit"
-                    class="shuru">
-                </el-input>
-                <el-button type="primary" class="shu2" style="background-color:dodgerblue;" @click="getList">查询</el-button>
-                <el-button type="primary" plain class="shu1" @click="resetData1">重置</el-button>
+<!--                <el-input-->
+<!--                    placeholder="请输入部门名称/代码查询"-->
+<!--                    v-model="query.unit"-->
+<!--                    class="shuru">-->
+<!--                </el-input>-->
+<!--                <el-button type="primary" class="shu2" style="background-color:dodgerblue;" @click="getList">查询</el-button>-->
+<!--                <el-button type="primary" plain class="shu1" @click="resetData1">重置</el-button>-->
                 <div class="table-container"><el-table
                     ref="multipleTable"
                     :data="units"
                     tooltip-effect="dark"
-                    style="width: 100%"
-                    @selection-change="handleSelectionChange">
+                    style="width: 100%">
                     <el-table-column
                         type="selection"
                         width="25px"
@@ -61,13 +59,21 @@
                         show-overflow-tooltip>
                     </el-table-column>
                     <el-table-column
+                        label="部门地址">
+                        <template slot-scope="scope">
+                            西安交通大学
+                        </template>
+                    </el-table-column>
+                    <el-table-column
                         prop="count"
                         label="成员人数"
                         show-overflow-tooltip>
                     </el-table-column>
                     <el-table-column
                         label="操作">
-                        <el-button type="text" @click="openMemberlist">查看成员</el-button>
+                        <template slot-scope="scope">
+                        <el-button type="text" @click="openMemberlist(scope.row)">查看成员</el-button>
+                        </template>
                     </el-table-column>
                 </el-table>
                     <div class="pagination-container">
@@ -90,7 +96,7 @@
 </template>
 
 <script>
-import {_getUnit} from '../../../../api/user'
+import {_selectUnit} from '../../../../api/user'
 
 export default {
   data () {
@@ -119,10 +125,10 @@ export default {
       fliterData1: [],
       units: [],
       query: {
-        unit: '',
         pageNo: 1,
         pageSize: 10
-      }
+      },
+      sunit: ''
     }
   },
   created () {
@@ -130,10 +136,10 @@ export default {
   },
   methods: {
     getList () {
-      _getUnit(this.query).then(res => {
+      _selectUnit(this.query.pageNo, this.query.pageSize).then(res => {
         console.info(res)
-        this.units = res.data.records
-        this.total = res.data.records.length
+        this.units = res.data.data
+        this.total = res.data.total
       })
     },
     handleClick (tab, event) {
@@ -178,9 +184,10 @@ export default {
     handlePreview (file) {
       console.log(file)
     },
-    openMemberlist () {
+    openMemberlist (row) {
+      this.sunit = row.unit
       this.$router.push({
-        path: '/main/second_MemberList'
+        path: '/main/second_MemberList?unit=' + this.sunit
       })
     },
     // 搜索函数
@@ -193,7 +200,7 @@ export default {
     },
     resetData1 () {
       this.input = ''
-      this.fliterData1 = this.tableData
+      this.getList()
     }
   }
 }

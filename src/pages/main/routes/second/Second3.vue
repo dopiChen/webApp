@@ -6,16 +6,16 @@
                 <el-button type="primary" icon="el-icon-document" style="background-color:dodgerblue;">导入监考信息</el-button>
                 <el-button type="primary" plain class="shu" @click="dialogVisible = true">数据导出</el-button>
                 <el-input
-                    placeholder="请输入姓名/工号查询"
+                    placeholder="请输入工号查询"
                     v-model="input"
                     class="shuru">
                 </el-input>
-                <el-button type="primary" class="shu2" style="background-color:dodgerblue;" @click="searchData1">查询</el-button>
+                <el-button type="primary" class="shu2" style="background-color:dodgerblue;" @click="getListSearch">查询</el-button>
                 <el-button type="primary" plain class="shu1" @click="resetData1">重置</el-button>
                 <div class="table-container">
                     <el-table
                         ref="multipleTable"
-                        :data="paginatedData"
+                        :data="users"
                         tooltip-effect="dark"
                         style="width: 100%">
                         <el-table-column
@@ -77,10 +77,10 @@
                             @size-change="handleSizeChange"
                             @current-change="handleCurrentChange"
                             :current-page="currentPage"
-                            :page-sizes="[10]"
+                            :page-sizes="[10,20,30,40]"
                             :page-size="pageSize"
                             layout="total, sizes, prev, pager, next"
-                            :total="users.length"
+                            :total="total"
                             class="ye">
                         </el-pagination>
                     </div>
@@ -91,7 +91,7 @@
 </template>
 
 <script>
-import { getFinalList } from '../../../../api/user'
+import {getFinalList, getFinalListsearch} from '../../../../api/user'
 
 export default {
   data () {
@@ -100,31 +100,33 @@ export default {
       pageSize: 10,
       dialogVisible: false,
       input: '',
-      users: []
-    }
-  },
-  computed: {
-    paginatedData () {
-      const start = (this.currentPage - 1) * this.pageSize
-      const end = this.currentPage * this.pageSize
-      return this.users.slice(start, end)
+      users: [],
+      total: 0
     }
   },
   created () {
     this.getList()
   },
   methods: {
+    getListSearch () {
+      getFinalListsearch(this.input, this.currentPage, this.pageSize).then(res => {
+        this.users = res.data.data
+        this.total = res.data.total
+      })
+    },
     getList () {
-      getFinalList().then(res => {
-        this.users = res.data
+      getFinalList(this.currentPage).then(res => {
+        this.users = res.data.data
+        this.total = res.data.total
       })
     },
     handleSizeChange (val) {
       this.pageSize = val
-      this.currentPage = 1
+      this.getList()
     },
     handleCurrentChange (val) {
       this.currentPage = val
+      this.getList()
     },
     returnclick () {
       this.$router.push({

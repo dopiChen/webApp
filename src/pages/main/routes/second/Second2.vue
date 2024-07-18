@@ -30,8 +30,8 @@
                                     style="width: 100%;">
                                 </el-date-picker>
                             </el-form-item>
-                            <el-form-item label="监考说明">
-                                <el-input type="textarea" placeholder="请输入监考说明" v-model="ruleForm.description" maxlength="200" show-word-limit></el-input>
+                            <el-form-item label="批次说明">
+                                <el-input type="textarea" placeholder="请输入批次说明" v-model="ruleForm.description" maxlength="200" show-word-limit></el-input>
                             </el-form-item>
                             <el-form-item label="上传附件">
                                 <el-upload  class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/" :on-preview="handlePreview" :on-remove="handleRemove">
@@ -47,11 +47,12 @@
                     </span>
                 </el-dialog>
                 <el-button type="primary" plain class="shu">数据导出</el-button>
-                <el-input placeholder="请输入监考名称关键词查询" v-model="input" class="shuru" @keyup.enter="searchData"></el-input>
-                <el-button type="primary" class="shu2" style="background-color:dodgerblue;" @click="searchData">查询</el-button>
-                <el-button type="primary" plain class="shu1" @click="resetData">重置</el-button>
+                <el-input placeholder="请输入监考名称关键词查询" v-model="query.batchName" class="shuru"></el-input>
+                <el-button type="primary" class="shu3" style="background-color:dodgerblue;" @click="getList">查询</el-button>
+                <el-button type="primary" plain class="shu2" @click="resetData">重置</el-button>
+                <el-button type="primary" plain class="shu1" warning @click="removeBatchs">删除选中</el-button>
                 <div class="table-container">
-                    <el-table @selection-change="sg" ref="multipleTable" :data="paginatedData" tooltip-effect="dark" style="width: 100%">
+                    <el-table @selection-change="sg" ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%">
                         <el-table-column
                             type="selection"
                             width="25px"
@@ -60,10 +61,10 @@
                         <el-table-column
                             label="序号">
                             <template slot-scope="scope">
-                                {{scope.$index + 1 + (currentPage - 1) * pageSize}}
+                                {{scope.$index + 1 + (query.pageNo - 1) * query.pageSize}}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="batchName" label="监考名称" show-overflow-tooltip>
+                        <el-table-column prop="batchName" label="批次名称" show-overflow-tooltip>
                             <template slot-scope="scope">
                                 <span v-html="highlightSearchTerm(scope.row.batchName)"></span>
                             </template>
@@ -73,6 +74,7 @@
                         <el-table-column prop="startDate" label="报名开始时间" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="endDate" label="报名结束时间" show-overflow-tooltip></el-table-column>
                         <el-table-column prop="year" label="创建时间" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="description" label="批次说明"></el-table-column>
                         <el-table-column label="批次状态">
                             <template slot-scope="scope">
                                 <el-tag :type="getStatusType(scope.row)" class="status-tag">{{ getStatusText(scope.row) }}</el-tag>
@@ -89,11 +91,11 @@
                             background
                             @size-change="handleSizeChange"
                             @current-change="handleCurrentChange"
-                            :current-page="currentPage"
-                            :page-sizes="[10, 20, 30, 40]"
-                            :page-size="pageSize"
+                            :current-page="query.pageNo"
+                            :page-sizes="[10,20,30,40]"
+                            :page-size="query.pageSize"
                             layout="total, sizes, prev, pager, next"
-                            :total="filteredData.length"
+                            :total="total"
                             class="ye">
                         </el-pagination>
                     </div>
@@ -104,16 +106,13 @@
 </template>
 
 <script>
-import { debounce } from 'lodash'
-import {_creatBatch, _getAllBatches, _removeBatch, _removeBatchs} from '../../../../api/user'
+import {_creatBatch, getBatchList, _removeBatch, _removeBatchs} from '../../../../api/user'
 
 export default {
   data () {
     return {
       activeName: 'second',
-      currentPage: 1,
-      pageSize: 10,
-      input: '',
+      total: 0,
       dialogVisible: false,
       ruleForm: {
         attachment: 'string',
@@ -139,21 +138,17 @@ export default {
         ]
       },
       tableData: [],
-      filteredData: [],
       now: new Date(), // 新增的当前时间变量
-      selectdata: []
-    }
-  },
-  computed: {
-    paginatedData () {
-      const start = (this.currentPage - 1) * this.pageSize
-      const end = this.currentPage * this.pageSize
-      return this.filteredData.slice(start, end)
+      selectdata: [],
+      query: {
+        pageNo: 1,
+        pageSize: 10,
+        batchName: ''
+      }
     }
   },
   created () {
     this.getList()
-    this.debouncedSearch = debounce(this.searchData, 300)
   },
   methods: {
     sg (value) {
@@ -207,17 +202,18 @@ export default {
       })
     },
     getList () {
-      _getAllBatches().then(res => {
-        this.tableData = res.data
-        this.filteredData = res.data
+      getBatchList(this.query).then(res => {
+        this.tableData = res.data.records
+        this.total = res.data.total
       })
     },
     handleSizeChange (val) {
-      this.pageSize = val
-      this.currentPage = 1
+      this.query.pageSize = val
+      this.getList()
     },
     handleCurrentChange (val) {
-      this.currentPage = val
+      this.query.pageNo = val
+      this.getList()
     },
     handleClose (done) {
       this.$confirm('确认关闭？')
@@ -237,27 +233,19 @@ export default {
     handlePreview (file) {
       console.log(file)
     },
-    searchData () {
-      const searchQuery = this.input.toLowerCase()
-      this.filteredData = this.tableData.filter(item => {
-        return item.batchName.toLowerCase().includes(searchQuery)
-      })
-      this.currentPage = 1
-    },
     resetData () {
-      this.input = ''
+      this.query.batchName = ''
       this.getList()
     },
     highlightSearchTerm (text) {
-      if (!this.input) return text
-      const regex = new RegExp(`(${this.input})`, 'gi')
+      if (!this.query.batchName) return text
+      const regex = new RegExp(`(${this.query.batchName})`, 'gi')
       return text.replace(regex, '<span class="highlight">$1</span>')
     },
     getStatusType (row) {
       const now = this.now
       const start = new Date(row.startDate)
       const end = new Date(row.endDate)
-
       if (now < start) {
         return 'info'
       } else if (now > end) {
@@ -319,13 +307,17 @@ export default {
     background-color: #ffffff;
 }
 .shu1 {
-    background-color: #ffffff;
     position: absolute;
     right: 0px;
 }
 .shu2 {
+    background-color: #ffffff;
     position: absolute;
-    right: 85px;
+    right: 110px;
+}
+.shu3 {
+    position: absolute;
+    right: 190px;
 }
 .table-container {
     position: relative;
@@ -343,7 +335,7 @@ export default {
 }
 .shuru {
     position: absolute;
-    right: 170px;
+    right: 270px;
     width: 230px;
 }
 .scwj {

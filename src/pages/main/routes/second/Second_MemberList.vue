@@ -1,11 +1,12 @@
 <template>
     <div class="body">
-        <el-button type="text" @click="returnclick" icon="el-icon-back" style="font-size: 30px;color: #d3dce6;margin-left:24px"></el-button>
+        <el-button type="text" @click="returnclick" icon="el-icon-back" style="font-size: 30px;color: #F2F2F2;margin-left:24px"></el-button>
         <span class="title1">部门与角色管理/</span>
         <span class="title2">成员名单</span>
         <div class="top">
             <div class="top1">
-                <el-button type="primary" plain class="shu" @click="dialogVisible = true">添加成员</el-button>
+                <el-button type="primary" plain class="shu" @click="returnclick">返回上一界面</el-button>
+<!--                <el-button type="primary" plain class="shu" @click="dialogVisible = true">添加成员</el-button>-->
                 <el-dialog
                     title="添加成员"
                     :visible.sync="dialogVisible"
@@ -54,51 +55,60 @@
                 </el-dialog>
                 <el-input
                     placeholder="请输入成员关键词查询"
-                    v-model="input"
+                    v-model="query.name"
                     class="shuru">
                 </el-input>
-                <el-button type="primary" class="shu2"  style="background-color:dodgerblue;" @click="searchData1">查询</el-button>
+                <el-button type="primary" class="shu2"  style="background-color:dodgerblue;" @click="getList">查询</el-button>
                 <el-button type="primary" plain class="shu1" @click="resetData1">重置</el-button>
                 <div class="table-container"><el-table
                     ref="multipleTable"
-                    :data="paginatedData"
+                    :data="tableData"
                     tooltip-effect="dark"
-                    style="width: 100%"
-                    @selection-change="handleSelectionChange">
+                    style="width: 100%">
                     <el-table-column
                         type="selection"
                         width="25px"
                         show-overflow-tooltip>
                     </el-table-column>
                     <el-table-column
-                        type="index"
-                        :index="indexMethod"
-                        label="序号"
-                        show-overflow-tooltip>
+                            label="序号">
+                        <template slot-scope="scope">
+                            {{scope.$index + 1 + (query.pageNo - 1) * query.pageSize}}
+                        </template>
                     </el-table-column>
                     <el-table-column
-                        prop="name"
+                        prop="personnel.name"
                         label="姓名"
                         show-overflow-tooltip>
                     </el-table-column>
                     <el-table-column
-                        prop="gh"
-                        label="工号"
+                            prop="user.usertype"
+                            label="职位">
+                    </el-table-column>
+                    <el-table-column
+                            v-model="username"
+                        prop="personnel.username"
+                        label="工号">
+                    </el-table-column>
+                    <el-table-column
+                            prop="personnel.phone"
+                            label="电话号码">
+                    </el-table-column>
+                    <el-table-column
+                            prop="personnel.address"
+                            label="住址">
+                    </el-table-column>
+                    <el-table-column
+                        prop="personnel.eduBackground"
+                        label="学历"
                         show-overflow-tooltip>
                     </el-table-column>
                     <el-table-column
-                        prop="xtjs"
-                        label="系统角色"
-                        show-overflow-tooltip>
-                    </el-table-column>
-                    <el-table-column
-                        prop="jsdm"
-                        label="角色代码"
-                        show-overflow-tooltip>
-                    </el-table-column>
-                    <el-table-column prop="ryzt" label="人员状态">
+                            prop="user.statusText"
+                            label="人员状态"
+                            show-overflow-tooltip>
                         <template slot-scope="scope">
-                            <span :style="{ color: scope.row.ryzt === '激活' ? 'green' : 'red' }">{{ scope.row.ryzt }}</span>
+                            <span :class="scope.row.user.statusClass">{{ scope.row.user.statusText }}</span>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -113,7 +123,7 @@
 <!--                                    <br>-->
 <!--                                    <el-button type="text" @click="showChangeStatusDialog2(scope.row)">修改工号</el-button>-->
 <!--                                    <br>-->
-                                    <el-button type="text" @click="showChangeStatusDialog3(scope.row)">变更系统角色</el-button>
+                                    <el-button type="text" @click="showChangeStatusDialog3(scope.row)">调整人员职位</el-button>
                                     <br>
 <!--                                    <el-button type="text" @click="showChangeStatusDialog4(scope.row)">变更角色代码</el-button>-->
 <!--                                    <br>-->
@@ -121,7 +131,6 @@
                                     <br>
                                 </el-dropdown-menu>
                             </el-dropdown>
-                            <el-button type="text" @click="remove(scope.row)" style="margin-left: 10px">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -130,68 +139,30 @@
                             background
                             @size-change="handleSizeChange"
                             @current-change="handleCurrentChange"
-                            :current-page="currentPage"
-                            :page-sizes="[10]"
-                            :page-size="pageSize"
-                            layout="prev, pager, next"
-                            :total="tableData.length"
+                            :current-page="query.pageNo"
+                            :page-sizes="[10,20,30,40]"
+                            :page-size="query.pageSize"
+                            layout="total,sizes,prev, pager, next"
+                            :total="total"
                             class="ye">
                         </el-pagination>
                     </div>
                     <el-dialog
-                        title="修改姓名"
-                        :visible.sync="changeStatusDialogVisible1"
-                        width="30%">
-                        <span>修改姓名:</span>
-                        <el-input v-model="newStatus" placeholder="请修改姓名"></el-input>
-                        <span slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="confirmStatusChange1">确认</el-button>
-            <el-button @click="changeStatusDialogVisible1 = false">取消</el-button>
-        </span>
-                    </el-dialog>
-                    <el-dialog
-                        title="修改工号"
-                        :visible.sync="changeStatusDialogVisible2"
-                        width="30%">
-                        <span>修改工号:</span>
-                        <el-input v-model="newStatus" placeholder="请修改工号"></el-input>
-                        <span slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="confirmStatusChange2">确认</el-button>
-            <el-button @click="changeStatusDialogVisible2 = false">取消</el-button>
-        </span>
-                    </el-dialog>
-                    <el-dialog
-                        title="变更系统角色"
+                        title="调整人员职位"
                         :visible.sync="changeStatusDialogVisible3"
                         width="30%">
-                        <span>变更系统角色:</span>
-                        <el-select v-model="newStatus" placeholder="请选择系统角色">
-                            <el-option label="研究生招生考务科科长" value="研究生招生考务科科长"></el-option>
-                            <el-option label="学院分管研究生工作副院长" value="学院分管研究生工作副院长"></el-option>
-                            <el-option label="职能部门综合办主任" value="职能部门综合办主任"></el-option>
-                            <el-option label="学院研工办主任" value="学院研工办主任"></el-option>
-                            <el-option label="在职在岗教职工" value="在职在岗教职工"></el-option>
+                        <span>调整人员职位:</span>
+                        <el-select v-model="newStatus1" placeholder="请选择系统角色">
+
+                            <el-option label="在职在岗教职工" value=1></el-option>
+                            <el-option label="学院研工办主任" value=2></el-option>
+                            <el-option label="职能部门综合办主任" value=3></el-option>
+                            <el-option label="学院分管研究生工作副院长" value=4></el-option>
+                            <el-option label="研究生招生考务科科长" value=5></el-option>
                         </el-select>
                         <span slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="confirmStatusChange3">确认</el-button>
+            <el-button type="primary" @click="changePosition">确认</el-button>
             <el-button @click="changeStatusDialogVisible3 = false">取消</el-button>
-        </span>
-                    </el-dialog>
-                    <el-dialog
-                        title="变更角色代码"
-                        :visible.sync="changeStatusDialogVisible4"
-                        width="30%">
-                        <span>变更角色代码:</span>
-                        <el-select v-model="newStatus" placeholder="请选择角色代码" style="width:526px" required>
-                            <el-option label="role1" value="role1"></el-option>
-                            <el-option label="role2" value="role2"></el-option>
-                            <el-option label="role3" value="role3"></el-option>
-                            <el-option label="role4" value="role4"></el-option>
-                            <el-option label="role5" value="role5"></el-option>
-                        </el-select>
-                        <span slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="confirmStatusChange4">确认</el-button>
-            <el-button @click="changeStatusDialogVisible4 = false">取消</el-button>
         </span>
                     </el-dialog>
                     <el-dialog
@@ -199,12 +170,12 @@
                         :visible.sync="changeStatusDialogVisible"
                         width="30%">
                         <span>变更人员状态:</span>
-                        <el-select v-model="newStatus" placeholder="请选择人员状态">
-                            <el-option label="激活" value="激活"></el-option>
-                            <el-option label="冻结" value="冻结"></el-option>
+                        <el-select v-model="newStatus2" placeholder="请选择人员状态">
+                            <el-option label="激活" value=1></el-option>
+                            <el-option label="冻结" value=0></el-option>
                         </el-select>
                         <span slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="confirmStatusChange5">确认</el-button>
+            <el-button type="primary" @click="changeStatus">确认</el-button>
             <el-button @click="changeStatusDialogVisible = false">取消</el-button>
         </span>
                     </el-dialog>
@@ -215,9 +186,13 @@
 </template>
 
 <script>
+import {_getperuser, _postionChange, _statusChange} from '../../../../api/user'
+
 export default {
   data () {
     return {
+      username: '',
+      status: '',
       activeName: 'second',
       currentPage: 1,
       pageSize: 10,
@@ -229,7 +204,8 @@ export default {
       changeStatusDialogVisible3: false,
       changeStatusDialogVisible4: false,
       changeStatusDialogVisible: false,
-      newStatus: '',
+      newStatus1: '',
+      newStatus2: '',
       ruleForm: {
         name: '',
         gh: '',
@@ -255,70 +231,72 @@ export default {
         ]
       },
       fliterData1: [],
-      tableData: [
-        {
-          name: '张家栋',
-          gh: '340990011',
-          xtjs: '教职工',
-          jsdm: 'role5',
-          ryzt: '激活'
-        },
-        {
-          name: '陈家栋',
-          gh: '340990012',
-          xtjs: '教职工',
-          jsdm: 'role5',
-          ryzt: '激活'
-        },
-        {
-          name: '王家栋',
-          gh: '340990013',
-          xtjs: '教职工',
-          jsdm: 'role5',
-          ryzt: '激活'
-        },
-        {
-          name: '王家栋',
-          gh: '340990014',
-          xtjs: '教职工',
-          jsdm: 'role5',
-          ryzt: '激活'
-        },
-        {
-          name: '王家栋',
-          gh: '340990015',
-          xtjs: '教职工',
-          jsdm: 'role1',
-          ryzt: '激活'
-        },
-        {
-          name: '王家栋',
-          gh: '340990016',
-          xtjs: '教职工',
-          jsdm: 'role5',
-          ryzt: '激活'
-        },
-        {
-          name: '王家栋',
-          gh: '340990017',
-          xtjs: '教职工',
-          jsdm: 'role5',
-          ryzt: '激活'
-        }
-      ]
+      tableData: [],
+      query: {
+        unit: this.$route.query.unit,
+        pageNo: 1,
+        pageSize: 10,
+        name: ''
+      },
+      total: 0
     }
   },
-  computed: {
-    paginatedData () {
-      const start = (this.currentPage - 1) * this.pageSize
-      const end = this.currentPage * this.pageSize
-      return this.fliterData1.slice(start, end)
-    }
-  },
-  mounted () {
-    this.fliterData1 = this.tableData
+  created () {
+    this.getList()
   },
   methods: {
+    changePosition () {
+      _postionChange(this.username, this.newStatus1)
+      this.getList()
+      this.changeStatusDialogVisible3 = false
+    },
+    changeStatus () {
+      _statusChange(this.username, this.newStatus2)
+      this.getList()
+      this.changeStatusDialogVisible = false
+    },
+    getList () {
+      _getperuser(this.query.unit, this.query.pageNo, this.query.pageSize, this.query.name).then(res => {
+        this.tableData = res.data.data
+        this.total = res.data.total
+        this.transformUserTypes()
+        this.transformUserStatus()
+      })
+    },
+    transformUserTypes () {
+      this.tableData = this.tableData.map(item => {
+        switch (item.user.usertype) {
+          case 1:
+            item.user.usertype = '在职在岗教职工'
+            break
+          case 2:
+            item.user.usertype = '研工办主任'
+            break
+          case 3:
+            item.user.usertype = '研究生招生考务科科长'
+            break
+          case 4:
+            item.user.usertype = '副院长'
+            break
+          case 5:
+            item.user.usertype = '研究生招生考务科科长'
+            break
+        }
+        return item
+      })
+    },
+    transformUserStatus () {
+      this.tableData = this.tableData.map(item => {
+        if (item.user.isEnabled) {
+          item.user.statusText = '已激活'
+          item.user.statusClass = 'active'
+        } else {
+          item.user.statusText = '已冻结'
+          item.user.statusClass = 'inactive'
+        }
+        return item
+      })
+    },
     handleClick (tab, event) {
       console.log(tab, event)
     },
@@ -326,10 +304,12 @@ export default {
       return (this.currentPage - 1) * this.pageSize + index + 1
     },
     handleSizeChange (val) {
-      this.pageSize = val
+      this.query.pageSize = val
+      this.getList()
     },
     handleCurrentChange (val) {
-      this.currentPage = val
+      this.query.pageNo = val
+      this.getList()
     },
     handleClick1 () {
       alert('button click')
@@ -383,7 +363,7 @@ export default {
     showChangeStatusDialog3 (row) {
       this.changeStatusDialogVisible3 = true
       this.currentRow = row
-      this.newStatus = row.xtjs
+      this.username = row.personnel.username
     },
     showChangeStatusDialog4 (row) {
       this.changeStatusDialogVisible4 = true
@@ -393,7 +373,7 @@ export default {
     showChangeStatusDialog5 (row) {
       this.changeStatusDialogVisible = true
       this.currentRow = row
-      this.newStatus = row.ryzt
+      this.username = row.personnel.username
     },
     confirmStatusChange1 () {
       const index = this.tableData.indexOf(this.currentRow)
@@ -526,5 +506,11 @@ export default {
 }
 .el-icon-arrow-down {
     font-size: 15px;
+}
+.active {
+    color: green;
+}
+.inactive {
+    color: red;
 }
 </style>

@@ -3,7 +3,8 @@
         <span class="title">监考安排表</span>
         <div class="top">
             <div class="top1">
-                <el-button type="primary" plain class="shu" @click="dialogVisible = true">数据导出</el-button>
+                <el-button type="primary" icon="el-icon-document" style="background-color:dodgerblue;">导入监考信息</el-button>
+                <el-button type="primary" plain class="shu" @click="outdata">数据导出</el-button>
                 <el-input
                     placeholder="请输入工号查询"
                     v-model="input"
@@ -16,7 +17,8 @@
                         ref="multipleTable"
                         :data="users"
                         tooltip-effect="dark"
-                        style="width: 100%">
+                        style="width: 100%"
+                        @selection-change="handleSelelctionChange">
                         <el-table-column
                             type="selection"
                             width="25px"
@@ -29,36 +31,36 @@
                             </template>
                         </el-table-column>
                         <el-table-column
-                            prop="personnel.name"
+                            prop="name"
                             label="姓名"
                             show-overflow-tooltip>
                         </el-table-column>
                         <el-table-column
-                            prop="personnel.gender"
+                            prop="gender"
                             label="性别">
                         </el-table-column>
                         <el-table-column
-                            prop="personnel.username"
+                            prop="username"
                             label="工号"
                             show-overflow-tooltip>
                         </el-table-column>
                         <el-table-column
-                            prop="personnel.unit"
+                            prop="unit"
                             label="所在单位"
                             show-overflow-tooltip>
                         </el-table-column>
                         <el-table-column
-                            prop="personnel.phone"
+                            prop="phone"
                             label="移动电话"
                             show-overflow-tooltip>
                         </el-table-column>
                         <el-table-column
-                            prop="examination.examId"
+                            prop="examId"
                             label="监考场次"
                             show-overflow-tooltip>
                         </el-table-column>
                         <el-table-column
-                            prop="examination.examRoom"
+                            prop="examRoom"
                             label="考场名称"
                             show-overflow-tooltip>
                         </el-table-column>
@@ -66,10 +68,54 @@
                             label="监考时间"
                             width="150">
                             <template slot-scope="scope">
-                                {{ scope.row.examination.fromTime }} 至 {{ scope.row.examination.endTime }}
+                                {{ scope.row.fromTime }} 至 {{ scope.row.endTime }}
                             </template>
                         </el-table-column>
                     </el-table>
+                    <el-dialog title="导出数据预览" :visible.sync="isExportDialogVisible" width="50%">
+                        <el-table :data="selectedData" style="width: 100%;">
+                            <el-table-column
+                                prop="name"
+                                label="姓名">
+                            </el-table-column>
+                            <el-table-column
+                                prop="gender"
+                                label="性别">
+                            </el-table-column>
+                            <el-table-column
+                                prop="username"
+                                label="工号">
+                            </el-table-column>
+                            <el-table-column
+                                prop="unit"
+                                label="所在单位">
+                            </el-table-column>
+                            <el-table-column
+                                prop="phone"
+                                label="移动电话">
+                            </el-table-column>
+                            <el-table-column
+                                prop="examId"
+                                label="监考场次">
+                            </el-table-column>
+                            <el-table-column
+                                prop="examRoom"
+                                label="考场名称"
+                                >
+                            </el-table-column>
+                            <el-table-column
+                                label="监考时间"
+                                width="150">
+                                <template slot-scope="scope">
+                                    {{ scope.row.fromTime }} 至 {{ scope.row.endTime }}
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                        <span slot="footer" class="dialog-footer">
+        <el-button @click="isExportDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="confirmExportExcel">确认导出</el-button>
+      </span>
+                    </el-dialog>
                     <div class="pagination-container">
                         <el-pagination
                             background
@@ -90,7 +136,8 @@
 </template>
 
 <script>
-import {getFinalList, getFinalListsearch} from '../../../../api/user'
+import {getFinalListdto, getFinalListsearch} from '../../../../api/user'
+import * as XLSX from 'xlsx'
 
 export default {
   data () {
@@ -100,6 +147,8 @@ export default {
       dialogVisible: false,
       input: '',
       users: [],
+      selectedData: [],
+      isExportDialogVisible: false,
       total: 0
     }
   },
@@ -107,14 +156,39 @@ export default {
     this.getList()
   },
   methods: {
+    // 导出数据的方法
+    outdata () {
+      if (this.selectedData.length > 0) {
+        this.isExportDialogVisible = true
+      } else {
+        this.$message.warning('请选择要导出的数据')
+      }
+    },
+    // 确认导出的方法
+    confirmExportExcel () {
+      const ws = XLSX.utils.json_to_sheet(this.selectedData)
+      const wb = XLSX.utils.book_new()
+      XLSX.utils.book_append_sheet(wb, ws, 'Sheet1')
+      XLSX.writeFile(wb, 'export.xlsx')
+      this.isExportDialogVisible = false
+    },
+    handleSelelctionChange (val) {
+      this.selectedIds = val.map(item => item.id)
+      // 处理表格选择变化
+      this.selectedData = val
+    },
     getListSearch () {
-      getFinalListsearch(this.input, this.currentPage, this.pageSize).then(res => {
-        this.users = res.data.data
-        this.total = res.data.total
-      })
+      if (this.input === '') {
+        this.getList()
+      } else {
+        getFinalListsearch(this.input, this.pageSize, this.currentPage).then(res => {
+          this.users = res.data.data
+          this.total = res.data.total
+        })
+      }
     },
     getList () {
-      getFinalList(this.currentPage).then(res => {
+      getFinalListdto(this.pageSize, this.currentPage).then(res => {
         this.users = res.data.data
         this.total = res.data.total
       })

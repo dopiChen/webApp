@@ -3,12 +3,12 @@
         <span class="title">监考通知确认情况</span>
         <div class="top">
             <div class="top1">
-                <el-button type="primary" plain class="shu">数据导出</el-button>
-                <el-input placeholder="请输入监考名称关键词查询" v-model="query.batchName" class="shuru"></el-input>
+                <el-button type="primary" plain class="shu" @click="outdata">数据导出</el-button>
+                <el-input placeholder="请输入考场名称关键词查询" v-model="query.examRoom" class="shuru"></el-input>
                 <el-button type="primary" class="shu2" style="background-color:dodgerblue;" @click="getList">查询</el-button>
                 <el-button type="primary" plain class="shu1" @click="resetData">重置</el-button>
                 <div class="table-container">
-                    <el-table @selection-change="sg" ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%">
+                    <el-table @selection-change="handleSelelctionChange" ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%">
                         <el-table-column
                             type="selection"
                             width="25px"
@@ -20,16 +20,20 @@
                                 {{scope.$index + 1 + (query.pageNo - 1) * query.pageSize}}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="batchName" label="监考名称" show-overflow-tooltip>
+                        <el-table-column label="考场名称">
                             <template slot-scope="scope">
-                                <span v-html="highlightSearchTerm(scope.row.batchName)"></span>
+                                <span v-html="highlightSearchTerm(scope.row.examRoom)"></span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="batchId" label="批次代码" show-overflow-tooltip>
+                        <el-table-column prop="examId" label="考场编号" show-overflow-tooltip>
                         </el-table-column>
-                        <el-table-column prop="startDate" label="报名开始时间" show-overflow-tooltip></el-table-column>
-                        <el-table-column prop="endDate" label="报名结束时间" show-overflow-tooltip></el-table-column>
-                        <el-table-column label="批次状态">
+                        <el-table-column prop="totalnum" label="通知人数" show-overflow-tooltip>
+                        </el-table-column>
+                        <el-table-column prop="count" label="通知已确认人数" show-overflow-tooltip>
+                        </el-table-column>
+                        <el-table-column prop="fromTime" label="报名开始时间" show-overflow-tooltip></el-table-column>
+                        <el-table-column prop="endTime" label="报名结束时间" show-overflow-tooltip></el-table-column>
+                        <el-table-column label=" 考试状态">
                             <template slot-scope="scope">
                                 <el-tag :type="getStatusType(scope.row)" class="status-tag">{{ getStatusText(scope.row) }}</el-tag>
                             </template>
@@ -49,13 +53,36 @@
                         </el-pagination>
                     </div>
                 </div>
+                <!-- 预览对话框 -->
+                <el-dialog title="导出数据预览" :visible.sync="isExportDialogVisible" width="50%">
+                    <el-table :data="selectedData" style="width: 100%;">
+                        <el-table-column label="考场名称">
+                            <template slot-scope="scope">
+                                <span v-html="highlightSearchTerm(scope.row.examRoom)"></span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="examId" label="考场编号">
+                        </el-table-column>
+                        <el-table-column prop="totalnum" label="通知人数">
+                        </el-table-column>
+                        <el-table-column prop="count" label="通知已确认人数">
+                        </el-table-column>
+                        <el-table-column prop="fromTime" label="报名开始时间"></el-table-column>
+                        <el-table-column prop="endTime" label="报名结束时间"></el-table-column>
+                    </el-table>
+                    <span slot="footer" class="dialog-footer">
+        <el-button @click="isExportDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="confirmExportExcel">确认导出</el-button>
+      </span>
+                </el-dialog>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import {_creatBatch, getBatchList, _removeBatch, _removeBatchs} from '../../../../api/user'
+import {_removeBatch, _removeBatchs, _getEms, _getEms1} from '../../../../api/user'
+import * as XLSX from 'xlsx'
 
 export default {
   data () {
@@ -63,6 +90,8 @@ export default {
       activeName: 'second',
       total: 0,
       dialogVisible: false,
+      selectedData: [],
+      isExportDialogVisible: false,
       ruleForm: {
         attachment: 'string',
         batchId: 0,
@@ -92,7 +121,7 @@ export default {
       query: {
         pageNo: 1,
         pageSize: 10,
-        batchName: ''
+        examRoom: ''
       }
     }
   },
@@ -100,6 +129,27 @@ export default {
     this.getList()
   },
   methods: {
+    handleSelelctionChange (val) {
+      this.selectedIds = val.map(item => item.id)
+      // 处理表格选择变化
+      this.selectedData = val
+    },
+    // 导出数据的方法
+    outdata () {
+      if (this.selectedData.length > 0) {
+        this.isExportDialogVisible = true
+      } else {
+        this.$message.warning('请选择要导出的数据')
+      }
+    },
+    // 确认导出的方法
+    confirmExportExcel () {
+      const ws = XLSX.utils.json_to_sheet(this.selectedData)
+      const wb = XLSX.utils.book_new()
+      XLSX.utils.book_append_sheet(wb, ws, 'Sheet1')
+      XLSX.writeFile(wb, 'export.xlsx')
+      this.isExportDialogVisible = false
+    },
     sg (value) {
       // 这的value就是选中的数据构成的数组
       this.selectdata = value
@@ -151,10 +201,17 @@ export default {
       })
     },
     getList () {
-      getBatchList(this.query).then(res => {
-        this.tableData = res.data.records
-        this.total = res.data.total
-      })
+      if (this.query.examRoom !== '' || this.query !== null) {
+        _getEms(this.query.pageNo, this.query.pageSize, this.query.examRoom).then(res => {
+          this.tableData = res.data.data
+          this.total = res.data.total
+        })
+      } else {
+        _getEms1(this.query.pageNo, this.query.pageSize).then(res => {
+          this.tableData = res.data.data
+          this.total = res.data.total
+        })
+      }
     },
     handleSizeChange (val) {
       this.query.pageSize = val
@@ -171,11 +228,6 @@ export default {
         })
         .catch(_ => {})
     },
-    submitForm (formName) {
-      _creatBatch(this.ruleForm)
-      this.dialogVisible = false
-      this.getList()
-    },
     handleRemove (file, fileList) {
       console.log(file, fileList)
     },
@@ -183,7 +235,7 @@ export default {
       console.log(file)
     },
     resetData () {
-      this.query.batchName = ''
+      this.query.examRoom = ''
       this.getList()
     },
     highlightSearchTerm (text) {
@@ -193,8 +245,8 @@ export default {
     },
     getStatusType (row) {
       const now = this.now
-      const start = new Date(row.startDate)
-      const end = new Date(row.endDate)
+      const start = new Date(row.fromTime)
+      const end = new Date(row.endTime)
       if (now < start) {
         return 'info'
       } else if (now > end) {
@@ -205,8 +257,8 @@ export default {
     },
     getStatusText (row) {
       const now = this.now
-      const start = new Date(row.startDate)
-      const end = new Date(row.endDate)
+      const start = new Date(row.fromTime)
+      const end = new Date(row.endTime)
       if (now < start) {
         return '未开始'
       } else if (now > end) {

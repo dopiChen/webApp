@@ -75,6 +75,8 @@
   </span>
               </el-dialog>
                 <el-input placeholder="请输入监考名称关键词查询" v-model="query.batchName" class="shuru"></el-input>
+                <el-button type="primary" plain class="shu" @click="outdata">数据导出</el-button>
+                <el-input placeholder="请输入监考名称关键词查询" rr8era87rwetyas v-model="query.batchName" class="shuru"></el-input>
                 <el-button type="primary" class="shu3" style="background-color:dodgerblue;" @click="getList">查询</el-button>
                 <el-button type="primary" plain class="shu2" @click="resetData">重置</el-button>
                 <el-button type="primary" plain class="shu1" warning @click="removeBatchs">删除选中</el-button>
@@ -113,6 +115,22 @@
                             </template>
                         </el-table-column>
                     </el-table>
+                    <el-dialog title="导出数据预览" :visible.sync="isExportDialogVisible" width="50%">
+                        <el-table :data="selectdata" style="width: 100%;">
+                            <el-table-column prop="batchName" label="批次名称" >
+                            </el-table-column>
+                            <el-table-column prop="batchId" label="批次代码" >
+                            </el-table-column>
+                            <el-table-column prop="startDate" label="报名开始时间"></el-table-column>
+                            <el-table-column prop="endDate" label="报名结束时间" ></el-table-column>
+                            <el-table-column prop="year" label="创建时间"></el-table-column>
+                            <el-table-column prop="description" label="批次说明"></el-table-column>
+                        </el-table>
+                        <span slot="footer" class="dialog-footer">
+        <el-button @click="isExportDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="confirmExportExcel">确认导出</el-button>
+      </span>
+                    </el-dialog>
                     <div class="pagination-container">
                         <el-pagination
                             background
@@ -134,10 +152,12 @@
 
 <script>
 import {_creatBatch, getBatchList, _removeBatch, _removeBatchs} from '../../../../api/user'
+import * as XLSX from 'xlsx'
 
 export default {
   data () {
     return {
+      isExportDialogVisible: false,
       fileList: [],
       activeName: 'second',
       total: 0,
@@ -201,8 +221,25 @@ export default {
     beforeRemove (file, fileList) {
       return this.$confirm(`确定移除 ${file.name}？`)
     },
+    // 导出数据的方法
+    outdata () {
+      if (this.selectdata.length > 0) {
+        this.isExportDialogVisible = true
+      } else {
+        this.$message.warning('请选择要导出的数据')
+      }
+    },
+    // 确认导出的方法
+    confirmExportExcel () {
+      const ws = XLSX.utils.json_to_sheet(this.selectdata)
+      const wb = XLSX.utils.book_new()
+      XLSX.utils.book_append_sheet(wb, ws, 'Sheet1')
+      XLSX.writeFile(wb, 'export.xlsx')
+      this.isExportDialogVisible = false
+    },
     sg (value) {
       // 这的value就是选中的数据构成的数组
+      this.selectedIds = value.map(item => item.id)
       this.selectdata = value
     },
     removeBatchs () {

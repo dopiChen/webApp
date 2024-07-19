@@ -1,11 +1,11 @@
 <template>
     <div class="body">
-        <el-button type="text" @click="returnclick" icon="el-icon-back" style="font-size: 30px;color: #F2F2F2;margin-left:24px"></el-button>
+        <el-button type="text" @click="returnclick" icon="el-icon-back" style="font-size: 30px;margin-left:24px"></el-button>
         <span class="title1">部门与角色管理/</span>
         <span class="title2">成员名单</span>
         <div class="top">
             <div class="top1">
-                <el-button type="primary" plain class="shu" @click="returnclick">返回上一界面</el-button>
+                <el-button type="primary" plain class="shu" @click="outdata">数据导出</el-button>
 <!--                <el-button type="primary" plain class="shu" @click="dialogVisible = true">添加成员</el-button>-->
                 <el-dialog
                     title="添加成员"
@@ -64,7 +64,8 @@
                     ref="multipleTable"
                     :data="tableData"
                     tooltip-effect="dark"
-                    style="width: 100%">
+                    style="width: 100%"
+                    @selection-change="handleSelelctionChange">
                     <el-table-column
                         type="selection"
                         width="25px"
@@ -77,38 +78,38 @@
                         </template>
                     </el-table-column>
                     <el-table-column
-                        prop="personnel.name"
+                        prop="name"
                         label="姓名"
                         show-overflow-tooltip>
                     </el-table-column>
                     <el-table-column
-                            prop="user.usertype"
-                            label="职位">
-                    </el-table-column>
-                    <el-table-column
-                            v-model="username"
-                        prop="personnel.username"
+                        v-model="username"
+                        prop="username"
                         label="工号">
                     </el-table-column>
                     <el-table-column
-                            prop="personnel.phone"
+                            prop="usertype"
+                            label="职位">
+                    </el-table-column>
+                    <el-table-column
+                            prop="phone"
                             label="电话号码">
                     </el-table-column>
                     <el-table-column
-                            prop="personnel.address"
+                            prop="address"
                             label="住址">
                     </el-table-column>
                     <el-table-column
-                        prop="personnel.eduBackground"
+                        prop="eduBackground"
                         label="学历"
                         show-overflow-tooltip>
                     </el-table-column>
                     <el-table-column
-                            prop="user.statusText"
+                            prop="statusText"
                             label="人员状态"
                             show-overflow-tooltip>
                         <template slot-scope="scope">
-                            <span :class="scope.row.user.statusClass">{{ scope.row.user.statusText }}</span>
+                            <span :class="scope.row.statusClass">{{ scope.row.statusText }}</span>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -179,6 +180,48 @@
             <el-button @click="changeStatusDialogVisible = false">取消</el-button>
         </span>
                     </el-dialog>
+                    <!-- 预览对话框 -->
+                    <el-dialog title="导出数据预览" :visible.sync="isExportDialogVisible" width="50%">
+                        <el-table :data="selectedData" style="width: 100%;">
+                            <el-table-column
+                                prop="name"
+                                label="姓名"
+                                show-overflow-tooltip>
+                            </el-table-column>
+                            <el-table-column
+                                v-model="username"
+                                prop="username"
+                                label="工号">
+                            </el-table-column>
+                            <el-table-column
+                                prop="usertype"
+                                label="职位">
+                            </el-table-column>
+                            <el-table-column
+                                prop="phone"
+                                label="电话号码">
+                            </el-table-column>
+                            <el-table-column
+                                prop="address"
+                                label="住址">
+                            </el-table-column>
+                            <el-table-column
+                                prop="eduBackground"
+                                label="学历">
+                            </el-table-column>
+                            <el-table-column
+                                prop="statusText"
+                                label="人员状态">
+                                <template slot-scope="scope">
+                                    <span :class="scope.row.statusClass">{{ scope.row.statusText }}</span>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                        <span slot="footer" class="dialog-footer">
+        <el-button @click="isExportDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="confirmExportExcel">确认导出</el-button>
+      </span>
+                    </el-dialog>
                 </div>
             </div>
         </div>
@@ -186,8 +229,8 @@
 </template>
 
 <script>
-import {_getperuser, _postionChange, _statusChange} from '../../../../api/user'
-
+import {_getperuserdto, _postionChange, _statusChange} from '../../../../api/user'
+import * as XLSX from 'xlsx'
 export default {
   data () {
     return {
@@ -238,13 +281,37 @@ export default {
         pageSize: 10,
         name: ''
       },
-      total: 0
+      total: 0,
+
+      selectedData: [],
+      isExportDialogVisible: false
     }
   },
   created () {
     this.getList()
   },
   methods: {
+    handleSelelctionChange (val) {
+      this.selectedIds = val.map(item => item.id)
+      // 处理表格选择变化
+      this.selectedData = val
+    },
+    // 导出数据的方法
+    outdata () {
+      if (this.selectedData.length > 0) {
+        this.isExportDialogVisible = true
+      } else {
+        this.$message.warning('请选择要导出的数据')
+      }
+    },
+    // 确认导出的方法
+    confirmExportExcel () {
+      const ws = XLSX.utils.json_to_sheet(this.selectedData)
+      const wb = XLSX.utils.book_new()
+      XLSX.utils.book_append_sheet(wb, ws, 'Sheet1')
+      XLSX.writeFile(wb, 'export.xlsx')
+      this.isExportDialogVisible = false
+    },
     changePosition () {
       _postionChange(this.username, this.newStatus1)
       this.getList()
@@ -256,7 +323,7 @@ export default {
       this.changeStatusDialogVisible = false
     },
     getList () {
-      _getperuser(this.query.unit, this.query.pageNo, this.query.pageSize, this.query.name).then(res => {
+      _getperuserdto(this.query.unit, this.query.pageNo, this.query.pageSize, this.query.name).then(res => {
         this.tableData = res.data.data
         this.total = res.data.total
         this.transformUserTypes()
@@ -265,21 +332,21 @@ export default {
     },
     transformUserTypes () {
       this.tableData = this.tableData.map(item => {
-        switch (item.user.usertype) {
+        switch (item.usertype) {
           case 1:
-            item.user.usertype = '在职在岗教职工'
+            item.usertype = '在职在岗教职工'
             break
           case 2:
-            item.user.usertype = '研工办主任'
+            item.usertype = '研工办主任'
             break
           case 3:
-            item.user.usertype = '研究生招生考务科科长'
+            item.usertype = '研究生招生考务科科长'
             break
           case 4:
-            item.user.usertype = '副院长'
+            item.usertype = '副院长'
             break
           case 5:
-            item.user.usertype = '研究生招生考务科科长'
+            item.usertype = '研究生招生考务科科长'
             break
         }
         return item
@@ -287,12 +354,12 @@ export default {
     },
     transformUserStatus () {
       this.tableData = this.tableData.map(item => {
-        if (item.user.isEnabled) {
-          item.user.statusText = '已激活'
-          item.user.statusClass = 'active'
+        if (item.isEnabled) {
+          item.statusText = '已激活'
+          item.statusClass = 'active'
         } else {
-          item.user.statusText = '已冻结'
-          item.user.statusClass = 'inactive'
+          item.statusText = '已冻结'
+          item.statusClass = 'inactive'
         }
         return item
       })
@@ -363,7 +430,7 @@ export default {
     showChangeStatusDialog3 (row) {
       this.changeStatusDialogVisible3 = true
       this.currentRow = row
-      this.username = row.personnel.username
+      this.username = row.username
     },
     showChangeStatusDialog4 (row) {
       this.changeStatusDialogVisible4 = true
@@ -373,7 +440,7 @@ export default {
     showChangeStatusDialog5 (row) {
       this.changeStatusDialogVisible = true
       this.currentRow = row
-      this.username = row.personnel.username
+      this.username = row.username
     },
     confirmStatusChange1 () {
       const index = this.tableData.indexOf(this.currentRow)

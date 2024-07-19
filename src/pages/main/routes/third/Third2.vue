@@ -31,22 +31,22 @@
                     <el-table-column
                             prop="username"
                             label="工号"
-                            width="450">
+                            width="350">
                     </el-table-column>
                     <el-table-column
                         prop="name"
                         label="姓名"
-                        width="450">
+                        width="300">
                     </el-table-column>
                     <el-table-column
                         prop="way"
                         label="报名方式"
-                        width="450">
+                        width="300">
                     </el-table-column>
                     <el-table-column
                             prop="intendedCampus"
                             label="校区"
-                            width="400">
+                            width="300">
                     </el-table-column>
                     <el-table-column
                         prop="isComfirm"

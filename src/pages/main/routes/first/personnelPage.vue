@@ -1,20 +1,21 @@
 <template>
     <div class="mainbody">
-        <div class="profile">
+        <div class="profile" style="margin-top: 100px">
             <el-upload
-                class="avatar-uploader"
-                :action="uploadUrl"
-                :show-file-list="false"
-                :on-success="handleAvatarSuccess"
-                :before-upload="beforeAvatarUpload"
+                    class="avatar-uploader"
+                    :action="uploadUrl"
+                    :show-file-list="false"
+                    :on-success="handleAvatarSuccess"
+                    :before-upload="beforeAvatarUpload"
             >
                 <img v-if="user.avatar" :src="user.avatar" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                <span style="margin-top: 10px" v-if="isHave">点击上传头像</span>
             </el-upload>
             <div class="info">
                 <h2 style="font-size: 40px">{{ this.personnelData.name }}</h2>
                 <h2 style="font-size: 35px;margin-top: 10px">{{ this.personnelData.unit}}</h2>
-<!--                <p style="font-size: 20px;margin-top: 10px">{{ user.role }}</p>-->
+                <!--                <p style="font-size: 20px;margin-top: 10px">{{ user.role }}</p>-->
             </div>
             <el-descriptions class="table" :column="1" :size="medium" border style="width: 1000px;height: 500px">
                 <el-descriptions-item>
@@ -47,6 +48,13 @@
                 </el-descriptions-item>
                 <el-descriptions-item>
                     <template slot="label">
+                        <i class="el-icon-tickets"></i>
+                        学历
+                    </template>
+                    {{personnelData.eduBackground}}
+                </el-descriptions-item>
+                <el-descriptions-item>
+                    <template slot="label">
                         <i class="el-icon-office-building"></i>
                         备用电话
                     </template>
@@ -55,6 +63,7 @@
             </el-descriptions>
         </div>
         <hr>
+        <div class="submitcody" v-if="isVasible" >
         <h2>我的申请记录</h2>
         <div class="applications">
             <el-table :data="applications" stripe class="centered-table"  max-height="350">
@@ -67,14 +76,15 @@
                 </el-table-column>
                 <el-table-column prop="createdAt" label="查看报名" width="400" v-slot="scope">
                     <el-button
-                        type="text"
-                        size="small"
-                        @click="viewSignUp(scope.row)">
+                            type="text"
+                            size="small"
+                            @click="viewSignUp(scope.row)">
                         查看流程
                     </el-button>
                 </el-table-column>
             </el-table>
         </div>
+    </div>
     </div>
 </template>
 
@@ -94,7 +104,9 @@ export default {
         name: this.name
       },
       applications: [],
-      leaderData: []
+      leaderData: [],
+      isVasible: false,
+      isHave: true
     }
   },
   created () {
@@ -103,11 +115,13 @@ export default {
     this.fetchData2()
     console.info(11111)
     this.fetchData4()
+    this.goVisible()
   },
   computed: {
     ...mapState({
       username: state => state.user.id, // 映射 userId
-      name: state => state.user.name
+      name: state => state.user.name,
+      usertype: state => state.user.type
     }),
     uploadUrl () {
       return `/file/upload/avatar/${this.username}`
@@ -145,8 +159,9 @@ export default {
       })
       _getUserAvatar(this.username).then(res => {
         if (res.url === null) {
-          this.user.avatar = 'https://jsonplaceholder.typicode.com/posts/'
+          this.user.avatar = 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'
         } else {
+          this.isHave = false
           this.user.avatar = res.url
           console.info(this.user.avatar)
         }
@@ -184,6 +199,11 @@ export default {
         return false
       }
       return true
+    },
+    goVisible () {
+      if (this.usertype === 1) {
+        this.isVasible = true
+      }
     }
   }
 }
@@ -193,7 +213,6 @@ export default {
 <style scoped>
 .mainbody {
     width: 80%;
-    height: 100%;
     margin: 40px auto;
     padding: 20px;
     background-color: #fff;
@@ -254,7 +273,6 @@ export default {
 }
 
 .applications {
-    flex-grow: 1;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -265,8 +283,8 @@ export default {
 .centered-table {
     width: 80%;
     font-size: 20px;
-    margin-left: 200px;
 }
+
 .el-table th, .el-table td {
     font-size: 16px;
 }

@@ -5,15 +5,25 @@
                 <div class="overlaylong-Signin" v-if="disfiex == 0">
                     <h2 class="overlaylongH2">用户名密码登录</h2>
                     <input type="text" v-model="usernameform.username" placeholder="user">
-                    <el-input type="text"  v-model="usernameform.password" placeholder="password" show-password ></el-input>
-                    <el-button  type="text" @click="forgetPassWord">忘记密码?</el-button>
-                    <button class="inupbutton" @click="usernameSignIn">登录</button>
+                    <el-input type="text" v-model="usernameform.password" placeholder="password" show-password
+                              @keyup.enter.native="openCaptchaDialog"></el-input>
+                    <el-button type="text" @click="forgetPassWord">忘记密码?</el-button>
+                    <button class="inupbutton" @click="openCaptchaDialog">登录</button>
                 </div>
+                <el-dialog title="请输入验证码" :visible.sync="captchaDialogVisible" width="20%">
+                    <Captcha @getValue="updateCaptcha" :width="'400px'" :height="'100px'" :number="4"></Captcha>
+                    <el-input v-model="enteredCaptcha" placeholder="输入验证码" style="width: 100%;margin-top: 10px"></el-input>
+                    <span slot="footer" class="dialog-footer">
+                        <el-button @click="captchaDialogVisible = false">取消</el-button>
+                        <el-button type="primary" @click="usernameSignIn" @keyup.enter.native="usernameSignIn">确定</el-button>
+                    </span>
+                </el-dialog>
                 <div class="overlaylong-Signup" v-if="disfiex == 1">
                     <h2 class="overlaylongH2">手机验证码登录</h2>
                     <input type="text" v-model="codeform.phone" placeholder="phone">
                     <div class="code-container">
-                        <input type="text" v-model="codeform.code" placeholder="code" style="width: 120px">
+                        <input type="text" v-model="codeform.code" placeholder="code" style="width: 120px"
+                               @keyup.enter="SmsCodeSignIn">
                         <button class="send-code-button" @click="sendCode" :disabled="isCountingDown">
                             {{ isCountingDown ? countdown + 's' : '发送验证码' }}
                         </button>
@@ -37,23 +47,23 @@
                 </div>
             </div>
         </div>
-        <el-dialog :visible.sync="IsforgetPassWord" title="找回密码" width="30%" >
+        <el-dialog :visible.sync="IsforgetPassWord" title="找回密码" width="30%">
             <div class="main">
                 <el-form
-                    label-position="top"
-                    label-width="100px"
-                    :model="formdata"
+                        label-position="top"
+                        label-width="100px"
+                        :model="formdata"
                 >
                     <el-form-item
-                        label="用户名"
-                        :rules="[
+                            label="用户名"
+                            :rules="[
               { required: true, message: '用户名不能为空', trigger: 'blur' }]"
                     >
-                        <el-input v-model="formdata.username" placeholder="请输入用户名" style="width: 500px" />
+                        <el-input v-model="formdata.username" placeholder="请输入用户名" style="width: 500px"/>
                     </el-form-item>
                     <el-form-item
-                        label="设置新密码"
-                        :rules="[
+                            label="设置新密码"
+                            :rules="[
               { required: true, message: '不能为空', trigger: 'blur' },
               {
                 pattern: /^(?![0-9]+$)(?![a-zA-Z]+$).{8,}$/,
@@ -64,16 +74,16 @@
                     >
                         <div class="main-rule">至少8个字符，不能全是字母或数字</div>
                         <el-input
-                            v-model="formdata.newPassword"
-                            placeholder="请输入新密码"
-                            show-password
-                            style="width: 500px"
+                                v-model="formdata.newPassword"
+                                placeholder="请输入新密码"
+                                show-password
+                                style="width: 500px"
                         />
                     </el-form-item>
 
                     <el-form-item
-                        label="确认新密码"
-                        :rules="[
+                            label="确认新密码"
+                            :rules="[
               {
                 pattern: /^(?![0-9]+$)(?![a-zA-Z]+$).{8,}$/,
                 message: '格式错误',
@@ -87,15 +97,15 @@
             ]"
                     >
                         <el-input
-                            v-model="formdata.confirmPassword"
-                            placeholder="请再次输入新密码"
-                            show-password
-                            style="width: 500px"
+                                v-model="formdata.confirmPassword"
+                                placeholder="请再次输入新密码"
+                                show-password
+                                style="width: 500px"
                         />
                     </el-form-item>
                     <el-form-item
-                        label="账号所绑定的手机号"
-                        :rules="[
+                            label="账号所绑定的手机号"
+                            :rules="[
               { required: true, message: '手机号号不能为空', trigger: 'blur' },
               {
                 pattern: /^(13[0-9]|14[5-9]|15[0-3,5-9]|166|17[0-8]|18[0-9]|19[1,8-9])\\d{8}$/,
@@ -104,12 +114,12 @@
               },
             ]"
                     >
-                        <el-input v-model="formdata.phone" placeholder="请输入手机号" style="width: 500px" />
+                        <el-input v-model="formdata.phone" placeholder="请输入手机号" style="width: 500px"/>
                     </el-form-item>
 
                     <el-form-item
-                        label="获取验证码"
-                        :rules="[
+                            label="获取验证码"
+                            :rules="[
               { required: true, message: '验证码不能为空', trigger: 'blur' },
             ]"
                     >
@@ -133,8 +143,11 @@
 <script>
 import {_login, _loginByCode, _sendCode} from '../../api/user'
 import {_checkUser, _resetPassword} from '../../api/api'
-
+import Captcha from '../../pages/login/Captcha.vue'// 根据实际路径调整导入
 export default {
+  components: {
+    Captcha
+  },
   data () {
     return {
       overlaylong: 'overlaylong',
@@ -142,6 +155,9 @@ export default {
       disfiex: 0,
       isCountingDown: false,
       countdown: 60,
+      enteredCaptcha: '',
+      generatedCaptcha: '',
+      captchaDialogVisible: false,
       usernameform: {
         username: '',
         password: ''
@@ -171,6 +187,19 @@ export default {
         callback()
       }
     },
+    openCaptchaDialog () {
+      if (this.usernameform.username === '' || this.usernameform.password === '') {
+        this.$message({
+          message: '用户名或密码不能为空',
+          type: 'warning'
+        })
+      } else {
+        this.captchaDialogVisible = true
+      }
+    },
+    updateCaptcha (value) {
+      this.generatedCaptcha = value
+    },
     phoneSign () {
       this.overlaylong = 'overlaylongleft'
       this.overlaytitle = 'overlaytitleright'
@@ -187,31 +216,43 @@ export default {
       }, 200)
     },
     usernameSignIn () {
-      console.log(this.usernameform.username)
-      console.log(this.usernameform.password)
-      _login(this.usernameform).then(res => {
-        // 这里的返回值res是axios封装后的
-        // res.data就是后端返回的json数据
-        // res.data.data才是后端真正返回的数据
-        if (res.data !== null) {
-          this.$router.push({path: '/main'})
+      if (this.usernameform.username === '' || this.usernameform.password === '') {
+        this.$message({
+          message: '用户名或密码不能为空',
+          type: 'warning'
+        })
+      } else {
+        if (this.enteredCaptcha !== this.generatedCaptcha) {
           this.$message({
-            message: '登陆成功',
-            type: 'success'
-          })
-        } else {
-          this.$message({
-            message: '用户名或密码错误',
+            message: '验证码错误',
             type: 'warning'
           })
+        } else {
+          _login(this.usernameform).then(res => {
+            // 这里的返回值res是axios封装后的
+            // res.data就是后端返回的json数据
+            // res.data.data才是后端真正返回的数据
+            if (res.data !== null) {
+              this.$router.push({path: '/main'})
+              this.$message({
+                message: '登陆成功',
+                type: 'success'
+              })
+            } else {
+              this.$message({
+                message: '用户名或密码错误',
+                type: 'warning'
+              })
+            }
+            console.info(res.data)
+          })
         }
-        console.info(res.data)
-      })
+      }
     },
     SmsCodeSignIn () {
-      if (this.codeform.code === '') {
+      if (this.codeform.code === '' || this.codeform.phone === '') {
         this.$message({
-          message: '请输入验证码',
+          message: '手机号或验证码不能为空！',
           type: 'warning'
         })
       } else {
@@ -326,7 +367,11 @@ h1 {
     font-size: 30px;
     color: black;
 }
-
+.dialog-footer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .logon {
     background-color: #fff;
     border-radius: 10px;
@@ -474,12 +519,14 @@ input {
     margin: 10px 0;
     width: 240px;
 }
-h3{
+
+h3 {
     font-size: 10px;
     margin-top: 10px;
     cursor: pointer;
 }
-.inupbutton{
+
+.inupbutton {
     background-color: #29eac4;
     border: none;
     width: 180px;
@@ -491,6 +538,7 @@ h3{
     line-height: 40px;
     margin-top: 30px;
 }
+
 .code-container {
     display: flex;
     align-items: center;
@@ -511,17 +559,21 @@ h3{
     background-color: #cccccc;
     cursor: not-allowed;
 }
+
 .main {
     margin: 20px 0;
 }
+
 .main-rule {
     margin-bottom: 10px;
     color: #666;
 }
+
 .main-code {
     display: flex;
     align-items: center;
 }
+
 .main-sms {
     margin-top: 10px;
     color: #999;

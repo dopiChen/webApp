@@ -68,7 +68,7 @@
 <!--                        </el-form-item>-->
                         <el-form-item label="上传电子照片" required>
                             <el-upload
-                                    action="https://jsonplaceholder.typicode.com/posts/"
+                                    action="/file/upload"
                                     list-type="picture-card"
                                     :on-preview="handlePictureCardPreview"
                                     :on-remove="handleRemove"
@@ -91,9 +91,7 @@
                         </el-form-item>
                         <el-form-item label="申请人承诺" required>
                             <el-col :span="11" style="margin-left: 100px;">
-                                <el-checkbox-group v-model="this.promise">
-                                    <el-checkbox label="本人自愿参加" name="type"></el-checkbox>
-                                </el-checkbox-group>
+                                    <el-checkbox v-model="promise">本人自愿参加</el-checkbox>
                                 <el-col :span="24" style="margin-top: 0; padding-top: 5px;">
                                     <small class="promisetext">本人自愿参加研究生入学考试监考工作，认真学习掌握工作纪律要求，严格遵守《国家教育考试考务安全保密工作规定》，切实遵守监考工作守则，按照考务工作安排，完成监考工作。</small>
                                 </el-col>
@@ -149,7 +147,7 @@ export default {
       examdetail: [], // 选定考试的信息
       activeStep: 1, // 当前活跃的步骤，可以根据需要动态设置
       personnelData: [], // 当前用户个人信息
-      promise: ''
+      promise: false
     }
   },
   created () {
@@ -167,18 +165,25 @@ export default {
           type: 'warning'
         })
       } else {
-        this.$confirm('确认信息无误提交报名！', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.handlefinalsubmit()
-        }).catch(() => {
+        if (!this.promise) {
           this.$message({
-            type: 'info',
-            message: '已取消报名'
+            type: 'warning',
+            message: '请同意报名协议！'
           })
-        })
+        } else {
+          this.$confirm('确认信息无误提交报名！', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.handlefinalsubmit()
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消报名'
+            })
+          })
+        }
       }
     },
     handlefinalsubmit () {
@@ -191,21 +196,29 @@ export default {
         name: this.personnelData.name,
         reson: '无',
         username: this.personnelData.username,
-        way: '自主报名'
+        way: '自主报名',
+        dialogImageUrl: ''
       }
       _commitSignup(submit).then(res => {
-        this.$message({
-          type: 'success',
-          message: '提交成功!请前往个人主页查看'
-        })
+        if (res.data == null) {
+          this.$message({
+            type: 'success',
+            message: '提交成功!请前往个人主页查看'
+          })
+        } else {
+          this.$message({
+            type: 'warning',
+            message: '您已经报名过该场监考，请前往个人主页查看！'
+          })
+        }
       })
       // 报名失败在这里添加逻辑让其显示报名失败
     },
     handleRemove (file, fileList) {
       console.log(file, fileList)
     },
-    handlePictureCardPreview (file) {
-      this.dialogImageUrl = file.url
+    handlePictureCardPreview (res) {
+      this.dialogImageUrl = res.url
       this.dialogVisible = true
     },
     getStatus (step) {

@@ -3,7 +3,7 @@
         <span class="title">部门与角色管理</span>
         <div class="top">
             <div class="top1">
-                <el-button type="primary" plain class="shu">数据导出</el-button>
+                <el-button type="primary" plain class="shu" @click="outdata">数据导出</el-button>
 <!--                <el-button type="primary" plain class="shu" @click="dialogVisible = true">添加部门</el-button>-->
 <!--                <el-dialog-->
 <!--                    title="添加部门"-->
@@ -41,7 +41,8 @@
                     ref="multipleTable"
                     :data="units"
                     tooltip-effect="dark"
-                    style="width: 100%">
+                    style="width: 100%"
+                    @selection-change="handleSelelctionChange">
                     <el-table-column
                         type="selection"
                         width="25px"
@@ -76,6 +77,20 @@
                         </template>
                     </el-table-column>
                 </el-table>
+
+                    <!-- 预览对话框 -->
+                    <el-dialog title="导出数据预览" :visible.sync="isExportDialogVisible" width="50%">
+                        <el-table :data="selectedData" style="width: 100%;">
+                            <el-table-column prop="unit" label="部门名称">
+                            </el-table-column>
+                            <el-table-column prop="count" label="通知已确认人数">
+                            </el-table-column>
+                        </el-table>
+                        <span slot="footer" class="dialog-footer">
+        <el-button @click="isExportDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="confirmExportExcel">确认导出</el-button>
+      </span>
+                    </el-dialog>
                     <div class="pagination-container">
                         <el-pagination
                             background
@@ -97,6 +112,7 @@
 
 <script>
 import {_selectUnit} from '../../../../api/user'
+import * as XLSX from 'xlsx'
 
 export default {
   data () {
@@ -105,6 +121,9 @@ export default {
       activeName: 'second',
       value: '',
       dialogVisible: false,
+
+      selectedData: [],
+      isExportDialogVisible: false,
       ruleForm: {
         name: '',
         bmdm: '',
@@ -135,6 +154,27 @@ export default {
     this.getList()
   },
   methods: {
+    handleSelelctionChange (val) {
+      this.selectedIds = val.map(item => item.id)
+      // 处理表格选择变化
+      this.selectedData = val
+    },
+    // 导出数据的方法
+    outdata () {
+      if (this.selectedData.length > 0) {
+        this.isExportDialogVisible = true
+      } else {
+        this.$message.warning('请选择要导出的数据')
+      }
+    },
+    // 确认导出的方法
+    confirmExportExcel () {
+      const ws = XLSX.utils.json_to_sheet(this.selectedData)
+      const wb = XLSX.utils.book_new()
+      XLSX.utils.book_append_sheet(wb, ws, 'Sheet1')
+      XLSX.writeFile(wb, 'export.xlsx')
+      this.isExportDialogVisible = false
+    },
     getList () {
       _selectUnit(this.query.pageNo, this.query.pageSize).then(res => {
         console.info(res)

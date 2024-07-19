@@ -47,6 +47,33 @@
                     </span>
                 </el-dialog>
                 <el-button type="primary" plain class="shu">数据导出</el-button>
+              <el-button type="primary" plain class="shu" @click="dialogVisible1 = true">数据导入</el-button>
+              <el-dialog
+                  title="提示"
+                  :visible.sync="dialogVisible1"
+                  width="30%">
+                <div class="upload">
+                <el-upload
+                    class="shu"
+                    action="/file/upload/excel/batch"
+                    :show-file-list="false"
+                    :before-upload="handleLimit"
+                    :on-success="handleSuccess">
+                  <el-button type="primary" plain class="shu" >批次导入</el-button>
+                </el-upload>
+                <el-upload
+                    class="shu"
+                    action="/file/upload/excel"
+                    :show-file-list="false"
+                    :before-upload="handleLimit"
+                    :on-success="handleSuccess">
+                  <el-button type="primary" plain class="shu" >考场导入</el-button>
+                </el-upload>
+                </div>
+                <span slot="footer" class="dialog-footer">
+    <el-button type="primary" @click="dialogVisible1 = false">返 回</el-button>
+  </span>
+              </el-dialog>
                 <el-input placeholder="请输入监考名称关键词查询" v-model="query.batchName" class="shuru"></el-input>
                 <el-button type="primary" class="shu3" style="background-color:dodgerblue;" @click="getList">查询</el-button>
                 <el-button type="primary" plain class="shu2" @click="resetData">重置</el-button>
@@ -111,9 +138,11 @@ import {_creatBatch, getBatchList, _removeBatch, _removeBatchs} from '../../../.
 export default {
   data () {
     return {
+      fileList: [],
       activeName: 'second',
       total: 0,
       dialogVisible: false,
+      dialogVisible1: false,
       ruleForm: {
         attachment: 'string',
         batchId: 0,
@@ -151,6 +180,27 @@ export default {
     this.getList()
   },
   methods: {
+    handleSuccess (res, file) {
+      this.$message.success('上传成功!')
+      this.getList()
+    },
+    handleLimit (file) {
+      const isXLSX = file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      console.log(isXLSX)
+      if (!isXLSX) {
+        this.$message.error('上传头像图片只能是 xlsx 格式!')
+      }
+      return isXLSX
+    },
+    handleRemove (file, fileList) {
+      console.log(file, fileList)
+    },
+    handlePreview (file) {
+      console.log(file)
+    },
+    beforeRemove (file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`)
+    },
     sg (value) {
       // 这的value就是选中的数据构成的数组
       this.selectdata = value
@@ -227,12 +277,6 @@ export default {
       this.dialogVisible = false
       this.getList()
     },
-    handleRemove (file, fileList) {
-      console.log(file, fileList)
-    },
-    handlePreview (file) {
-      console.log(file)
-    },
     resetData () {
       this.query.batchName = ''
       this.getList()
@@ -295,6 +339,7 @@ export default {
     bottom: 24px;
 }
 .top1 {
+  display: inline;
     height: 48px;
     background: #FFFFFF;
     position: absolute;
@@ -305,6 +350,7 @@ export default {
 }
 .shu {
     background-color: #ffffff;
+  display: inline-block;
 }
 .shu1 {
     position: absolute;
@@ -318,6 +364,11 @@ export default {
 .shu3 {
     position: absolute;
     right: 190px;
+}
+.upload{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 }
 .table-container {
     position: relative;

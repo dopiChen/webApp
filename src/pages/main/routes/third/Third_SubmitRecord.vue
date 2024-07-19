@@ -13,6 +13,7 @@
             </el-upload>
             <div class="info">
                 <h2 style="font-size: 40px">{{ this.personnelData.name }}</h2>
+                <h2 style="font-size: 35px;margin-top: 10px">{{ this.personnelData.unit}}</h2>
 <!--                <p style="font-size: 20px;margin-top: 10px">{{ user.role }}</p>-->
             </div>
             <el-descriptions class="table" :column="1" :size="medium" border style="width: 1000px;height: 500px">
@@ -56,7 +57,7 @@
         <hr>
         <h2>我的申请记录</h2>
         <div class="applications">
-            <el-table :data="applications" stripe class="centered-table">
+            <el-table :data="applications" stripe class="centered-table"  max-height="350">
                 <el-table-column prop="examId" label="考试编号" width="280"></el-table-column>
                 <el-table-column prop="way" label="报名方式" width="400"></el-table-column>
                 <el-table-column  label="状态" width="280">
@@ -266,7 +267,6 @@ export default {
     font-size: 20px;
     margin-left: 200px;
 }
-
 .el-table th, .el-table td {
     font-size: 16px;
 }

@@ -53,11 +53,6 @@ export default {
           path: '/main/third2',
           icon: 'suncaper-menu-unfold',
           title: '监考记录'
-        },
-        {
-          path: '/main/third_submitrecord',
-          icon: 'suncaper-menu-unfold',
-          title: '提交记录'
         }
       ]
     },

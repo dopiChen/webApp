@@ -36,6 +36,12 @@ const mainPage = [
           import('../pages/main/routes/first/First_Enroll.vue')
       },
       {
+        path: 'personnelPage',
+        name: 'personnelPage',
+        component: () =>
+          import('../pages/main/routes/first/personnelPage.vue')
+      },
+      {
         path: 'second1',
         name: 'second',
         component: () =>

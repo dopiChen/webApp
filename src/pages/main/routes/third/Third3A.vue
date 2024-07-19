@@ -17,12 +17,6 @@
                 <el-descriptions-item label="监考说明">
                     监考人员需要分别站在教室前后，在不影响考生情况下，适当走动。
                 </el-descriptions-item>
-                <el-descriptions-item label="附件">
-                    <img src="../../../../../src/assets/images/email.jpg" alt="附件图片" style="width: 16px; height: 16px;">
-                    <router-link to="/path/to/your/route">
-                        <el-link type="primary" class="tail">附件.docx</el-link>
-                    </router-link>
-                </el-descriptions-item>
             </el-descriptions>
 
             <span class="tag2">|</span>

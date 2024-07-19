@@ -163,7 +163,6 @@ export default {
     // 调整页面 引用时不用改动
     handleSizeChange (size) {
       this.size = size
-      this.currentPage = page
       if (this.input === '') {
         this.getFinalList(this.currentPage)
       } else {

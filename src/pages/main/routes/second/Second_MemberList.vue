@@ -5,7 +5,7 @@
         <span class="title2">成员名单</span>
         <div class="top">
             <div class="top1">
-                <el-button type="primary" plain class="shu" @click="outdata">数据导出</el-button>
+                <el-button type="primary" plain class="shu" icon="el-icon-document" @click="outdata">数据导出</el-button>
 <!--                <el-button type="primary" plain class="shu" @click="dialogVisible = true">添加成员</el-button>-->
                 <el-dialog
                     title="添加成员"

@@ -3,8 +3,7 @@
         <span class="title">监考安排表</span>
         <div class="top">
             <div class="top1">
-                <el-button type="primary" icon="el-icon-document" style="background-color:dodgerblue;">导入监考信息</el-button>
-                <el-button type="primary" plain class="shu" @click="outdata">数据导出</el-button>
+                <el-button type="primary" plain icon="el-icon-document" @click="outdata">数据导出</el-button>
                 <el-input
                     placeholder="请输入工号查询"
                     v-model="input"

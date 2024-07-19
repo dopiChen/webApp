@@ -672,7 +672,6 @@ export default {
 }
 
 .top1 {
-    display: flex;
     height: 48px;
     background: #FFFFFF;
     position: absolute;

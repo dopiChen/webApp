@@ -3,7 +3,7 @@
         <span class="title">监考通知确认情况</span>
         <div class="top">
             <div class="top1">
-                <el-button type="primary" plain class="shu" @click="outdata">数据导出</el-button>
+                <el-button type="primary" plain class="shu" icon="el-icon-document" @click="outdata">数据导出</el-button>
                 <el-input placeholder="请输入考场名称关键词查询" v-model="query.examRoom" class="shuru"></el-input>
                 <el-button type="primary" class="shu2" style="background-color:dodgerblue;" @click="getList">查询</el-button>
                 <el-button type="primary" plain class="shu1" @click="resetData">重置</el-button>

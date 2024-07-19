@@ -33,12 +33,6 @@
                             <el-form-item label="批次说明">
                                 <el-input type="textarea" placeholder="请输入批次说明" v-model="ruleForm.description" maxlength="200" show-word-limit></el-input>
                             </el-form-item>
-                            <el-form-item label="上传附件">
-                                <el-upload  class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/" :on-preview="handlePreview" :on-remove="handleRemove">
-                                    <el-button size="small" type="primary" class="scwj" plain icon="el-icon-upload2">上传文件</el-button>
-                                    <div class="wjxianzhi" style="margin-top: 40px">限制上传文件10个以下，单个大小不超过100M；</div>
-                                </el-upload>
-                            </el-form-item>
                         </el-form>
                     </div>
                     <span slot="footer" class="dialog-footer">
@@ -46,7 +40,7 @@
                         <el-button @click="dialogVisible = false">取消</el-button>
                     </span>
                 </el-dialog>
-                <el-button type="primary" plain class="shu">数据导出</el-button>
+                <el-button type="primary" plain class="shu" @click="outdata">数据导出</el-button>
               <el-button type="primary" plain class="shu" @click="dialogVisible1 = true">数据导入</el-button>
               <el-dialog
                   title="提示"
@@ -75,7 +69,6 @@
   </span>
               </el-dialog>
                 <el-input placeholder="请输入监考名称关键词查询" v-model="query.batchName" class="shuru"></el-input>
-                <el-button type="primary" plain class="shu" @click="outdata">数据导出</el-button>
                 <el-input placeholder="请输入监考名称关键词查询" rr8era87rwetyas v-model="query.batchName" class="shuru"></el-input>
                 <el-button type="primary" class="shu3" style="background-color:dodgerblue;" @click="getList">查询</el-button>
                 <el-button type="primary" plain class="shu2" @click="resetData">重置</el-button>
@@ -243,7 +236,7 @@ export default {
       this.selectdata = value
     },
     removeBatchs () {
-      this.$confirm('此操作将永久删除该批次, 是否继续?', '提示', {
+      this.$confirm('此操作将永久删除所选中批次, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -387,7 +380,6 @@ export default {
 }
 .shu {
     background-color: #ffffff;
-  display: inline-block;
 }
 .shu1 {
     position: absolute;

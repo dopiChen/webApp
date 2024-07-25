@@ -81,6 +81,11 @@
                                     show-overflow-tooltip>
                                 </el-table-column>
                                 <el-table-column
+                                    prop="examId"
+                                    label="考试编号"
+                                    show-overflow-tooltip>
+                                </el-table-column>
+                                <el-table-column
                                     prop="name"
                                     label="报名人"
                                     show-overflow-tooltip>
@@ -201,6 +206,11 @@
                                     show-overflow-tooltip>
                                 </el-table-column>
                                 <el-table-column
+                                    prop="examId"
+                                    label="考试编号"
+                                    show-overflow-tooltip>
+                                </el-table-column>
+                                <el-table-column
                                     prop="name"
                                     label="报名人"
                                     show-overflow-tooltip>
@@ -271,6 +281,11 @@
                                     type="index"
                                     :index="indexMethod"
                                     label="序号"
+                                    show-overflow-tooltip>
+                                </el-table-column>
+                                <el-table-column
+                                    prop="examId"
+                                    label="考试编号"
                                     show-overflow-tooltip>
                                 </el-table-column>
                                 <el-table-column

@@ -246,16 +246,15 @@ export default {
           ids: ids
         }
         _removeBatchs(obj).then(res => {
-          if (res.data === true) {
+          if (res.status === true) {
             this.$message({
-              message: '删除成功',
-              type: 'success'
+              type: 'success',
+              message: '删除成功!'
             })
-            this.getList()
           } else {
             this.$message({
-              message: '删除失败',
-              type: 'warning'
+              type: 'warning',
+              message: '请勿删除已开始或进行中的批次!'
             })
           }
         })
@@ -268,12 +267,20 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        _removeBatch(id)
-        this.getList()
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
+        _removeBatch(id).then(res => {
+          if (res.status === true) {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+          } else {
+            this.$message({
+              type: 'warning',
+              message: '请勿删除已开始或进行中的批次!'
+            })
+          }
         })
+        this.getList()
       }).catch(() => {
         this.$message({
           type: 'info',

@@ -80,6 +80,11 @@
                                     label="序号"
                                     show-overflow-tooltip>
                                 </el-table-column>
+                              <el-table-column
+                                  prop="examId"
+                                  label="考试编号"
+                                  show-overflow-tooltip>
+                              </el-table-column>
                                 <el-table-column
                                     prop="name"
                                     label="报名人"
@@ -98,10 +103,6 @@
                                     prop="way"
                                     label="报名方式"
                                     show-overflow-tooltip>
-                                </el-table-column>
-                                <el-table-column
-                                    label="上传材料">
-                                    <el-button type="text" @click="dialogFormVisible=true">预览</el-button>
                                 </el-table-column>
                                 <el-table-column label="操作">
                                     <!-- 传递 row 参数 -->
@@ -200,6 +201,11 @@
                                     label="序号"
                                     show-overflow-tooltip>
                                 </el-table-column>
+                              <el-table-column
+                                  prop="examId"
+                                  label="考试编号"
+                                  show-overflow-tooltip>
+                              </el-table-column>
                                 <el-table-column
                                     prop="name"
                                     label="报名人"
@@ -218,10 +224,6 @@
                                     prop="way"
                                     label="报名方式"
                                     show-overflow-tooltip>
-                                </el-table-column>
-                                <el-table-column
-                                    label="上传材料">
-                                    <el-button type="text">预览</el-button>
                                 </el-table-column>
                                 <el-table-column
                                     label="操作"
@@ -273,6 +275,11 @@
                                     label="序号"
                                     show-overflow-tooltip>
                                 </el-table-column>
+                              <el-table-column
+                                  prop="examId"
+                                  label="考试编号"
+                                  show-overflow-tooltip>
+                              </el-table-column>
                                 <el-table-column
                                     prop="name"
                                     label="报名人"
@@ -292,10 +299,7 @@
                                     label="报名方式"
                                     show-overflow-tooltip>
                                 </el-table-column>
-                                <el-table-column
-                                    label="上传材料">
-                                    <el-button type="text" >预览</el-button>
-                                </el-table-column>
+
                                 <el-table-column
                                     label="操作"
                                     v-slot="scope">

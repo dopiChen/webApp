@@ -54,7 +54,7 @@ export default {
         ctx.restore() // 恢复到之前保存的状态
       }
       // 添加一些随机的横线
-      for (let i = 0; i < 70; i++) {
+      for (let i = 0; i < 30; i++) {
         const startX = Math.random() * canvas.width
         const startY = Math.random() * canvas.height
         const endX = Math.random() * canvas.width

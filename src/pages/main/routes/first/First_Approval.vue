@@ -318,11 +318,12 @@
                     </el-tab-pane>
                 </el-tabs>
                 <!-- 预览对话框 -->
-                <el-dialog title="导出数据预览" :visible.sync="isExportDialogVisible" width="50%">
+                <el-dialog title="导出数据预览" :visible.sync="isExportDialogVisible" width="35%">
                     <el-table :data="selectedData" style="width: 100%;">
-                        <el-table-column prop="name" label="姓名" width="200"></el-table-column>
-                        <el-table-column prop="num" label="姓名" width="200"></el-table-column>
-                        <el-table-column prop="yxjkxq" label="意向校区" width="200"></el-table-column>
+                        <el-table-column prop="name" label="姓名" width="150"></el-table-column>
+                        <el-table-column prop="username" label="工号" width="150"></el-table-column>
+                        <el-table-column prop="intendedCampus" label="意向校区" width="200"></el-table-column>
+                        <el-table-column prop="way" label="报名方式" width="150"></el-table-column>
                         <!-- 添加其他你需要预览的列 -->
                     </el-table>
                     <span slot="footer" class="dialog-footer">
@@ -669,6 +670,7 @@ export default {
     top: 64px;
     right: 24px;
     bottom: 24px;
+    overflow: auto; /* 当内容超出时，允许滚动 */
 }
 
 .top1 {

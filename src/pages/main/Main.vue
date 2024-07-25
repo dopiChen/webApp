@@ -18,8 +18,8 @@ export default {
     return {
       logo: {
         src: logo,
-        alt: '监考报名',
-        firstDes: '监考报名'
+        alt: '研究生监考报名系统',
+        firstDes: '研究生监考报名系统'
       }
     }
   },

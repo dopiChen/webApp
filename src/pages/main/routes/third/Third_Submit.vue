@@ -347,8 +347,8 @@ export default {
 
 .mainbody {
     width: 100%;
-    height: 85%;
-    margin-top: 30px;
+    height: 95%;
+    margin-top: 10px;
     margin-bottom: 20px;
     display: flex;
 

@@ -669,6 +669,7 @@ export default {
     top: 64px;
     right: 24px;
     bottom: 24px;
+    overflow: auto; /* 当内容超出时，允许滚动 */
 }
 
 .top1 {

@@ -17,11 +17,12 @@
             </div>
             <div class="tablebody">
                 <el-table
-                        :data="fliterData1"
+                        :data="fliterDataWithStatus"
                         stripe
                         style="width: 100%"
                         @selection-change="handleSelelctionChange"
-                        class="table">
+                        class="table"
+                        max-height="900px">
                     <el-table-column
                             type="selection"
                             width="55">
@@ -33,14 +34,14 @@
                         show-overflow-tooltip>
                     </el-table-column>
                     <el-table-column
-                            prop="batchId"
-                            label="批次编号"
-                            width="100">
-                    </el-table-column>
-                    <el-table-column
                             prop="batchName"
                             label="监考批次"
-                            width="300">
+                            width="200">
+                    </el-table-column>
+                    <el-table-column
+                        prop="batchId"
+                        label="批次编号"
+                        width="100">
                     </el-table-column>
                     <el-table-column
                             prop="startDate"
@@ -58,9 +59,11 @@
                             width="400">
                     </el-table-column>
                     <el-table-column
-                            label="批次状态"
-                            width="400">
-                        <div>已结束</div>
+                        label="批次状态"
+                        width="400">
+                        <template v-slot="scope">
+                            <el-tag :type="scope.row.statusType">{{ scope.row.status }}</el-tag>
+                        </template>
                     </el-table-column>
                     <el-table-column
                             fixed="right"
@@ -142,16 +145,31 @@ export default {
     console.info(this.teams)
     this.fetchData2(this.currentPage)
   },
-  currentTableData () {
-    const start = (this.currentPage - 1) * this.pageSize
-    const end = start + this.pageSize
-    return this.fliterData1.slice(start, end)
-  },
   computed: {
     ...mapState({
       username: state => state.user.id, // 映射 userId
       name: state => state.user.name
-    })
+    }),
+    fliterDataWithStatus () {
+      return this.fliterData1.map(item => {
+        const currentDate = new Date()
+        const startDate = new Date(item.startDate)
+        const endDate = new Date(item.endDate)
+
+        if (currentDate < startDate) {
+          item.status = '未开始'
+          item.statusType = 'info' // 蓝色标签
+        } else if (currentDate >= startDate && currentDate <= endDate) {
+          item.status = '进行中'
+          item.statusType = 'primary' // 蓝色标签
+        } else {
+          item.status = '已结束'
+          item.statusType = 'danger' // 红色标签
+        }
+
+        return item
+      })
+    }
   },
   beforeDestroy () {
     window.removeEventListener('resize', this.updateTableHeight)
@@ -172,6 +190,18 @@ export default {
       if (this.selectedIds.length === 0) {
         Message({
           message: '尚未选择批次',
+          type: 'warning'
+        })
+        return
+      }
+      // 查找所选批次中状态不符合要求的批次
+      const invalidBatch = this.fliterDataWithStatus.find(batch =>
+        this.selectedIds.includes(batch.batchId) && (batch.status === '已结束' || batch.status === '未开始')
+      )
+
+      if (invalidBatch) {
+        this.$message({
+          message: `无法选择${invalidBatch.status}的批次进行报名`,
           type: 'warning'
         })
         return

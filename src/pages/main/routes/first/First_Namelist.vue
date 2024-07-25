@@ -328,7 +328,8 @@ export default {
     flex-direction: column;
     align-items: center;
     height: 100%;
-    justify-content: flex-start
+    justify-content: flex-start;
+    overflow: auto; /* 当内容超出时，允许滚动 */
 }
 
 .title {
@@ -341,6 +342,7 @@ export default {
     text-align: right;
     padding: 1rem;
     margin-top: 1rem;
+    overflow: auto; /* 当内容超出时，允许滚动 */
 }
 
 .body {

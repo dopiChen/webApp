@@ -359,6 +359,7 @@ export default {
 }
 .body {
     height: 100%;
+    overflow: auto; /* 当内容超出时，允许滚动 */
 }
 .top {
     background: #FFFFFF;
@@ -367,6 +368,7 @@ export default {
     top: 64px;
     right: 24px;
     bottom: 24px;
+    overflow: auto; /* 当内容超出时，允许滚动 */
 }
 .top1 {
   display: inline;
@@ -402,6 +404,7 @@ export default {
 .table-container {
     position: relative;
     padding-bottom: 50px;
+    overflow: auto; /* 当内容超出时，允许滚动 */
 }
 .pagination-container {
     position: absolute;
@@ -412,6 +415,7 @@ export default {
     justify-content: flex-end;
     padding-right: 10px;
     background: white;
+    overflow: auto; /* 当内容超出时，允许滚动 */
 }
 .shuru {
     position: absolute;
